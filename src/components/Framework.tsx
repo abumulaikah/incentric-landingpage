@@ -48,7 +48,6 @@ const getTextPath = (i: number, cx: number, cy: number, r: number) => {
 
 function InteractiveWheel() {
   const [activeItem, setActiveItem] = useState<{id: string, title: string, description: string} | null>(null);
-  const reduceEffects = useReducedEffects();
   
   const SIZE = 600;
   const CENTER = SIZE / 2;
@@ -146,7 +145,7 @@ function InteractiveWheel() {
               ))}
             </defs>
             
-            <g className={reduceEffects ? "" : "animate-spin-reverse-slow"} style={{ transformOrigin: 'center' }}>
+            <g className="animate-spin-reverse-slow" style={{ transformOrigin: 'center' }}>
               {middleRingData.map((item, i) => {
                  const start = i * 120 + GAP_OFFSET;
                  const end = (i + 1) * 120 - GAP_OFFSET;
@@ -175,7 +174,7 @@ function InteractiveWheel() {
               })}
             </g>
             
-            <g className={reduceEffects ? "" : "animate-spin-slow"} style={{ transformOrigin: 'center' }}>
+            <g className="animate-spin-slow" style={{ transformOrigin: 'center' }}>
               {outerRingData.map((item, i) => {
                  const start = i * 120 + GAP_OFFSET;
                  const end = (i + 1) * 120 - GAP_OFFSET;
@@ -284,11 +283,9 @@ export function Framework() {
       <div className="absolute bottom-1/4 left-1/4 w-[260px] h-[260px] md:w-[500px] md:h-[500px] bg-brand-yellow/5 rounded-full blur-[70px] md:blur-[120px] pointer-events-none md:mix-blend-screen" />
       
       {/* Meteors */}
-      {!reduceEffects && (
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <Meteors number={5} />
-        </div>
-      )}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <Meteors number={reduceEffects ? 3 : 5} />
+      </div>
 
       <div className="max-w-7xl mx-auto relative z-10 pt-12">
         <InteractiveWheel />
