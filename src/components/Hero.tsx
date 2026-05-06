@@ -1,6 +1,7 @@
 import { motion, useScroll, useTransform } from "motion/react";
 import { ArrowRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useReducedEffects } from "../hooks/useReducedEffects";
 
 const words = [
   { text: "WOW", duration: 3000 },
@@ -233,6 +234,7 @@ function InteractiveDots() {
 }
 
 export function Hero() {
+  const reduceEffects = useReducedEffects();
   const [index, setIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
   const [displayText, setDisplayText] = useState("");
@@ -273,13 +275,13 @@ export function Hero() {
 
   return (
     <section id="top" className="relative min-h-[90vh] flex flex-col justify-center items-center text-center px-6 py-20 overflow-hidden bg-slate-950 scroll-mt-28">
-      <GlobeBackground />
+      {!reduceEffects && <GlobeBackground />}
       {/* Background abstract elements */}
-      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-brand-blue/30 rounded-full blur-[120px] pointer-events-none mix-blend-screen" />
-      <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-brand-yellow/20 rounded-full blur-[120px] pointer-events-none mix-blend-screen" />
+      <div className="absolute top-1/4 left-1/4 w-[280px] h-[280px] md:w-[500px] md:h-[500px] bg-brand-blue/25 md:bg-brand-blue/30 rounded-full blur-[70px] md:blur-[120px] pointer-events-none md:mix-blend-screen" />
+      <div className="absolute bottom-1/4 right-1/4 w-[260px] h-[260px] md:w-[500px] md:h-[500px] bg-brand-yellow/15 md:bg-brand-yellow/20 rounded-full blur-[70px] md:blur-[120px] pointer-events-none md:mix-blend-screen" />
       
       {/* Interactive Dots Layer */}
-      <InteractiveDots />
+      {!reduceEffects && <InteractiveDots />}
 
       <div className="w-full max-w-5xl mx-auto relative z-10">
         <motion.div

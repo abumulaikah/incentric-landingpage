@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from "motion/react";
 import { useEffect, useState } from "react";
+import { useReducedEffects } from "../hooks/useReducedEffects";
 
 const centerData = { id: 'center', title: 'Loyal Customer', description: 'The absolute core of the business. By aligning every facet around the customer, we achieve unparalleled advocacy and sustainable retention.' };
 
@@ -47,6 +48,7 @@ const getTextPath = (i: number, cx: number, cy: number, r: number) => {
 
 function InteractiveWheel() {
   const [activeItem, setActiveItem] = useState<{id: string, title: string, description: string} | null>(null);
+  const reduceEffects = useReducedEffects();
   
   const SIZE = 600;
   const CENTER = SIZE / 2;
@@ -144,7 +146,7 @@ function InteractiveWheel() {
               ))}
             </defs>
             
-            <g className="animate-spin-reverse-slow" style={{ transformOrigin: 'center' }}>
+            <g className={reduceEffects ? "" : "animate-spin-reverse-slow"} style={{ transformOrigin: 'center' }}>
               {middleRingData.map((item, i) => {
                  const start = i * 120 + GAP_OFFSET;
                  const end = (i + 1) * 120 - GAP_OFFSET;
@@ -173,7 +175,7 @@ function InteractiveWheel() {
               })}
             </g>
             
-            <g className="animate-spin-slow" style={{ transformOrigin: 'center' }}>
+            <g className={reduceEffects ? "" : "animate-spin-slow"} style={{ transformOrigin: 'center' }}>
               {outerRingData.map((item, i) => {
                  const start = i * 120 + GAP_OFFSET;
                  const end = (i + 1) * 120 - GAP_OFFSET;
@@ -263,22 +265,30 @@ function Meteors({ number = 5 }: { number?: number }) {
 }
 
 export function Framework() {
+  const reduceEffects = useReducedEffects();
+
   return (
     <section id="framework" className="py-32 px-6 lg:px-12 bg-slate-950 relative overflow-hidden scroll-mt-28">
       {/* Deep Space Background */}
       <div className="absolute inset-0 bg-slate-950 pointer-events-none">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900/40 via-slate-950 to-slate-950"></div>
         {/* Star layers */}
-        <div className="absolute inset-0 opacity-40 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjM1IiBjeT0iNTYiIHI9IjAuNSIgZmlsbD0iI2ZmZiIvPjxjaXJjbGUgY3g9IjE3MCIgY3k9IjEyMCIgcj0iMC41IiBmaWxsPSIjZmZmIi8+PGNpcmNsZSBjeD0iMjgwIiBjeT0iODAiIHI9IjEuNSIgZmlsbD0iI2ZmZiIgZmlsbC1vcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSIzNTAiIGN5PSIyNTAiIHI9IjEiIGZpbGw9IiNmZmYiLz48Y2lyY2xlIGN4PSI4MCIgY3k9IjMzMCIgcj0iMSIgZmlsbD0iI2ZmZiIgZmlsbC1vcGFjaXR5PSIwLjciLz48Y2lyY2xlIGN4PSIyMjAiIGN5PSIzOTAiIHI9IjAuNSIgZmlsbD0iI2ZmZiIvPjxjaXJjbGUgY3g9IjI1MCIgY3k9IjIyMCIgcj0iMSIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg==')] animate-[pulse_6s_ease-in-out_infinite]"></div>
-        <div className="absolute inset-0 opacity-30 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MDAiIGhlaWdodD0iNTAwIj48cmVjdCB3aWR0aD0iNTAwIiBoZWlnaHQ9IjUwMCIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjE1MCIgY3k9IjI1MCIgcj0iMiIgZmlsbD0iI2ZmZiIgZmlsbC1vcGFjaXR5PSIwLjMiLz48Y2lyY2xlIGN4PSI0NTAiIGN5PSIxMjAiIHI9IjEiIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iNzAiIGN5PSI0MTAiIHI9IjEuNSIgZmlsbD0iI2ZmZiIgZmlsbC1vcGFjaXR5PSIwLjgiLz48Y2lyY2xlIGN4PSIzODAiIGN5PSIzMTAiIHI9IjAuNSIgZmlsbD0iI2ZmZiIgZmlsbC1vcGFjaXR5PSIwLjYiLz48L3N2Zz4=')] [background-size:250px_250px] animate-[pulse_4s_ease-in-out_infinite_reverse]"></div>
+        {!reduceEffects && (
+          <>
+            <div className="absolute inset-0 opacity-40 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjM1IiBjeT0iNTYiIHI9IjAuNSIgZmlsbD0iI2ZmZiIvPjxjaXJjbGUgY3g9IjE3MCIgY3k9IjEyMCIgcj0iMC41IiBmaWxsPSIjZmZmIi8+PGNpcmNsZSBjeD0iMjgwIiBjeT0iODAiIHI9IjEuNSIgZmlsbD0iI2ZmZiIgZmlsbC1vcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSIzNTAiIGN5PSIyNTAiIHI9IjEiIGZpbGw9IiNmZmYiLz48Y2lyY2xlIGN4PSI4MCIgY3k9IjMzMCIgcj0iMSIgZmlsbD0iI2ZmZiIgZmlsbC1vcGFjaXR5PSIwLjciLz48Y2lyY2xlIGN4PSIyMjAiIGN5PSIzOTAiIHI9IjAuNSIgZmlsbD0iI2ZmZiIvPjxjaXJjbGUgY3g9IjI1MCIgY3k9IjIyMCIgcj0iMSIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg==')] animate-[pulse_6s_ease-in-out_infinite]"></div>
+            <div className="absolute inset-0 opacity-30 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MDAiIGhlaWdodD0iNTAwIj48cmVjdCB3aWR0aD0iNTAwIiBoZWlnaHQ9IjUwMCIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjE1MCIgY3k9IjI1MCIgcj0iMiIgZmlsbD0iI2ZmZiIgZmlsbC1vcGFjaXR5PSIwLjMiLz48Y2lyY2xlIGN4PSI0NTAiIGN5PSIxMjAiIHI9IjEiIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iNzAiIGN5PSI0MTAiIHI9IjEuNSIgZmlsbD0iI2ZmZiIgZmlsbC1vcGFjaXR5PSIwLjgiLz48Y2lyY2xlIGN4PSIzODAiIGN5PSIzMTAiIHI9IjAuNSIgZmlsbD0iI2ZmZiIgZmlsbC1vcGFjaXR5PSIwLjYiLz48L3N2Zz4=')] [background-size:250px_250px] animate-[pulse_4s_ease-in-out_infinite_reverse]"></div>
+          </>
+        )}
       </div>
-      <div className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-brand-blue/10 rounded-full blur-[120px] pointer-events-none mix-blend-screen" />
-      <div className="absolute bottom-1/4 left-1/4 w-[500px] h-[500px] bg-brand-yellow/5 rounded-full blur-[120px] pointer-events-none mix-blend-screen" />
+      <div className="absolute top-1/4 right-0 w-[280px] h-[280px] md:w-[500px] md:h-[500px] bg-brand-blue/10 rounded-full blur-[70px] md:blur-[120px] pointer-events-none md:mix-blend-screen" />
+      <div className="absolute bottom-1/4 left-1/4 w-[260px] h-[260px] md:w-[500px] md:h-[500px] bg-brand-yellow/5 rounded-full blur-[70px] md:blur-[120px] pointer-events-none md:mix-blend-screen" />
       
       {/* Meteors */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <Meteors number={5} />
-      </div>
+      {!reduceEffects && (
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <Meteors number={5} />
+        </div>
+      )}
 
       <div className="max-w-7xl mx-auto relative z-10 pt-12">
         <InteractiveWheel />

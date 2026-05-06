@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from "motion/react";
 import { useState } from "react";
+import { useReducedEffects } from "../hooks/useReducedEffects";
 
 interface TeamMember {
   id: number;
@@ -27,7 +28,7 @@ const team: TeamMember[] = [
   { id: 15, name: "Noah Williams", role: "Client Partner", image: "https://xsgames.co/randomusers/assets/avatars/male/15.jpg", size: "medium" },
 ];
 
-function TeamCard({ member, className }: { member: TeamMember, className?: string }) {
+function TeamCard({ member, className, reduceEffects }: { member: TeamMember, className?: string, reduceEffects: boolean }) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -42,8 +43,8 @@ function TeamCard({ member, className }: { member: TeamMember, className?: strin
         src={member.image}
         alt={member.name}
         className="w-full h-full object-cover transition-all duration-500"
-        initial={{ scale: 1.1 }}
-        animate={{ 
+        initial={reduceEffects ? false : { scale: 1.1 }}
+        animate={reduceEffects ? undefined : { 
           scale: [1.1, 1.12, 1.1],
           x: [0, 5, 0],
           y: [0, -5, 0]
@@ -75,6 +76,10 @@ function TeamCard({ member, className }: { member: TeamMember, className?: strin
 }
 
 export function TeamCTA() {
+  const reduceEffects = useReducedEffects();
+  const firstRow = reduceEffects ? team.slice(0, 6) : [...team, ...team];
+  const secondRow = reduceEffects ? team.slice(6, 12) : [...team.slice().reverse(), ...team.slice().reverse()];
+
   return (
     <section id="team" className="py-24 lg:py-40 bg-[#e7eaee] relative overflow-hidden scroll-mt-28">
       <div className="container mx-auto px-6 mb-16 text-center">
@@ -98,18 +103,19 @@ export function TeamCTA() {
         {/* First Row - Moving Left */}
         <div className="flex overflow-hidden group">
           <motion.div 
-            animate={{ x: [0, "-50%"] }}
+            animate={reduceEffects ? undefined : { x: [0, "-50%"] }}
             transition={{ 
               duration: 60, 
               repeat: Infinity, 
               ease: "linear" 
             }}
-            className="flex gap-6 whitespace-nowrap"
+            className={`flex gap-6 ${reduceEffects ? "overflow-x-auto px-6 pb-4" : "whitespace-nowrap"}`}
           >
-            {[...team, ...team].map((member, idx) => (
+            {firstRow.map((member, idx) => (
               <TeamCard 
                 key={`${member.id}-${idx}`} 
                 member={member} 
+                reduceEffects={reduceEffects}
                 className="w-[300px] md:w-[400px] flex-shrink-0 !rounded-2xl" 
               />
             ))}
@@ -119,19 +125,20 @@ export function TeamCTA() {
         {/* Second Row - Moving Right */}
         <div className="flex overflow-hidden group">
           <motion.div 
-            initial={{ x: "-50%" }}
-            animate={{ x: 0 }}
+            initial={reduceEffects ? undefined : { x: "-50%" }}
+            animate={reduceEffects ? undefined : { x: 0 }}
             transition={{ 
               duration: 75, 
               repeat: Infinity, 
               ease: "linear" 
             }}
-            className="flex gap-6 whitespace-nowrap"
+            className={`flex gap-6 ${reduceEffects ? "overflow-x-auto px-6 pb-4" : "whitespace-nowrap"}`}
           >
-            {[...team.slice().reverse(), ...team.slice().reverse()].map((member, idx) => (
+            {secondRow.map((member, idx) => (
               <TeamCard 
                 key={`${member.id}-rev-${idx}`} 
                 member={member} 
+                reduceEffects={reduceEffects}
                 className="w-[300px] md:w-[400px] flex-shrink-0 !rounded-2xl" 
               />
             ))}
