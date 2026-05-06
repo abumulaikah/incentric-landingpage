@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import { useReducedEffects } from "../hooks/useReducedEffects";
 
 function RotatingText() {
-  const reduceEffects = useReducedEffects();
   const text = "CONTACT US | GET IN TOUCH | START A PROJECT | ";
   const characters = text.split("");
   const radius = 85; 
@@ -12,7 +11,7 @@ function RotatingText() {
   return (
     <motion.div
       className="relative w-40 h-40 md:w-52 md:h-52 flex items-center justify-center"
-      animate={reduceEffects ? undefined : { rotate: 360 }}
+      animate={{ rotate: 360 }}
       transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
     >
       {characters.map((char, i) => (
@@ -76,7 +75,6 @@ function FractalGlass() {
 }
 
 export function Footer() {
-  const reduceEffects = useReducedEffects();
   const tickerText = "INCENTRIC ";
   
   return (
@@ -84,7 +82,7 @@ export function Footer() {
       {/* Seamless Looping Background Text */}
       <div className="absolute top-1/2 -translate-y-1/2 left-0 w-full overflow-hidden whitespace-nowrap opacity-[0.08] select-none pointer-events-none">
         <motion.div
-          animate={reduceEffects ? undefined : { x: [0, "-50%"] }}
+          animate={{ x: [0, "-50%"] }}
           transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
           className="flex gap-20 whitespace-nowrap"
         >
