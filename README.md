@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <div align="center">
 <img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
 </div>
@@ -18,3 +19,7 @@ View your app in AI Studio: https://ai.studio/apps/3b86a96e-df24-4d68-88e0-9a17d
 2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
 3. Run the app:
    `npm run dev`
+=======
+# incentric-landingpage
+landing page incentric
+>>>>>>> 18d94c2a613d66132ba247cef2f075d1fca63e27
