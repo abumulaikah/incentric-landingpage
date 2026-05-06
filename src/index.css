@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-brand-blue: #014fcf;
+  --color-brand-yellow: #ffbc00;
+  --font-sans: "Helvetica Neue", Helvetica, "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --animate-shimmer: shimmer 2s linear infinite;
+  
+  --animate-meteor: meteor 5s linear infinite;
+  --animate-spin-slow: spin 40s linear infinite;
+  --animate-spin-reverse-slow: spin-reverse 40s linear infinite;
+
+  @keyframes spin-reverse {
+    to {
+      transform: rotate(-360deg);
+    }
+  }
+
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  @keyframes meteor {
+    0% {
+      transform: rotate(135deg) translateX(0);
+      opacity: 0;
+    }
+    1% {
+      opacity: 1;
+    }
+    70% {
+      opacity: 1;
+    }
+    100% {
+      transform: rotate(135deg) translateX(3000px);
+      opacity: 0;
+    }
+  }
+}
+
+@layer base {
+  body {
+    @apply font-sans bg-slate-50 text-slate-900;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-sans font-bold text-slate-900 tracking-tight;
+  }
+}
+
+@layer utilities {
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+
