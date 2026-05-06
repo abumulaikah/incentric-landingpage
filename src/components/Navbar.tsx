@@ -1,6 +1,12 @@
 import { motion } from "motion/react";
 import { useState, useEffect } from "react";
 
+const navLinks = [
+  { label: "The Logic", href: "#logic" },
+  { label: "The Framework", href: "#framework" },
+  { label: "Team", href: "#team" },
+];
+
 export function Navbar() {
   const [isDarkText, setIsDarkText] = useState(false);
 
@@ -49,21 +55,23 @@ export function Navbar() {
         className={`pointer-events-auto w-full max-w-5xl h-16 flex items-center justify-between px-6 lg:px-8 relative z-10 transition-colors duration-500 ${isDarkText ? 'text-slate-900' : 'text-white'}`}
       >
         <div className="flex items-center">
-          <div className="flex items-center space-x-2">
+          <a href="#top" className="flex items-center space-x-2 hover:opacity-80 transition-opacity" aria-label="Back to top">
             <div className={`w-8 h-8 focus:outline-none rounded-full flex items-center justify-center transition-colors duration-500 ${isDarkText ? 'bg-slate-900' : 'bg-white'}`}>
               <span className={`font-bold text-sm transition-colors duration-500 ${isDarkText ? 'text-white' : 'text-slate-900'}`}>IN</span>
             </div>
-            <span className="text-xl font-bold tracking-tight cursor-pointer">INCENTRIC</span>
-          </div>
+            <span className="text-xl font-bold tracking-tight">INCENTRIC</span>
+          </a>
         </div>
         
         <div className="flex items-center space-x-4 md:space-x-8 text-xs md:text-sm font-bold">
-          <span className="hidden sm:inline-block hover:opacity-70 cursor-pointer transition-opacity">The Logic</span>
-          <span className="hidden sm:inline-block hover:opacity-70 cursor-pointer transition-opacity">The Framework</span>
-          <span className="hidden sm:inline-block hover:opacity-70 cursor-pointer transition-opacity">Team</span>
-          <button className={`px-5 py-2 rounded-full hover:scale-105 transition-all uppercase tracking-[0.1em] text-[10px] md:text-xs font-bold ${isDarkText ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'}`}>
+          {navLinks.map((link) => (
+            <a key={link.href} href={link.href} className="hidden sm:inline-block hover:opacity-70 transition-opacity">
+              {link.label}
+            </a>
+          ))}
+          <a href="#contact" className={`px-5 py-2 rounded-full hover:scale-105 transition-all uppercase tracking-[0.1em] text-[10px] md:text-xs font-bold ${isDarkText ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'}`}>
             Start Now
-          </button>
+          </a>
         </div>
       </motion.nav>
     </div>

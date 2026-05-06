@@ -2,8 +2,16 @@ import { motion, useScroll, useTransform } from "motion/react";
 import { ArrowRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
+const words = [
+  { text: "WOW", duration: 3000 },
+  { text: "meaningful", duration: 1000 },
+  { text: "unforgettable", duration: 1000 },
+  { text: "stunning", duration: 1000 },
+  { text: "remarkable", duration: 1000 },
+  { text: "lasting", duration: 1000 },
+];
+
 function GlobeBackground() {
-  const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     offset: ["start start", "end start"]
   });
@@ -157,7 +165,7 @@ function InteractiveDots() {
         let opacity = 0.4;
         let drawSize = p.size;
         
-        if (distance < maxDistance) {
+        if (distance > 0 && distance < maxDistance) {
           let force = (maxDistance - distance) / maxDistance;
           force = force * force * (3 - 2 * force);
           
@@ -230,15 +238,6 @@ export function Hero() {
   const [displayText, setDisplayText] = useState("");
   const [typingSpeed, setTypingSpeed] = useState(50);
 
-  const words = [
-    { text: "WOW", duration: 3000 },
-    { text: "meaningful", duration: 1000 },
-    { text: "unforgettable", duration: 1000 },
-    { text: "stunning", duration: 1000 },
-    { text: "remarkable", duration: 1000 },
-    { text: "lasting", duration: 1000 },
-  ];
-
   useEffect(() => {
     const handleTyping = () => {
       const currentWord = words[index].text;
@@ -270,10 +269,10 @@ export function Hero() {
 
     const timer = setTimeout(handleTyping, typingSpeed);
     return () => clearTimeout(timer);
-  }, [displayText, isDeleting, index, typingSpeed, words]);
+  }, [displayText, isDeleting, index, typingSpeed]);
 
   return (
-    <section className="relative min-h-[90vh] flex flex-col justify-center items-center text-center px-6 py-20 overflow-hidden bg-slate-950">
+    <section id="top" className="relative min-h-[90vh] flex flex-col justify-center items-center text-center px-6 py-20 overflow-hidden bg-slate-950 scroll-mt-28">
       <GlobeBackground />
       {/* Background abstract elements */}
       <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-brand-blue/30 rounded-full blur-[120px] pointer-events-none mix-blend-screen" />
@@ -320,12 +319,12 @@ export function Hero() {
           transition={{ duration: 0.8, ease: "easeOut", delay: 0.4 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-6"
         >
-          <button className="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-slate-900 transition-all duration-300 bg-brand-yellow rounded-full hover:scale-105 hover:shadow-[0_0_40px_rgba(255,188,0,0.4)] overflow-hidden tracking-[0.1em] text-sm md:text-base uppercase w-full sm:w-auto">
+          <a href="#contact" className="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-slate-900 transition-all duration-300 bg-brand-yellow rounded-full hover:scale-105 hover:shadow-[0_0_40px_rgba(255,188,0,0.4)] overflow-hidden tracking-[0.1em] text-sm md:text-base uppercase w-full sm:w-auto">
             <span className="relative z-10 flex items-center justify-center">
               Transform Your CX
               <ArrowRight className="w-5 h-5 ml-3 transition-transform duration-300 group-hover:translate-x-2" />
             </span>
-          </button>
+          </a>
         </motion.div>
 
         <motion.div

@@ -42,6 +42,10 @@
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     @apply font-sans bg-slate-50 text-slate-900;
   }
@@ -60,5 +64,4 @@
     display: none;
   }
 }
-
 

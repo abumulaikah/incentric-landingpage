@@ -1,5 +1,4 @@
 import { motion } from "motion/react";
-import { Quote } from "lucide-react";
 
 const testimonials = [
   {
@@ -114,9 +113,4 @@ export function Testimonials() {
       </div>
     </section>
   );
-}
-
-// Helper to avoid hydration errors or complex inline logic
-function flexDelay(index: number) {
-  return index * 0.15;
 }

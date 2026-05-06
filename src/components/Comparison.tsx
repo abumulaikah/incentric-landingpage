@@ -1,4 +1,5 @@
 import { motion, useMotionValue, useTransform, animate, useScroll } from "motion/react";
+import type { MotionValue } from "motion/react";
 import { useEffect, useState, useRef } from "react";
 
 function Counter({ from, to, delay = 0 }: { from: number; to: number; delay?: number }) {
@@ -15,7 +16,7 @@ function Counter({ from, to, delay = 0 }: { from: number; to: number; delay?: nu
 
 interface CharacterProps {
   children: string;
-  progress: any;
+  progress: MotionValue<number>;
   range: [number, number];
   targetColor?: string;
 }
@@ -55,11 +56,11 @@ export function Comparison() {
     offset: ["start 0.8", "start 0.2"]
   });
 
-  const text = "Don’t just build a better product. Build a better experience.";
+  const text = "Don't just build a better product. Build a better experience.";
   const characters = text.split("");
 
   return (
-    <section className="py-32 px-6 lg:px-12 bg-white relative overflow-hidden" ref={containerRef}>
+    <section id="logic" className="py-32 px-6 lg:px-12 bg-white relative overflow-hidden scroll-mt-28" ref={containerRef}>
       {/* Background decorations */}
       <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-gradient-to-b from-brand-blue/5 to-transparent rounded-bl-full pointer-events-none -z-10 blur-3xl"></div>
       

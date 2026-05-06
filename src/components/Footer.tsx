@@ -3,7 +3,7 @@ import { ArrowUpRight } from "lucide-react";
 import { useEffect } from "react";
 
 function RotatingText() {
-  const text = "CONTACT US • GET IN TOUCH • START A PROJECT • ";
+  const text = "CONTACT US | GET IN TOUCH | START A PROJECT | ";
   const characters = text.split("");
   const radius = 85; 
 
@@ -72,7 +72,7 @@ export function Footer() {
   const tickerText = "INCENTRIC ";
   
   return (
-    <footer className="bg-[#e7eaee] text-slate-950 min-h-[70vh] flex flex-col justify-center relative overflow-hidden pt-20 border-t border-slate-200">
+    <footer id="contact" className="bg-[#e7eaee] text-slate-950 min-h-[70vh] flex flex-col justify-center relative overflow-hidden pt-20 border-t border-slate-200 scroll-mt-28">
       {/* Seamless Looping Background Text */}
       <div className="absolute top-1/2 -translate-y-1/2 left-0 w-full overflow-hidden whitespace-nowrap opacity-[0.08] select-none pointer-events-none">
         <motion.div
@@ -93,10 +93,12 @@ export function Footer() {
 
       {/* Central Interactive Element */}
       <div className="relative z-10 flex flex-col items-center justify-center">
-        <motion.button
+        <motion.a
+          href="mailto:hello@incentric.studio?subject=Start%20a%20Project"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           className="relative group"
+          aria-label="Start a project by email"
         >
           <div className="relative w-44 h-44 md:w-64 md:h-64 rounded-full flex items-center justify-center transition-all duration-700">
             {/* Rotating Circular Text */}
@@ -111,27 +113,26 @@ export function Footer() {
               <ArrowUpRight className="w-8 h-8 md:w-12 md:h-12 text-slate-950" />
             </motion.div>
           </div>
-        </motion.button>
+        </motion.a>
       </div>
 
       {/* Bottom Minimal Footer */}
       <div className="absolute bottom-12 left-0 w-full px-12 flex flex-col md:flex-row justify-between items-center gap-8 text-[10px] uppercase tracking-[0.3em] text-slate-400 z-20">
         <div className="flex gap-12 text-center md:text-left font-bold">
-          <a href="#" className="hover:text-slate-950 transition-colors">Twitter (X)</a>
-          <a href="#" className="hover:text-slate-950 transition-colors">LinkedIn</a>
-          <a href="#" className="hover:text-slate-950 transition-colors">Email</a>
+          <span>Twitter (X)</span>
+          <span>LinkedIn</span>
+          <a href="mailto:hello@incentric.studio" className="hover:text-slate-950 transition-colors">Email</a>
         </div>
         
         <div className="flex flex-col md:flex-row items-center gap-6 md:gap-12 font-medium">
           <span>&copy; {new Date().getFullYear()} INCENTRIC STUDIO</span>
           <div className="flex gap-8">
-            <a href="#" className="hover:text-slate-950 transition-colors">Privacy</a>
-            <a href="#" className="hover:text-slate-950 transition-colors">Terms</a>
+            <span>Privacy</span>
+            <span>Terms</span>
           </div>
         </div>
       </div>
     </footer>
   );
 }
-
 

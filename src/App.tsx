@@ -5,7 +5,6 @@ import { Framework } from './components/Framework';
 import { Testimonials } from './components/Testimonials';
 import { TeamCTA } from './components/TeamCTA';
 import { Footer } from './components/Footer';
-import { motion } from 'motion/react';
 
 export default function App() {
   return (
@@ -22,4 +21,3 @@ export default function App() {
     </div>
   );
 }
-

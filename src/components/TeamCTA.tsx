@@ -76,7 +76,7 @@ function TeamCard({ member, className }: { member: TeamMember, className?: strin
 
 export function TeamCTA() {
   return (
-    <section className="py-24 lg:py-40 bg-[#e7eaee] relative overflow-hidden">
+    <section id="team" className="py-24 lg:py-40 bg-[#e7eaee] relative overflow-hidden scroll-mt-28">
       <div className="container mx-auto px-6 mb-16 text-center">
         <motion.span 
           initial={{ opacity: 0, y: 10 }}
@@ -143,4 +143,3 @@ export function TeamCTA() {
     </section>
   );
 }
-

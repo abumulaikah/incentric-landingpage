@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 const centerData = { id: 'center', title: 'Loyal Customer', description: 'The absolute core of the business. By aligning every facet around the customer, we achieve unparalleled advocacy and sustainable retention.' };
 
 const middleRingData = [
-  { id: 'm0', title: 'WOW Product', description: 'Creating flagship products that are innovative, relevant, and easy to talk about—solving the "good product, hard to describe" problem.' },
+  { id: 'm0', title: 'WOW Product', description: 'Creating flagship products that are innovative, relevant, and easy to talk about - solving the "good product, hard to describe" problem.' },
   { id: 'm1', title: 'WOW Service', description: 'Designing and creating services that are not only fast and accurate, but also make customers feel truly understood.' },
   { id: 'm2', title: 'WOW Marketing', description: 'Developing and executing marketing strategies that go beyond promotion to build lasting memories and relationships.' },
 ];
@@ -102,9 +102,9 @@ function InteractiveWheel() {
                   className="w-full"
                 >
                   <p className="text-lg md:text-xl font-bold text-white mb-2 tracking-tight flex items-center justify-center">
-                    {activeItem.id === centerData.id && <span className="text-brand-yellow mr-3 text-lg md:text-xl">✦</span>}
-                    {activeItem.id.startsWith('o') && <span className="text-brand-yellow mr-3 text-base md:text-lg">■</span>}
-                    {activeItem.id.startsWith('m') && <span className="text-brand-blue mr-3 text-lg md:text-xl">●</span>}
+                    {activeItem.id === centerData.id && <span className="text-brand-yellow mr-3 text-lg md:text-xl">*</span>}
+                    {activeItem.id.startsWith('o') && <span className="text-brand-yellow mr-3 text-base md:text-lg">#</span>}
+                    {activeItem.id.startsWith('m') && <span className="text-brand-blue mr-3 text-lg md:text-xl">o</span>}
                     {activeItem.title}
                   </p>
                   <p className="text-base md:text-lg text-slate-400 leading-relaxed">
@@ -264,7 +264,7 @@ function Meteors({ number = 5 }: { number?: number }) {
 
 export function Framework() {
   return (
-    <section className="py-32 px-6 lg:px-12 bg-slate-950 relative overflow-hidden">
+    <section id="framework" className="py-32 px-6 lg:px-12 bg-slate-950 relative overflow-hidden scroll-mt-28">
       {/* Deep Space Background */}
       <div className="absolute inset-0 bg-slate-950 pointer-events-none">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900/40 via-slate-950 to-slate-950"></div>
