@@ -77,8 +77,8 @@ function TeamCard({ member, className, reduceEffects }: { member: TeamMember, cl
 
 export function TeamCTA() {
   const reduceEffects = useReducedEffects();
-  const firstRow = reduceEffects ? team.slice(0, 6) : [...team, ...team];
-  const secondRow = reduceEffects ? team.slice(6, 12) : [...team.slice().reverse(), ...team.slice().reverse()];
+  const firstRow = [...team, ...team];
+  const secondRow = [...team.slice().reverse(), ...team.slice().reverse()];
 
   return (
     <section id="team" className="py-24 lg:py-40 bg-[#e7eaee] relative overflow-hidden scroll-mt-28">
@@ -103,13 +103,13 @@ export function TeamCTA() {
         {/* First Row - Moving Left */}
         <div className="flex overflow-hidden group">
           <motion.div 
-            animate={reduceEffects ? undefined : { x: [0, "-50%"] }}
+            animate={{ x: [0, "-50%"] }}
             transition={{ 
-              duration: 60, 
+              duration: reduceEffects ? 75 : 60, 
               repeat: Infinity, 
               ease: "linear" 
             }}
-            className={`flex gap-6 ${reduceEffects ? "overflow-x-auto px-6 pb-4" : "whitespace-nowrap"}`}
+            className="flex gap-6 whitespace-nowrap"
           >
             {firstRow.map((member, idx) => (
               <TeamCard 
@@ -125,14 +125,14 @@ export function TeamCTA() {
         {/* Second Row - Moving Right */}
         <div className="flex overflow-hidden group">
           <motion.div 
-            initial={reduceEffects ? undefined : { x: "-50%" }}
-            animate={reduceEffects ? undefined : { x: 0 }}
+            initial={{ x: "-50%" }}
+            animate={{ x: 0 }}
             transition={{ 
-              duration: 75, 
+              duration: reduceEffects ? 90 : 75, 
               repeat: Infinity, 
               ease: "linear" 
             }}
-            className={`flex gap-6 ${reduceEffects ? "overflow-x-auto px-6 pb-4" : "whitespace-nowrap"}`}
+            className="flex gap-6 whitespace-nowrap"
           >
             {secondRow.map((member, idx) => (
               <TeamCard 

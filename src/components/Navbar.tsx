@@ -1,5 +1,7 @@
 import { motion } from "motion/react";
 import { useState, useEffect } from "react";
+import logoBlue from "../assets/logos/incentric-logo-blue.png";
+import logoWhite from "../assets/logos/incentric-logo-white.png";
 
 const navLinks = [
   { label: "The Logic", href: "#logic" },
@@ -56,10 +58,11 @@ export function Navbar() {
       >
         <div className="flex items-center">
           <a href="#top" className="flex items-center space-x-2 hover:opacity-80 transition-opacity" aria-label="Back to top">
-            <div className={`w-8 h-8 focus:outline-none rounded-full flex items-center justify-center transition-colors duration-500 ${isDarkText ? 'bg-slate-900' : 'bg-white'}`}>
-              <span className={`font-bold text-sm transition-colors duration-500 ${isDarkText ? 'text-white' : 'text-slate-900'}`}>IN</span>
-            </div>
-            <span className="text-xl font-bold tracking-tight">INCENTRIC</span>
+            <img
+              src={isDarkText ? logoBlue : logoWhite}
+              alt="Incentric"
+              className="h-7 w-auto max-w-[150px] object-contain transition-opacity duration-500 md:h-9 md:max-w-[190px]"
+            />
           </a>
         </div>
         
