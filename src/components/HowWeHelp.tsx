@@ -6,37 +6,19 @@ const steps = [
     number: "01",
     title: "Business & Customer Diagnosis",
     description:
-      "Kami membantu mengidentifikasi titik masalah, blind spot, dan peluang perbaikan dari sisi customer experience, service, dan operational bisnis.",
-    features: [
-      "CUSTOMER JOURNEY MAPPING",
-      "PAIN POINT ANALYSIS",
-      "OPERATIONAL ASSESSMENT",
-      "COMPETITIVE BENCHMARKING",
-    ],
+      "We help you identify key pain points, blind spots, and improvement opportunities across customer experience, service delivery, and operational efficiency.",
   },
   {
     number: "02",
     title: "Strategy & Experience Design",
     description:
-      "Bersama owner dan tim, kami menyusun strategi serta pengalaman customer yang lebih jelas, konsisten, dan relevan dengan tujuan bisnis.",
-    features: [
-      "STRATEGIC ROADMAP DESIGN",
-      "EXPERIENCE ARCHITECTURE",
-      "SERVICE BLUEPRINT CREATION",
-      "CUSTOMER-CENTRIC FRAMEWORKS",
-    ],
+      "Working together with your leadership team, we develop comprehensive strategies and customer experiences that are clearer, more consistent, and directly aligned with your business goals.",
   },
   {
     number: "03",
     title: "Implementation & Growth Improvement",
     description:
-      "Kami mendampingi proses implementasi agar perubahan tidak hanya berjalan di atas kertas, tetapi benar-benar meningkatkan loyalitas customer, kualitas service, dan pertumbuhan bisnis.",
-    features: [
-      "IMPLEMENTATION ROADMAP",
-      "TEAM ENABLEMENT PROGRAMS",
-      "PERFORMANCE TRACKING SYSTEMS",
-      "CONTINUOUS IMPROVEMENT CYCLES",
-    ],
+      "We guide your implementation process to ensure changes don't just exist on paper, but truly drive customer loyalty, service quality, and sustainable business growth.",
   },
 ];
 
@@ -67,7 +49,7 @@ export function HowWeHelp() {
               How We Help You
             </h2>
             <p className="text-lg text-slate-600 leading-relaxed max-w-md">
-              Kami mendampingi transformasi bisnis Anda melalui tiga tahap strategis yang terukur dan berdampak langsung pada pertumbuhan loyalitas customer.
+              We guide your business transformation through three strategic phases designed to drive measurable impact on customer loyalty and growth.
             </p>
 
             {/* Decorative line */}
@@ -110,31 +92,9 @@ export function HowWeHelp() {
                     </h3>
 
                     {/* Description */}
-                    <p className="text-base text-slate-700 leading-relaxed mb-8 group-hover:text-slate-900 transition-colors duration-300">
+                    <p className="text-base text-slate-700 leading-relaxed group-hover:text-slate-900 transition-colors duration-300">
                       {step.description}
                     </p>
-
-                    {/* Features List */}
-                    <div className="space-y-2.5">
-                      {step.features.map((feature, i) => (
-                        <motion.div
-                          key={i}
-                          initial={{ opacity: 0, x: -15 }}
-                          whileInView={{ opacity: 1, x: 0 }}
-                          viewport={{ once: true }}
-                          transition={{
-                            delay: index * 0.15 + i * 0.08,
-                            duration: 0.6,
-                          }}
-                          className="flex items-center gap-3 text-slate-600 group/feature"
-                        >
-                          <div className="w-1.5 h-1.5 rounded-full bg-brand-blue group-hover/feature:bg-brand-yellow transition-all duration-300 group-hover/feature:scale-125" />
-                          <p className="text-xs font-medium tracking-wider group-hover/feature:text-slate-900 transition-colors duration-300">
-                            {feature}
-                          </p>
-                        </motion.div>
-                      ))}
-                    </div>
                   </div>
 
                   {/* Corner Accent - Top Right */}
