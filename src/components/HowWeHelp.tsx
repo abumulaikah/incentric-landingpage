@@ -110,11 +110,14 @@ export function HowWeHelp() {
             transition={{ duration: 0.8 }}
             className="lg:sticky lg:top-32 lg:h-fit"
           >
-            <p className="mb-6 text-sm font-black uppercase tracking-[0.3em] text-brand-blue">
+            <p className="mb-6 text-sm font-bold uppercase tracking-[0.3em] text-brand-blue">
               How We Help
             </p>
-            <h2 className="mb-8 text-5xl font-black leading-[1.08] tracking-tight text-slate-950 md:text-6xl lg:text-7xl">
-              From Diagnosis to Measurable Growth
+            <h2 className="mb-8 text-4xl font-bold leading-tight tracking-tight text-slate-950 md:text-5xl lg:text-6xl">
+              From Diagnosis to{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-blue to-blue-500">
+                Measurable Growth
+              </span>
             </h2>
             <p className="max-w-md text-lg leading-relaxed text-slate-600">
               We guide business transformation through three practical phases designed to improve loyalty, service quality, and growth.
