@@ -402,7 +402,11 @@ export function Hero() {
             className="group relative inline-flex items-center justify-center gap-3 rounded-full border border-white/20 bg-white/10 px-8 py-4 font-bold text-white backdrop-blur-md transition-all duration-300 hover:scale-105 hover:border-brand-yellow/50 hover:bg-white/15"
           >
             <span>Assess Your CX</span>
-            <span className="rounded-full bg-brand-yellow px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.14em] text-slate-950">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-yellow px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.14em] text-slate-950">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.9)]" />
+              </span>
               Free
             </span>
             <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-2" />
