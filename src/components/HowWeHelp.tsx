@@ -35,16 +35,28 @@ function ServiceCard({
   index: number;
   progress: MotionValue<number>;
 }) {
-  const enterStart = index === 0 ? 0 : 0.22 + index * 0.2;
-  const enterEnd = index === 0 ? 0.01 : enterStart + 0.2;
-  const y = useTransform(progress, [enterStart, enterEnd], index === 0 ? ["0%", "0%"] : ["115%", "0%"]);
-  const scale = useTransform(progress, [enterEnd, 1], index === 0 ? [1, 1] : [1, 1 - (steps.length - index - 1) * 0.025]);
+  const entryWindows = [
+    [0, 0.01],
+    [0.28, 0.42],
+    [0.6, 0.74],
+  ];
+  const stackOffsets = ["0%", "3.2%", "6.4%"];
+  const exitStart = 0.88;
+  const [enterStart, enterEnd] = entryWindows[index];
+  const y = useTransform(
+    progress,
+    [enterStart, enterEnd, exitStart, 1],
+    index === 0
+      ? ["0%", "0%", "0%", "-118%"]
+      : ["116%", stackOffsets[index], stackOffsets[index], "-118%"],
+  );
+  const scale = useTransform(progress, [enterEnd, exitStart], [1, 1 - (steps.length - index - 1) * 0.025]);
   const accentScale = useTransform(progress, [enterStart, enterEnd], [1.16, 1]);
   const accentY = useTransform(progress, [enterStart, enterEnd], [34, 0]);
 
   return (
     <motion.article
-      style={{ scale, y, top: index * 10, zIndex: index + 10 }}
+      style={{ scale, y, top: index * 8, zIndex: index + 10 }}
       className="absolute inset-x-0 top-0 grid h-full overflow-hidden rounded-[1.75rem] border border-white/12 bg-slate-950 p-6 text-white shadow-[0_34px_110px_rgba(2,6,23,0.34)] md:grid-cols-[1fr_0.82fr] md:p-10"
     >
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(255,255,255,0.12),transparent_34%),linear-gradient(135deg,#020617_0%,#0f172a_54%,#111827_100%)]" />
@@ -118,8 +130,8 @@ export function HowWeHelp() {
             <div className="mt-12 h-1 w-20 rounded-full bg-gradient-to-r from-brand-blue to-brand-yellow" />
           </motion.div>
 
-          <div className="relative min-h-[320vh]">
-            <div className="sticky top-[44%] h-[min(560px,calc(100svh-9rem))] min-h-[430px] -translate-y-1/2 md:top-[46%] md:h-[min(600px,calc(100svh-10rem))] md:min-h-[500px]">
+          <div className="relative min-h-[420vh]">
+            <div className="sticky top-1/2 h-[min(540px,calc(100svh-8rem))] min-h-[400px] -translate-y-1/2 md:h-[min(590px,calc(100svh-9rem))] md:min-h-[480px]">
               {steps.map((step, index) => (
                 <ServiceCard
                   key={step.number}
