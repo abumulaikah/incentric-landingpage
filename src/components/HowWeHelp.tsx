@@ -44,12 +44,7 @@ function ServiceCard({
   return (
     <div className="sticky top-0 flex h-screen items-center justify-center">
       <motion.article
-        style={{
-          scale,
-          top: index * 30,
-          zIndex: index + 1,
-          transformOrigin: "top center",
-        }}
+        style={{ scale, top: index * 30, zIndex: index + 1, transformOrigin: "top center" }}
         className="relative grid h-[min(620px,calc(100svh-7rem))] min-h-[460px] w-full overflow-hidden rounded-[1.75rem] border border-white/12 bg-slate-950 p-6 text-white shadow-[0_34px_110px_rgba(2,6,23,0.34)] sm:min-h-[500px] md:h-[min(640px,calc(100svh-8rem))] md:grid-cols-[1fr_0.82fr] md:p-10 lg:min-h-[520px]"
       >
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(255,255,255,0.12),transparent_34%),linear-gradient(135deg,#020617_0%,#0f172a_54%,#111827_100%)]" />
