@@ -38,13 +38,13 @@ function ServiceCard({
   const enterStart = index === 0 ? 0 : 0.12 + index * 0.15;
   const enterEnd = index === 0 ? 0.01 : enterStart + 0.18;
   const y = useTransform(progress, [enterStart, enterEnd], index === 0 ? ["0%", "0%"] : ["115%", "0%"]);
-  const scale = useTransform(progress, [enterEnd, 1], [1, 1 - (steps.length - index - 1) * 0.035]);
+  const scale = useTransform(progress, [enterEnd, 1], index === 0 ? [1, 1] : [1, 1 - (steps.length - index - 1) * 0.025]);
   const accentScale = useTransform(progress, [enterStart, enterEnd], [1.16, 1]);
   const accentY = useTransform(progress, [enterStart, enterEnd], [34, 0]);
 
   return (
     <motion.article
-      style={{ scale, y, top: index * 16, zIndex: index + 10 }}
+      style={{ scale, y, top: index * 12, zIndex: index + 10 }}
       className="absolute inset-x-0 top-0 grid min-h-[500px] overflow-hidden rounded-[1.75rem] border border-white/12 bg-slate-950 p-7 text-white shadow-[0_34px_110px_rgba(2,6,23,0.34)] md:grid-cols-[1fr_0.82fr] md:p-10"
     >
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(255,255,255,0.12),transparent_34%),linear-gradient(135deg,#020617_0%,#0f172a_54%,#111827_100%)]" />
@@ -119,7 +119,7 @@ export function HowWeHelp() {
           </motion.div>
 
           <div className="relative min-h-[250vh]">
-            <div className="sticky top-24 h-[620px] md:top-28 md:h-[640px]">
+            <div className="sticky top-32 h-[620px] md:top-36 md:h-[640px]">
               {steps.map((step, index) => (
                 <ServiceCard
                   key={step.number}
