@@ -35,8 +35,8 @@ function ServiceCard({
   index: number;
   progress: MotionValue<number>;
 }) {
-  const enterStart = index === 0 ? 0 : 0.12 + index * 0.15;
-  const enterEnd = index === 0 ? 0.01 : enterStart + 0.18;
+  const enterStart = index === 0 ? 0 : 0.22 + index * 0.2;
+  const enterEnd = index === 0 ? 0.01 : enterStart + 0.2;
   const y = useTransform(progress, [enterStart, enterEnd], index === 0 ? ["0%", "0%"] : ["115%", "0%"]);
   const scale = useTransform(progress, [enterEnd, 1], index === 0 ? [1, 1] : [1, 1 - (steps.length - index - 1) * 0.025]);
   const accentScale = useTransform(progress, [enterStart, enterEnd], [1.16, 1]);
@@ -118,8 +118,8 @@ export function HowWeHelp() {
             <div className="mt-12 h-1 w-20 rounded-full bg-gradient-to-r from-brand-blue to-brand-yellow" />
           </motion.div>
 
-          <div className="relative min-h-[250vh]">
-            <div className="sticky top-1/2 h-[min(560px,calc(100svh-9rem))] min-h-[430px] -translate-y-1/2 md:h-[min(600px,calc(100svh-10rem))] md:min-h-[500px]">
+          <div className="relative min-h-[320vh]">
+            <div className="sticky top-[44%] h-[min(560px,calc(100svh-9rem))] min-h-[430px] -translate-y-1/2 md:top-[46%] md:h-[min(600px,calc(100svh-10rem))] md:min-h-[500px]">
               {steps.map((step, index) => (
                 <ServiceCard
                   key={step.number}
