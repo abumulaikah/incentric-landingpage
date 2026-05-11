@@ -45,7 +45,7 @@ function ServiceCard({
   return (
     <motion.article
       style={{ scale, y, top: index * 12, zIndex: index + 10 }}
-      className="absolute inset-x-0 top-0 grid min-h-[500px] overflow-hidden rounded-[1.75rem] border border-white/12 bg-slate-950 p-7 text-white shadow-[0_34px_110px_rgba(2,6,23,0.34)] md:grid-cols-[1fr_0.82fr] md:p-10"
+      className="absolute inset-x-0 top-0 grid h-full overflow-hidden rounded-[1.75rem] border border-white/12 bg-slate-950 p-6 text-white shadow-[0_34px_110px_rgba(2,6,23,0.34)] md:grid-cols-[1fr_0.82fr] md:p-10"
     >
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(255,255,255,0.12),transparent_34%),linear-gradient(135deg,#020617_0%,#0f172a_54%,#111827_100%)]" />
       <div className="absolute right-[-12%] top-[-28%] h-[420px] w-[420px] rounded-full blur-[100px]" style={{ backgroundColor: step.accent, opacity: 0.2 }} />
@@ -53,19 +53,19 @@ function ServiceCard({
 
       <div className="relative z-10 flex flex-col justify-between gap-12">
         <div>
-          <p className="mb-6 text-xs font-black uppercase tracking-[0.32em] text-white/60">
+          <p className="mb-4 text-xs font-black uppercase tracking-[0.32em] text-white/60 md:mb-6">
             / {step.number}
           </p>
-          <h3 className="max-w-2xl text-3xl font-black leading-tight tracking-tight text-white md:text-5xl">
+          <h3 className="max-w-2xl text-2xl font-black leading-tight tracking-tight text-white sm:text-3xl md:text-5xl">
             {step.title}
           </h3>
         </div>
-        <p className="max-w-xl text-base leading-relaxed text-slate-300 md:text-xl">
+        <p className="max-w-xl text-sm leading-relaxed text-slate-300 sm:text-base md:text-xl">
           {step.description}
         </p>
       </div>
 
-      <div className="relative z-10 mt-10 flex min-h-[240px] items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] md:mt-0">
+      <div className="relative z-10 mt-6 flex min-h-[160px] items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] sm:min-h-[210px] md:mt-0 md:min-h-[240px]">
         <motion.div
           style={{ scale: accentScale, y: accentY }}
           className="relative aspect-square w-full max-w-[320px] rounded-full bg-white/[0.04]"
@@ -119,7 +119,7 @@ export function HowWeHelp() {
           </motion.div>
 
           <div className="relative min-h-[250vh]">
-            <div className="sticky top-32 h-[620px] md:top-36 md:h-[640px]">
+            <div className="sticky top-24 h-[calc(100svh-7.5rem)] min-h-[480px] max-h-[620px] md:top-28 md:h-[calc(100svh-8.5rem)] md:min-h-[520px] md:max-h-[640px]">
               {steps.map((step, index) => (
                 <ServiceCard
                   key={step.number}
