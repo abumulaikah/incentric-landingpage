@@ -38,45 +38,32 @@ function ServiceCard({
   const targetScale = 1 - (steps.length - index - 1) * 0.04;
   const start = index * 0.25;
   const scale = useTransform(progress, [start, 1], [1, targetScale]);
-  const accentScale = useTransform(progress, [start, Math.min(start + 0.18, 1)], [1.12, 1]);
-  const accentY = useTransform(progress, [start, Math.min(start + 0.18, 1)], [28, 0]);
 
   return (
     <div className="sticky top-0 flex h-screen items-center justify-center">
       <motion.article
         style={{ scale, top: index * 30, zIndex: index + 1, transformOrigin: "top center" }}
-        className="relative grid h-[min(620px,calc(100svh-7rem))] min-h-[460px] w-full overflow-hidden rounded-[1.75rem] border border-white/12 bg-slate-950 p-6 text-white shadow-[0_34px_110px_rgba(2,6,23,0.34)] sm:min-h-[500px] md:h-[min(640px,calc(100svh-8rem))] md:grid-cols-[1fr_0.82fr] md:p-10 lg:min-h-[520px]"
+        className="relative flex h-[min(620px,calc(100svh-7rem))] min-h-[460px] w-full overflow-hidden rounded-[1.75rem] border border-white/12 bg-slate-950 p-8 text-white shadow-[0_34px_110px_rgba(2,6,23,0.34)] sm:min-h-[500px] md:h-[min(640px,calc(100svh-8rem))] md:p-12 lg:min-h-[520px]"
       >
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(255,255,255,0.12),transparent_34%),linear-gradient(135deg,#020617_0%,#0f172a_54%,#111827_100%)]" />
         <div className="absolute right-[-12%] top-[-28%] h-[420px] w-[420px] rounded-full blur-[100px]" style={{ backgroundColor: step.accent, opacity: 0.2 }} />
         <div className="absolute bottom-0 left-0 h-px w-full bg-gradient-to-r from-transparent via-white/30 to-transparent" />
 
-        <div className="relative z-10 flex min-h-0 flex-col justify-between gap-8 md:gap-12">
-          <div>
-            <p className="mb-4 text-xs font-black uppercase tracking-[0.32em] text-white/60 md:mb-6">
-              / {step.number}
-            </p>
-            <h3 className="max-w-2xl text-2xl font-black leading-tight tracking-tight text-white sm:text-3xl md:text-4xl lg:text-5xl">
+        <div className="relative z-10 flex min-h-0 w-full flex-col justify-between gap-10">
+          <div className="relative pt-10 md:pt-14">
+            <span className="pointer-events-none absolute -left-3 -top-6 select-none text-[8rem] font-bold leading-none tracking-tight text-slate-400/30 sm:text-[10rem] md:-top-10 md:text-[13rem]">
+              {step.number}
+            </span>
+            <h3 className="relative z-10 max-w-2xl text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl md:text-5xl lg:text-6xl">
               {step.title}
             </h3>
           </div>
-          <p className="max-w-xl text-sm leading-relaxed text-slate-300 sm:text-base md:text-lg lg:text-xl">
-            {step.description}
-          </p>
-        </div>
-
-        <div className="relative z-10 mt-6 flex min-h-[150px] items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] sm:min-h-[190px] md:mt-0 md:min-h-[240px]">
-          <motion.div
-            style={{ scale: accentScale, y: accentY }}
-            className="relative aspect-square w-[min(72vw,300px)] max-w-[320px] rounded-full bg-white/[0.04] md:w-full"
-          >
-            <div className="absolute inset-[10%] rounded-full border-2 border-white/15" />
-            <div className="absolute inset-[26%] rounded-full" style={{ backgroundColor: step.accent }} />
-            <div className="absolute left-1/2 top-1/2 h-[112%] w-4 -translate-x-1/2 -translate-y-1/2 rotate-45 rounded-full bg-white/80 sm:w-5" />
-            <span className="absolute bottom-5 left-5 text-6xl font-black tracking-tight text-white/12 sm:bottom-7 sm:left-7 sm:text-7xl">
-              {step.number}
-            </span>
-          </motion.div>
+          <div>
+            <div className="mb-7 h-1 w-16 rounded-full" style={{ backgroundColor: step.accent }} />
+            <p className="max-w-2xl text-base leading-relaxed text-slate-300 md:text-lg lg:text-xl">
+              {step.description}
+            </p>
+          </div>
         </div>
       </motion.article>
     </div>
