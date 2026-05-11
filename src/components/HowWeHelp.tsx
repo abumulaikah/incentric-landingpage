@@ -42,14 +42,15 @@ function ServiceCard({
   const accentY = useTransform(progress, [start, Math.min(start + 0.18, 1)], [28, 0]);
 
   return (
-    <div className="sticky top-0 flex h-screen items-start pt-20 lg:pt-24">
+    <div className="sticky top-0 flex h-screen items-center justify-center">
       <motion.article
         style={{
           scale,
-          top: `calc(-2vh + ${index * 30}px)`,
+          top: index * 30,
+          zIndex: index + 1,
           transformOrigin: "top center",
         }}
-        className="relative grid h-[min(620px,calc(100svh-6rem))] min-h-[460px] w-full overflow-hidden rounded-[1.75rem] border border-white/12 bg-slate-950 p-6 text-white shadow-[0_34px_110px_rgba(2,6,23,0.34)] sm:min-h-[500px] md:h-[min(640px,calc(100svh-7rem))] md:grid-cols-[1fr_0.82fr] md:p-10 lg:min-h-[520px]"
+        className="relative grid h-[min(620px,calc(100svh-7rem))] min-h-[460px] w-full overflow-hidden rounded-[1.75rem] border border-white/12 bg-slate-950 p-6 text-white shadow-[0_34px_110px_rgba(2,6,23,0.34)] sm:min-h-[500px] md:h-[min(640px,calc(100svh-8rem))] md:grid-cols-[1fr_0.82fr] md:p-10 lg:min-h-[520px]"
       >
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(255,255,255,0.12),transparent_34%),linear-gradient(135deg,#020617_0%,#0f172a_54%,#111827_100%)]" />
         <div className="absolute right-[-12%] top-[-28%] h-[420px] w-[420px] rounded-full blur-[100px]" style={{ backgroundColor: step.accent, opacity: 0.2 }} />
@@ -95,7 +96,7 @@ export function HowWeHelp() {
   });
 
   return (
-    <section id="services" className="relative bg-white px-6 py-20 scroll-mt-28 lg:px-12 lg:py-28">
+    <section id="services" className="relative bg-white px-6 py-16 scroll-mt-28 lg:px-12 lg:py-24">
       <div className="absolute right-0 top-0 h-1/2 w-1/3 rounded-bl-full bg-gradient-to-bl from-brand-blue/8 to-transparent blur-3xl" />
       <div className="absolute bottom-1/4 left-0 h-1/4 w-1/4 rounded-tr-full bg-gradient-to-tr from-brand-yellow/8 to-transparent blur-3xl" />
 
