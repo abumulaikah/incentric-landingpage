@@ -1,5 +1,6 @@
-import { motion, AnimatePresence } from "motion/react";
-import { useEffect, useState } from "react";
+import { motion, AnimatePresence, useScroll, useTransform } from "motion/react";
+import type { MotionValue } from "motion/react";
+import { useEffect, useRef, useState } from "react";
 import { useReducedEffects } from "../hooks/useReducedEffects";
 
 const centerData = { id: 'center', title: 'Loyal Customer', description: 'The absolute core of the business. By aligning every facet around the customer, we achieve unparalleled advocacy and sustainable retention.' };
@@ -14,6 +15,27 @@ const outerRingData = [
   { id: 'o0', title: 'Culture', description: 'Creating a positive work environment through the implementation of "Culture Foundations" and Employee Engagement programs.' },
   { id: 'o1', title: 'Management', description: 'Managing goals and metrics as key success indicators using the "Sprint Break Cycle" and "Sprint Productivity System."' },
   { id: 'o2', title: 'Leadership', description: 'Developing leaders with "Conscious Leadership" who are capable of influencing teams to deliver WOW Experiences.' },
+];
+
+const helpSteps = [
+  {
+    eyebrow: "01",
+    title: "Business & Customer Diagnosis",
+    description: "We identify friction points, blind spots, and improvement opportunities across customer experience, service delivery, and business operations.",
+    color: "#014FCF",
+  },
+  {
+    eyebrow: "02",
+    title: "Strategy & Experience Design",
+    description: "Together with owners and teams, we shape clearer, more consistent customer experiences that stay relevant to the business goals.",
+    color: "#FFBC00",
+  },
+  {
+    eyebrow: "03",
+    title: "Implementation & Growth Improvement",
+    description: "We guide implementation so change does not stay on paper, but improves customer loyalty, service quality, and business growth.",
+    color: "#E7EAEE",
+  },
 ];
 
 const polarToCartesian = (cx: number, cy: number, r: number, angle: number) => {
@@ -263,6 +285,123 @@ function Meteors({ number = 5 }: { number?: number }) {
   );
 }
 
+function HelpStepCard({
+  step,
+  i,
+  progress,
+  range,
+  targetScale,
+}: {
+  step: typeof helpSteps[number];
+  i: number;
+  progress: MotionValue<number>;
+  range: [number, number];
+  targetScale: number;
+}) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: cardRef,
+    offset: ["start end", "start start"],
+  });
+
+  const scale = useTransform(progress, range, [1, targetScale]);
+  const visualScale = useTransform(scrollYProgress, [0, 1], [1.14, 1]);
+  const visualY = useTransform(scrollYProgress, [0, 1], [40, 0]);
+  const isLightCard = step.color === "#E7EAEE";
+
+  return (
+    <div ref={cardRef} className="h-[78vh] min-h-[560px] md:h-[86vh]">
+      <motion.article
+        style={{ scale, top: `calc(5rem + ${i * 18}px)` }}
+        className={`sticky mx-auto grid w-full max-w-6xl overflow-hidden rounded-[1.75rem] border p-6 shadow-[0_30px_90px_rgba(0,0,0,0.28)] md:grid-cols-[1fr_0.9fr] md:p-10 ${
+          isLightCard ? "border-slate-300/40 text-slate-950" : "border-white/15 text-white"
+        }`}
+      >
+        <div className="absolute inset-0" style={{ backgroundColor: step.color }} />
+        <div className={`absolute inset-0 ${isLightCard ? "bg-white/55" : "bg-slate-950/10"}`} />
+
+        <div className="relative z-10 flex min-h-[280px] flex-col justify-between gap-10 md:min-h-[420px]">
+          <div>
+            <p className={`mb-6 text-xs font-black uppercase tracking-[0.32em] ${isLightCard ? "text-brand-blue" : "text-white/70"}`}>
+              {step.eyebrow}
+            </p>
+            <h3 className={`max-w-2xl text-3xl font-black leading-tight tracking-tight md:text-5xl ${isLightCard ? "text-slate-950" : "text-white"}`}>
+              {step.title}
+            </h3>
+          </div>
+          <p className={`max-w-xl text-base leading-relaxed md:text-xl ${isLightCard ? "text-slate-700" : "text-white/78"}`}>
+            {step.description}
+          </p>
+        </div>
+
+        <div className="relative z-10 mt-8 flex items-center justify-center overflow-hidden rounded-2xl border border-white/20 bg-white/10 md:mt-0">
+          <motion.div
+            style={{ scale: visualScale, y: visualY }}
+            className={`relative aspect-square w-full max-w-[360px] rounded-full border ${
+              isLightCard ? "border-brand-blue/20 bg-brand-blue/10" : "border-white/20 bg-white/10"
+            }`}
+          >
+            <div className={`absolute inset-[12%] rounded-full border-2 ${isLightCard ? "border-brand-blue/25" : "border-white/25"}`} />
+            <div className={`absolute inset-[27%] rounded-full ${isLightCard ? "bg-brand-blue" : "bg-white"}`} />
+            <div className={`absolute left-1/2 top-1/2 h-[120%] w-6 -translate-x-1/2 -translate-y-1/2 rotate-45 rounded-full ${isLightCard ? "bg-brand-yellow" : "bg-brand-yellow"}`} />
+            <span className={`absolute bottom-8 left-8 text-7xl font-black tracking-tight ${isLightCard ? "text-brand-blue/15" : "text-white/15"}`}>
+              {step.eyebrow}
+            </span>
+          </motion.div>
+        </div>
+      </motion.article>
+    </div>
+  );
+}
+
+function HowWeHelp() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"],
+  });
+
+  return (
+    <div ref={containerRef} className="relative z-10 mt-16 md:mt-28">
+      <div className="mx-auto mb-12 max-w-4xl text-center md:mb-18">
+        <motion.p
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-5 text-xs font-black uppercase tracking-[0.32em] text-brand-yellow"
+        >
+          How We Help
+        </motion.p>
+        <motion.h2
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.08 }}
+          className="text-4xl font-black leading-tight tracking-tight text-white md:text-6xl"
+        >
+          From diagnosis to measurable growth.
+        </motion.h2>
+      </div>
+
+      <div className="relative">
+        {helpSteps.map((step, i) => {
+          const targetScale = 1 - (helpSteps.length - i) * 0.035;
+          return (
+            <HelpStepCard
+              key={step.title}
+              step={step}
+              i={i}
+              progress={scrollYProgress}
+              range={[i * 0.2, 1]}
+              targetScale={targetScale}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export function Framework() {
   const reduceEffects = useReducedEffects();
 
@@ -289,6 +428,7 @@ export function Framework() {
 
       <div className="max-w-7xl mx-auto relative z-10 pt-12">
         <InteractiveWheel />
+        <HowWeHelp />
       </div>
     </section>
   );
