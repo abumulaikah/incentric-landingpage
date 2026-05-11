@@ -8,21 +8,21 @@ const steps = [
     title: "Business & Customer Diagnosis",
     description:
       "We help identify key pain points, blind spots, and improvement opportunities across customer experience, service delivery, and business operations.",
-    color: "#014FCF",
+    accent: "#014FCF",
   },
   {
     number: "02",
     title: "Strategy & Experience Design",
     description:
       "Together with business owners and teams, we design clearer, more consistent customer strategies and experiences that stay relevant to the business goals.",
-    color: "#FFBC00",
+    accent: "#FFBC00",
   },
   {
     number: "03",
     title: "Implementation & Growth Improvement",
     description:
       "We guide implementation so change does not stay on paper, but improves customer loyalty, service quality, and sustainable business growth.",
-    color: "#E7EAEE",
+    accent: "#8FB7FF",
   },
 ];
 
@@ -46,45 +46,40 @@ function ServiceCard({
   const scale = useTransform(progress, [index * 0.2, 1], [1, targetScale]);
   const accentScale = useTransform(scrollYProgress, [0, 1], [1.18, 1]);
   const accentY = useTransform(scrollYProgress, [0, 1], [36, 0]);
-  const isYellow = step.color === "#FFBC00";
-  const isLight = step.color === "#E7EAEE";
 
   return (
-    <div ref={cardRef} className="h-[76vh] min-h-[520px] md:h-[82vh]">
+    <div ref={cardRef} className="h-[82vh] min-h-[620px] md:h-[88vh]">
       <motion.article
-        style={{ scale, top: `calc(6rem + ${index * 18}px)` }}
-        className={`sticky grid min-h-[440px] overflow-hidden rounded-[1.75rem] border p-7 shadow-[0_28px_80px_rgba(15,23,42,0.16)] md:grid-cols-[1fr_0.82fr] md:p-10 ${
-          isLight ? "border-slate-300 text-slate-950" : "border-white/20 text-white"
-        }`}
+        style={{ scale, top: `calc(5.25rem + ${index * 14}px)`, zIndex: index + 1 }}
+        className="sticky grid min-h-[500px] overflow-hidden rounded-[1.75rem] border border-white/12 bg-slate-950 p-7 text-white shadow-[0_34px_110px_rgba(2,6,23,0.34)] md:grid-cols-[1fr_0.82fr] md:p-10"
       >
-        <div className="absolute inset-0" style={{ backgroundColor: step.color }} />
-        <div className={`absolute inset-0 ${isYellow ? "bg-white/10" : isLight ? "bg-white/55" : "bg-slate-950/8"}`} />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(255,255,255,0.12),transparent_34%),linear-gradient(135deg,#020617_0%,#0f172a_54%,#111827_100%)]" />
+        <div className="absolute right-[-12%] top-[-28%] h-[420px] w-[420px] rounded-full blur-[100px]" style={{ backgroundColor: step.accent, opacity: 0.2 }} />
+        <div className="absolute bottom-0 left-0 h-px w-full bg-gradient-to-r from-transparent via-white/30 to-transparent" />
 
         <div className="relative z-10 flex flex-col justify-between gap-12">
           <div>
-            <p className={`mb-6 text-xs font-black uppercase tracking-[0.32em] ${isLight ? "text-brand-blue" : "text-white/75"}`}>
+            <p className="mb-6 text-xs font-black uppercase tracking-[0.32em] text-white/60">
               / {step.number}
             </p>
-            <h3 className={`max-w-2xl text-3xl font-black leading-tight tracking-tight md:text-5xl ${isLight ? "text-slate-950" : "text-white"}`}>
+            <h3 className="max-w-2xl text-3xl font-black leading-tight tracking-tight text-white md:text-5xl">
               {step.title}
             </h3>
           </div>
-          <p className={`max-w-xl text-base leading-relaxed md:text-xl ${isLight ? "text-slate-700" : "text-white/82"}`}>
+          <p className="max-w-xl text-base leading-relaxed text-slate-300 md:text-xl">
             {step.description}
           </p>
         </div>
 
-        <div className="relative z-10 mt-10 flex min-h-[220px] items-center justify-center overflow-hidden rounded-2xl border border-white/20 bg-white/10 md:mt-0">
+        <div className="relative z-10 mt-10 flex min-h-[240px] items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] md:mt-0">
           <motion.div
             style={{ scale: accentScale, y: accentY }}
-            className={`relative aspect-square w-full max-w-[320px] rounded-full ${
-              isLight ? "bg-brand-blue/10" : "bg-white/10"
-            }`}
+            className="relative aspect-square w-full max-w-[320px] rounded-full bg-white/[0.04]"
           >
-            <div className={`absolute inset-[10%] rounded-full border-2 ${isLight ? "border-brand-blue/25" : "border-white/25"}`} />
-            <div className={`absolute inset-[26%] rounded-full ${isLight ? "bg-brand-blue" : "bg-white/90"}`} />
-            <div className="absolute left-1/2 top-1/2 h-[118%] w-5 -translate-x-1/2 -translate-y-1/2 rotate-45 rounded-full bg-brand-yellow" />
-            <span className={`absolute bottom-7 left-7 text-7xl font-black tracking-tight ${isLight ? "text-brand-blue/15" : "text-white/18"}`}>
+            <div className="absolute inset-[10%] rounded-full border-2 border-white/15" />
+            <div className="absolute inset-[26%] rounded-full" style={{ backgroundColor: step.accent }} />
+            <div className="absolute left-1/2 top-1/2 h-[118%] w-5 -translate-x-1/2 -translate-y-1/2 rotate-45 rounded-full bg-white/80" />
+            <span className="absolute bottom-7 left-7 text-7xl font-black tracking-tight text-white/12">
               {step.number}
             </span>
           </motion.div>
@@ -127,7 +122,7 @@ export function HowWeHelp() {
             <div className="mt-12 h-1 w-20 rounded-full bg-gradient-to-r from-brand-blue to-brand-yellow" />
           </motion.div>
 
-          <div className="relative">
+          <div className="relative pb-[28vh]">
             {steps.map((step, index) => (
               <ServiceCard
                 key={step.number}
