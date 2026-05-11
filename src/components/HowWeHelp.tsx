@@ -44,7 +44,7 @@ function ServiceCard({
 
   return (
     <motion.article
-      style={{ scale, y, top: index * 12, zIndex: index + 10 }}
+      style={{ scale, y, top: index * 10, zIndex: index + 10 }}
       className="absolute inset-x-0 top-0 grid h-full overflow-hidden rounded-[1.75rem] border border-white/12 bg-slate-950 p-6 text-white shadow-[0_34px_110px_rgba(2,6,23,0.34)] md:grid-cols-[1fr_0.82fr] md:p-10"
     >
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(255,255,255,0.12),transparent_34%),linear-gradient(135deg,#020617_0%,#0f172a_54%,#111827_100%)]" />
@@ -119,7 +119,7 @@ export function HowWeHelp() {
           </motion.div>
 
           <div className="relative min-h-[250vh]">
-            <div className="sticky top-24 h-[calc(100svh-7.5rem)] min-h-[480px] max-h-[620px] md:top-28 md:h-[calc(100svh-8.5rem)] md:min-h-[520px] md:max-h-[640px]">
+            <div className="sticky top-1/2 h-[min(560px,calc(100svh-9rem))] min-h-[430px] -translate-y-1/2 md:h-[min(600px,calc(100svh-10rem))] md:min-h-[500px]">
               {steps.map((step, index) => (
                 <ServiceCard
                   key={step.number}
