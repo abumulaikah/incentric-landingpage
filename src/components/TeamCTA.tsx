@@ -28,7 +28,7 @@ const team: TeamMember[] = [
   { id: 6, name: "Yusuf Siddiq", role: "CX Researcher", image: getTeamImage("yusuf.jpg") },
   { id: 7, name: "Hidayatullah", role: "Tech Support", image: getTeamImage("dayat.jpg") },
   { id: 8, name: "Akbar Pratama", role: "Visual Designer", image: getTeamImage("akbar.jpg") },
-  { id: 9, name: "Azis", role: "Videographer", image: getTeamImage("azis.jpg") },
+  { id: 9, name: "Safrudin Azis", role: "Videographer", image: getTeamImage("azis.jpg") },
   { id: 10, name: "Dhimas Bekti", role: "Video Editor", image: getTeamImage("dhimas.jpg") },
   { id: 11, name: "Putri Dewi", role: "Client Relation Officer", image: getTeamImage("putri.jpg") },
   { id: 12, name: "Ambarwati", role: "Operations Assistant", image: getTeamImage("ambar.jpg") },
