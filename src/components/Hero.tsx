@@ -321,7 +321,7 @@ export function Hero() {
   return (
     <section
       id="top"
-      className="relative min-h-[90vh] flex flex-col justify-center items-center text-center px-6 py-20 overflow-hidden bg-slate-950 scroll-mt-28"
+      className="relative min-h-[90vh] flex flex-col justify-center items-center text-center px-6 py-20 overflow-hidden bg-[linear-gradient(180deg,#0b4b95_0%,#003a7d_42%,#002b61_100%)] scroll-mt-28"
     >
       {/* Background abstract elements - Gradient Orbs instead of 3D Globe */}
       <div className="absolute top-1/4 left-1/4 w-[280px] h-[280px] md:w-[500px] md:h-[500px] bg-brand-blue/25 md:bg-brand-blue/30 rounded-full blur-[70px] md:blur-[120px] pointer-events-none md:mix-blend-screen" />
