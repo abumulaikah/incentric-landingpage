@@ -7,25 +7,32 @@ interface TeamMember {
   name: string;
   role: string;
   image: string;
-  size: "small" | "medium" | "large";
 }
 
+const teamImages = import.meta.glob("../assets/team/*.jpg", {
+  eager: true,
+  import: "default",
+}) as Record<string, string | { src: string }>;
+
+const getTeamImage = (fileName: string) => {
+  const image = teamImages[`../assets/team/${fileName}`];
+  return typeof image === "string" ? image : image.src;
+};
+
 const team: TeamMember[] = [
-  { id: 1, name: "Alex Bennett", role: "Founder & CEO", image: "https://xsgames.co/randomusers/assets/avatars/male/1.jpg", size: "large" },
-  { id: 2, name: "Sarah Chen", role: "Head of CX", image: "https://xsgames.co/randomusers/assets/avatars/female/2.jpg", size: "medium" },
-  { id: 3, name: "Michael Ross", role: "Behavioral Lead", image: "https://xsgames.co/randomusers/assets/avatars/male/3.jpg", size: "small" },
-  { id: 4, name: "Elena Petrova", role: "Design Director", image: "https://xsgames.co/randomusers/assets/avatars/female/4.jpg", size: "medium" },
-  { id: 5, name: "David Okafor", role: "UX Strategist", image: "https://xsgames.co/randomusers/assets/avatars/male/5.jpg", size: "small" },
-  { id: 6, name: "Maya Lin", role: "Service Designer", image: "https://xsgames.co/randomusers/assets/avatars/female/6.jpg", size: "medium" },
-  { id: 7, name: "James Wilson", role: "Product Manager", image: "https://xsgames.co/randomusers/assets/avatars/male/7.jpg", size: "large" },
-  { id: 8, name: "Sofia Gaitan", role: "Customer Insights", image: "https://xsgames.co/randomusers/assets/avatars/female/8.jpg", size: "small" },
-  { id: 9, name: "Kenzo Tanaka", role: "Data Scientist", image: "https://xsgames.co/randomusers/assets/avatars/male/9.jpg", size: "medium" },
-  { id: 10, name: "Amara Singh", role: "CX Analyst", image: "https://xsgames.co/randomusers/assets/avatars/female/10.jpg", size: "small" },
-  { id: 11, name: "Liam O'Connor", role: "Creative Producer", image: "https://xsgames.co/randomusers/assets/avatars/male/11.jpg", size: "medium" },
-  { id: 12, name: "Isabella Vucci", role: "UI Designer", image: "https://xsgames.co/randomusers/assets/avatars/female/12.jpg", size: "small" },
-  { id: 13, name: "Gabriel Souza", role: "Motion Architect", image: "https://xsgames.co/randomusers/assets/avatars/male/13.jpg", size: "medium" },
-  { id: 14, name: "Hanna Schmidt", role: "Process Design", image: "https://xsgames.co/randomusers/assets/avatars/female/14.jpg", size: "small" },
-  { id: 15, name: "Noah Williams", role: "Client Partner", image: "https://xsgames.co/randomusers/assets/avatars/male/15.jpg", size: "medium" },
+  { id: 1, name: "Arisdiansah", role: "CEO", image: getTeamImage("arisdiansah.jpg") },
+  { id: 2, name: "Yana Sandhi", role: "COO", image: getTeamImage("yana.jpg") },
+  { id: 3, name: "Ronald Healtha", role: "Service Experience Consultant", image: getTeamImage("ronald.jpg") },
+  { id: 4, name: "Wahyu Teguh", role: "CRM Ecosystem Designer", image: getTeamImage("wahyu.jpg") },
+  { id: 5, name: "Al Fitra N", role: "CX Analyst", image: getTeamImage("fitra.jpg") },
+  { id: 6, name: "Yusuf Siddiq", role: "CX Researcher", image: getTeamImage("yusuf.jpg") },
+  { id: 7, name: "Hidayatullah", role: "Tech Support", image: getTeamImage("dayat.jpg") },
+  { id: 8, name: "Akbar Pratama", role: "Visual Designer", image: getTeamImage("akbar.jpg") },
+  { id: 9, name: "Azis", role: "Videographer", image: getTeamImage("azis.jpg") },
+  { id: 10, name: "Dhimas Bekti", role: "Video Editor", image: getTeamImage("dhimas.jpg") },
+  { id: 11, name: "Putri Dewi", role: "Client Relation Officer", image: getTeamImage("putri.jpg") },
+  { id: 12, name: "Ambarwati", role: "Operations Assistant", image: getTeamImage("ambar.jpg") },
+  { id: 13, name: "Sheis Aisyah", role: "Marketing Officer", image: getTeamImage("sheis.jpg") },
 ];
 
 function TeamCard({ member, className, reduceEffects }: { member: TeamMember, className?: string, reduceEffects: boolean }) {
