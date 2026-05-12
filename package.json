@@ -8,6 +8,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "clean": "astro sync && node -e \"fs.rmSync('dist',{recursive:true,force:true})\"",
+    "import:wp": "node scripts/import-wordpress-posts.mjs",
     "lint": "astro check"
   },
   "dependencies": {
@@ -33,6 +34,7 @@
     "@types/react-dom": "^19.0.1",
     "autoprefixer": "^10.4.21",
     "tailwindcss": "^4.1.14",
+    "turndown": "^7.2.4",
     "tsx": "^4.21.0",
     "typescript": "~5.8.2"
   }
