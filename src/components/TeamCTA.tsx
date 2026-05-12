@@ -85,7 +85,8 @@ function TeamCard({ member, className, reduceEffects }: { member: TeamMember, cl
 export function TeamCTA() {
   const reduceEffects = useReducedEffects();
   const firstRow = [...team, ...team];
-  const secondRow = [...team.slice().reverse(), ...team.slice().reverse()];
+  const reversedTeam = team.slice().reverse();
+  const secondRow = [...reversedTeam, ...reversedTeam];
 
   return (
     <section id="team" className="py-24 lg:py-40 bg-[#e7eaee] relative overflow-hidden scroll-mt-28">
