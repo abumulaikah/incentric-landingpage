@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import { ArrowRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import grainOverlay from "../assets/grain-overlay.png";
 import { useReducedEffects } from "../hooks/useReducedEffects";
 
 const words = [
@@ -321,11 +322,12 @@ export function Hero() {
   return (
     <section
       id="top"
-      className="relative min-h-[90vh] flex flex-col justify-center items-center text-center px-6 py-20 overflow-hidden bg-[linear-gradient(180deg,#0b4b95_0%,#003a7d_42%,#002b61_100%)] scroll-mt-28"
+      className="relative min-h-[90vh] flex flex-col justify-center items-center text-center px-6 py-20 overflow-hidden bg-slate-950 bg-[linear-gradient(180deg,#111d2d_0%,#10294d_48%,#0b326f_100%)] scroll-mt-28"
     >
-      {/* Background abstract elements - Gradient Orbs instead of 3D Globe */}
-      <div className="absolute top-1/4 left-1/4 w-[280px] h-[280px] md:w-[500px] md:h-[500px] bg-brand-blue/25 md:bg-brand-blue/30 rounded-full blur-[70px] md:blur-[120px] pointer-events-none md:mix-blend-screen" />
-      <div className="absolute bottom-1/4 right-1/4 w-[260px] h-[260px] md:w-[500px] md:h-[500px] bg-brand-yellow/15 md:bg-brand-yellow/20 rounded-full blur-[70px] md:blur-[120px] pointer-events-none md:mix-blend-screen" />
+      <div
+        className="absolute inset-0 z-[1] pointer-events-none bg-repeat opacity-5 mix-blend-overlay"
+        style={{ backgroundImage: `url(${grainOverlay.src})` }}
+      />
 
       {/* Interactive Dots Layer */}
       {!reduceEffects && <InteractiveDots />}

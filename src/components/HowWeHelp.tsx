@@ -43,23 +43,23 @@ function ServiceCard({
     <div className="sticky top-0 flex h-screen items-center justify-center">
       <motion.article
         style={{ scale, top: index * 30, zIndex: index + 1, transformOrigin: "top center" }}
-        className="relative flex h-[min(620px,calc(100svh-7rem))] min-h-[460px] w-full overflow-hidden rounded-[1.75rem] border border-white/12 bg-slate-950 p-8 text-white shadow-[0_34px_110px_rgba(2,6,23,0.34)] sm:min-h-[500px] md:h-[min(640px,calc(100svh-8rem))] md:p-12 lg:min-h-[520px]"
+        className="relative flex h-[min(520px,calc(100svh-8rem))] min-h-[360px] w-full overflow-hidden rounded-[1.75rem] border border-white/12 bg-slate-950 p-7 text-white shadow-[0_34px_110px_rgba(2,6,23,0.34)] sm:min-h-[420px] sm:p-8 md:h-[min(560px,calc(100svh-9rem))] md:p-12 lg:min-h-[460px]"
       >
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(255,255,255,0.12),transparent_34%),linear-gradient(135deg,#020617_0%,#0f172a_54%,#111827_100%)]" />
         <div className="absolute right-[-12%] top-[-28%] h-[420px] w-[420px] rounded-full blur-[100px]" style={{ backgroundColor: step.accent, opacity: 0.2 }} />
         <div className="absolute bottom-0 left-0 h-px w-full bg-gradient-to-r from-transparent via-white/30 to-transparent" />
 
-        <div className="relative z-10 flex min-h-0 w-full flex-col justify-between gap-10">
-          <div className="relative pt-10 md:pt-14">
-            <span className="pointer-events-none absolute -left-3 -top-6 select-none text-[8rem] font-bold leading-none tracking-tight text-slate-400/30 sm:text-[10rem] md:-top-10 md:text-[13rem]">
+        <div className="relative z-10 flex min-h-0 w-full flex-col justify-center gap-8 sm:justify-between sm:gap-10">
+          <div className="relative pt-8 md:pt-14">
+            <span className="pointer-events-none absolute -left-3 -top-6 select-none text-[7.5rem] font-bold leading-none tracking-tight text-slate-400/30 sm:text-[10rem] md:-top-10 md:text-[13rem]">
               {step.number}
             </span>
-            <h3 className="relative z-10 max-w-2xl text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl md:text-5xl lg:text-6xl">
+            <h3 className="relative z-10 max-w-2xl text-[2.35rem] font-bold leading-[1.05] tracking-tight text-white sm:text-4xl md:text-5xl lg:text-6xl">
               {step.title}
             </h3>
           </div>
           <div>
-            <div className="mb-7 h-1 w-16 rounded-full" style={{ backgroundColor: step.accent }} />
+            <div className="mb-5 h-1 w-16 rounded-full md:mb-7" style={{ backgroundColor: step.accent }} />
             <p className="max-w-2xl text-base leading-relaxed text-slate-300 md:text-lg lg:text-xl">
               {step.description}
             </p>

@@ -1,4 +1,5 @@
 import { motion } from "motion/react";
+import grainOverlay from "../assets/grain-overlay.png";
 
 const testimonials = [
   {
@@ -40,9 +41,12 @@ const testimonials = [
 
 export function Testimonials() {
   return (
-    <section className="py-32 bg-slate-50 relative overflow-hidden">
+    <section className="py-32 bg-slate-950 bg-[linear-gradient(180deg,#111d2d_0%,#10294d_48%,#0b326f_100%)] relative overflow-hidden">
       {/* Background accents */}
-      <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:24px_24px]"></div>
+      <div
+        className="absolute inset-0 bg-repeat opacity-5 mix-blend-overlay"
+        style={{ backgroundImage: `url(${grainOverlay.src})` }}
+      />
       
       <div className="container mx-auto px-6 lg:px-12 max-w-7xl relative z-10">
         <div className="text-center mb-24">
@@ -51,18 +55,18 @@ export function Testimonials() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="text-4xl md:text-5xl font-bold tracking-tight mb-6 text-slate-900"
+            className="text-4xl md:text-5xl font-bold tracking-tight mb-6 text-white"
           >
             We're biased.
             <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-blue to-blue-500">Don't listen to us.</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-yellow to-yellow-200">Don't listen to us.</span>
           </motion.h2>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-sm text-slate-500 uppercase tracking-[0.2em] font-bold"
+            className="text-sm text-slate-400 uppercase tracking-[0.2em] font-bold"
           >
             Hear it from our partners
           </motion.p>
@@ -71,7 +75,7 @@ export function Testimonials() {
         <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar relative w-full pt-4 pb-16 -mx-6 px-6 lg:-mx-12 lg:px-12">
           {testimonials.map((item, index) => (
             <div key={index} className="shrink-0 pr-6 md:pr-8 snap-center">
-              <div className="w-[280px] md:w-[340px] aspect-[4/5] rounded-[2rem] overflow-hidden relative group cursor-pointer shadow-xl shadow-slate-300/40 border border-white/40">
+              <div className="w-[280px] md:w-[340px] aspect-[4/5] rounded-[2rem] overflow-hidden relative group cursor-pointer shadow-xl shadow-slate-950/40 border border-white/20">
                 {/* Background Image */}
                 <img src={item.image} alt={item.author} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
 

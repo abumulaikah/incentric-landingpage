@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from "motion/react";
 import { useEffect, useState } from "react";
+import grainOverlay from "../assets/grain-overlay.png";
 import { useReducedEffects } from "../hooks/useReducedEffects";
 
 const centerData = { id: 'center', title: 'Loyal Customer', description: 'The absolute core of the business. By aligning every facet around the customer, we achieve unparalleled advocacy and sustainable retention.' };
@@ -88,7 +89,7 @@ function InteractiveWheel() {
         >
           <h2 className="text-sm font-bold uppercase tracking-[0.3em] text-brand-yellow mb-6">Introducing</h2>
           <p className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight tracking-tight text-white shadow-sm mb-6">
-            The <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-yellow to-yellow-200">WOW</span> Experience Loop
+            The <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-yellow to-yellow-200">WOW</span> Experience Loop<span className="align-super text-sm md:text-base lg:text-lg">™</span>
           </p>
           
           <div className="min-h-[140px] md:min-h-[90px] flex justify-center w-full max-w-2xl px-4">
@@ -122,7 +123,7 @@ function InteractiveWheel() {
                   className="w-full"
                 >
                   <p className="text-slate-400 text-base md:text-lg leading-relaxed">
-                    A continuous framework that aligns your team's culture with your customer's journey. Creating a self-sustaining cycle of unbreakable loyalty.
+                    We created a continuous framework that aligns your team's culture with your customer's journey, building a self-sustaining cycle of unbreakable loyalty.
                   </p>
                 </motion.div>
               )}
@@ -267,10 +268,14 @@ export function Framework() {
   const reduceEffects = useReducedEffects();
 
   return (
-    <section id="framework" className="py-32 px-6 lg:px-12 bg-slate-950 relative overflow-hidden scroll-mt-28">
+    <section id="framework" className="py-32 px-6 lg:px-12 bg-slate-950 bg-[linear-gradient(180deg,#111d2d_0%,#10294d_48%,#0b326f_100%)] relative overflow-hidden scroll-mt-28">
       {/* Deep Space Background */}
-      <div className="absolute inset-0 bg-slate-950 pointer-events-none">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900/40 via-slate-950 to-slate-950"></div>
+      <div className="absolute inset-0 pointer-events-none">
+        <div
+          className="absolute inset-0 bg-repeat opacity-5 mix-blend-overlay"
+          style={{ backgroundImage: `url(${grainOverlay.src})` }}
+        />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white/5 via-transparent to-transparent"></div>
         {/* Star layers */}
         {!reduceEffects && (
           <>
