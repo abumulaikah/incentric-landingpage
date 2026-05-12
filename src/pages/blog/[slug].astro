@@ -1,0 +1,40 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<BaseLayout title={`${post.data.title} | Incentric CX`} description={post.data.description}>
+  <main class="min-h-screen bg-slate-50 px-6 py-24 text-slate-900">
+    <article class="mx-auto max-w-3xl">
+      <a href="/blog/" class="not-prose text-sm font-bold text-brand-blue hover:underline">Back to blog</a>
+      <header class="not-prose mt-8 border-b border-slate-200 pb-10">
+        <p class="text-sm font-medium text-slate-500">
+          {post.data.pubDate.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          })}
+          <span aria-hidden="true"> · </span>
+          {post.data.author}
+        </p>
+        <h1 class="mt-4 text-4xl font-bold tracking-tight md:text-6xl">{post.data.title}</h1>
+        <p class="mt-5 text-lg leading-relaxed text-slate-600">{post.data.description}</p>
+      </header>
+      <div class="mt-10 space-y-6 text-lg leading-relaxed text-slate-700">
+        <Content />
+      </div>
+    </article>
+  </main>
+</BaseLayout>

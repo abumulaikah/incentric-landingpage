@@ -1,25 +1,52 @@
-<<<<<<< HEAD
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Incentric CX Landing Page
 
-# Run and deploy your AI Studio app
+Astro-based landing page with a Markdown blog.
 
-This contains everything you need to run your app locally.
+## Development
 
-View your app in AI Studio: https://ai.studio/apps/3b86a96e-df24-4d68-88e0-9a17d504297b
+Prerequisites:
 
-## Run Locally
+- Node.js
+- npm
 
-**Prerequisites:**  Node.js
+Install dependencies:
 
+```bash
+npm install
+```
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
-=======
-# incentric-landingpage
-landing page incentric
->>>>>>> 18d94c2a613d66132ba247cef2f075d1fca63e27
+Run the local dev server:
+
+```bash
+npm run dev
+```
+
+Build the static site:
+
+```bash
+npm run build
+```
+
+Check Astro and TypeScript diagnostics:
+
+```bash
+npm run lint
+```
+
+## Blog
+
+Blog posts live in `src/content/blog` as Markdown files.
+
+Example:
+
+```md
+---
+title: 'Article title'
+description: 'Short article summary.'
+pubDate: 2026-05-12
+author: 'Incentric'
+draft: false
+---
+
+Article content goes here.
+```

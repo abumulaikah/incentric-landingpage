@@ -103,7 +103,6 @@ export function HowWeHelp() {
             <p className="max-w-md text-lg leading-relaxed text-slate-600">
               We guide business transformation through three practical phases designed to improve loyalty, service quality, and growth.
             </p>
-            <div className="mt-12 h-1 w-20 rounded-full bg-gradient-to-r from-brand-blue to-brand-yellow" />
           </motion.div>
 
           <div className="relative">

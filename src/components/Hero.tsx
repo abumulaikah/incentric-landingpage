@@ -39,10 +39,11 @@ function InteractiveDots() {
     if (!canvas) return;
     const ctx = canvas.getContext("2d", { alpha: true });
     if (!ctx) return;
+    const canvasEl = canvas;
+    const ctxEl = ctx;
 
     let animationFrameId: number;
     let frameCount = 0;
-    const TARGET_FPS = 60;
     const FRAME_SKIP = 1; // Render every frame
 
     // Grid configuration
@@ -61,11 +62,11 @@ function InteractiveDots() {
       gridRef.current.clear();
 
       // Adaptive density based on window size
-      const screenArea = canvas.width * canvas.height;
+      const screenArea = canvasEl.width * canvasEl.height;
       let density = 4000; // Reduced from 2500
 
       // Further reduce for mobile-like devices
-      if (canvas.width < 1024) {
+      if (canvasEl.width < 1024) {
         density = 6000;
       } else if (screenArea > 2000000) {
         density = 3500; // Large screens
@@ -74,8 +75,8 @@ function InteractiveDots() {
       const count = Math.floor(screenArea / density);
 
       for (let i = 0; i < count; i++) {
-        const x = Math.random() * canvas.width;
-        const y = Math.random() * canvas.height;
+        const x = Math.random() * canvasEl.width;
+        const y = Math.random() * canvasEl.height;
         const particle: Particle = {
           x,
           y,
@@ -103,20 +104,20 @@ function InteractiveDots() {
     }
 
     const setCanvasSize = () => {
-      const parent = canvas.parentElement;
+      const parent = canvasEl.parentElement;
       if (parent) {
-        canvas.width = parent.offsetWidth;
-        canvas.height = parent.offsetHeight;
+        canvasEl.width = parent.offsetWidth;
+        canvasEl.height = parent.offsetHeight;
       } else {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        canvasEl.width = window.innerWidth;
+        canvasEl.height = window.innerHeight;
       }
       initParticles();
       rebuildGrid();
     };
 
     const handleMouseMove = (e: MouseEvent) => {
-      const rect = canvas.getBoundingClientRect();
+      const rect = canvasEl.getBoundingClientRect();
       mouseRef.current.x = e.clientX - rect.left;
       mouseRef.current.y = e.clientY - rect.top;
     };
@@ -132,24 +133,12 @@ function InteractiveDots() {
 
     setCanvasSize();
 
-    // Performance: Track FPS
-    let lastTime = performance.now();
-    let fps = 0;
-
     function animate() {
       frameCount++;
 
       // Only render on interval
       if (frameCount % FRAME_SKIP === 0) {
-        // FPS calculation (every 30 frames)
-        if (frameCount % 30 === 0) {
-          const now = performance.now();
-          fps = Math.round(1000 / ((now - lastTime) / 30));
-          lastTime = now;
-        }
-
-        if (!ctx || !canvas) return;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctxEl.clearRect(0, 0, canvasEl.width, canvasEl.height);
 
         const mouseX = mouseRef.current.x;
         const mouseY = mouseRef.current.y;
@@ -163,10 +152,10 @@ function InteractiveDots() {
           p.baseY += Math.sin(p.angle) * p.speed;
 
           // Wrap around screen boundaries
-          if (p.baseX < 0) p.baseX = canvas.width;
-          if (p.baseX > canvas.width) p.baseX = 0;
-          if (p.baseY < 0) p.baseY = canvas.height;
-          if (p.baseY > canvas.height) p.baseY = 0;
+          if (p.baseX < 0) p.baseX = canvasEl.width;
+          if (p.baseX > canvasEl.width) p.baseX = 0;
+          if (p.baseY < 0) p.baseY = canvasEl.height;
+          if (p.baseY > canvasEl.height) p.baseY = 0;
 
           const dx = mouseX - p.baseX;
           const dy = mouseY - p.baseY;
@@ -194,10 +183,10 @@ function InteractiveDots() {
           }
 
           // Draw particle
-          ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-          ctx.fill();
+          ctxEl.fillStyle = `rgba(255, 255, 255, ${opacity})`;
+          ctxEl.beginPath();
+          ctxEl.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctxEl.fill();
         }
 
         // Draw connections only if mouse is active
@@ -256,12 +245,12 @@ function InteractiveDots() {
                   Math.min(opacity1, opacity2) *
                   (1 - pDist / CONNECTION_DISTANCE);
 
-                ctx.strokeStyle = `rgba(255, 255, 255, ${lineOpacity})`;
-                ctx.lineWidth = 0.5;
-                ctx.beginPath();
-                ctx.moveTo(p1.x, p1.y);
-                ctx.lineTo(p2.x, p2.y);
-                ctx.stroke();
+                ctxEl.strokeStyle = `rgba(255, 255, 255, ${lineOpacity})`;
+                ctxEl.lineWidth = 0.5;
+                ctxEl.beginPath();
+                ctxEl.moveTo(p1.x, p1.y);
+                ctxEl.lineTo(p2.x, p2.y);
+                ctxEl.stroke();
               }
             }
           }
