@@ -2,16 +2,15 @@
 title: "CRM Bukan Cuma Soal Bot: AI Aja Nggak Cukup Buat Menangkan Hati Pelanggan"
 description: "Pernah nggak Anda ada di posisi ini: lagi butuh solusi cepat atau pengen tahu soal sebuah produk, terus Anda chat customer service. Wah, balasannya cepat banget! Tapi kok makin lama jawabannya cuma muter-muter, berulang, dan malah bikin bingung. Nggak lama, Anda sadar kalau dari tadi Anda cuma ngobrol sama bot atau AI yang belum di-training"
 pubDate: 2026-03-09T10:53:58
-author: Wahyu Teguh
-heroImage: https://mlczpqkasixx.i.optimole.com/cb:Lxyp.749/w:1280/h:720/q:mauto/ig:avif/https://incentric.co.id/wp-content/uploads/2026/03/Artikel-Foto.jpg
-heroImageAlt: CRM bukan cuma soal bot
-sourceUrl: https://incentric.co.id/crm-bukan-cuma-soal-bot-ai-aja-nggak-cukup-buat-menangkan-hati-pelanggan/
-categories:
-  - CRM
-tags:
-  - CRM
+author: "Wahyu Teguh"
+heroImage: "https://mlczpqkasixx.i.optimole.com/cb:Lxyp.749/w:1280/h:720/q:mauto/ig:avif/https://incentric.co.id/wp-content/uploads/2026/03/Artikel-Foto.jpg"
+heroImageAlt: "CRM bukan cuma soal bot"
+sourceUrl: "https://incentric.co.id/crm-bukan-cuma-soal-bot-ai-aja-nggak-cukup-buat-menangkan-hati-pelanggan/"
+categories: []
+tags: ["CRM"]
 draft: false
 ---
+
 Pernah nggak Anda ada di posisi ini: lagi butuh solusi cepat atau pengen tahu soal sebuah produk, terus Anda _chat customer service_. Wah, balasannya cepat banget! Tapi kok makin lama jawabannya cuma muter-muter, berulang, dan malah bikin bingung. Nggak lama, Anda sadar kalau dari tadi Anda cuma ngobrol sama bot atau AI yang belum di-_training_ betul soal _product knowledge_.
 
 Di era serba instan ini, banyak bisnis yang terobsesi banget sama otomatisasi. Entah itu pakai bot atau AI canggih, sampai-sampai lupa kalau yang beli produk mereka itu manusia, bukan robot.

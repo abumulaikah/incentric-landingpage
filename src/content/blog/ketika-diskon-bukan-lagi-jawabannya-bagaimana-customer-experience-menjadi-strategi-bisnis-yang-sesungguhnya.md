@@ -1,15 +1,16 @@
 ---
 title: "Ketika Diskon Bukan Lagi Jawabannya: Bagaimana Customer Experience Menjadi Strategi Bisnis yang Sesungguhnya"
-description: Bayangkan dua bisnis di kota yang sama, industri yang sama, harga yang relatif setara. Bisnis pertama selalu ramai di awal bulan, sepi di pertengahan, lalu ramai lagi setiap kali ada promo. Customer datang karena tertarik diskon, beli, lalu pergi. Bulan berikutnya, siklus yang sama berulang. Owner-nya sibuk memikirkan promo apa lagi yang bisa mendatangkan traffic.
+description: "Bayangkan dua bisnis di kota yang sama, industri yang sama, harga yang relatif setara. Bisnis pertama selalu ramai di awal bulan, sepi di pertengahan, lalu ramai lagi setiap kali ada promo. Customer datang karena tertarik diskon, beli, lalu pergi. Bulan berikutnya, siklus yang sama berulang. Owner-nya sibuk memikirkan promo apa lagi yang bisa mendatangkan traffic."
 pubDate: 2026-05-06T15:24:33
-author: Yana Sandhi
-sourceUrl: https://incentric.co.id/ketika-diskon-bukan-lagi-jawabannya-bagaimana-customer-experience-menjadi-strategi-bisnis-yang-sesungguhnya/
-categories:
-  - Customer Experience
-tags:
-  - Marketing
+author: "Yana Sandhi"
+heroImage: "https://mlczpqkasixx.i.optimole.com/cb:Lxyp.749/w:auto/h:auto/q:mauto/ig:avif/https://incentric.co.id/wp-content/uploads/2026/03/Artikel-Foto-5.jpg"
+heroImageAlt: "Ketika Diskon Bukan Lagi Jawabannya"
+sourceUrl: "https://incentric.co.id/ketika-diskon-bukan-lagi-jawabannya-bagaimana-customer-experience-menjadi-strategi-bisnis-yang-sesungguhnya/"
+categories: []
+tags: ["Marketing"]
 draft: false
 ---
+
 Bayangkan dua bisnis di kota yang sama, industri yang sama, harga yang relatif setara.
 
 Bisnis pertama selalu ramai di awal bulan, sepi di pertengahan, lalu ramai lagi setiap kali ada promo. Customer datang karena tertarik diskon, beli, lalu pergi. Bulan berikutnya, siklus yang sama berulang. Owner-nya sibuk memikirkan promo apa lagi yang bisa mendatangkan traffic.

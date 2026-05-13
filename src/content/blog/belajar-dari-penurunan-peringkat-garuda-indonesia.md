@@ -3,11 +3,14 @@ title: "Belajar Dari Penurunan Peringkat Garuda Indonesia"
 description: "Belajar dari Penurunan Peringkat Garuda Indonesia Kasus downgrade Skytrax ini mengingatkan semua pelaku bisnis bahwa kualitas layanan manusia (staf, crew) harus selaras dengan kualitas produk dan fasilitas (pesawat, sistem, infrastruktur). Jika satu sisi terabaikan, kepercayaan pelanggan bisa tergerus. Kasus terbaru Garuda Indonesia yang turun dari status maskapai bintang 5 menjadi bintang 4 versi Skytrax adalah"
 pubDate: 2026-03-13T23:14:19
 author: "Ronald Healtha"
+heroImage: "https://mlczpqkasixx.i.optimole.com/cb:Lxyp.749/w:auto/h:auto/q:mauto/ig:avif/https://incentric.co.id/wp-content/uploads/2026/02/Artikel-Foto.jpg"
+heroImageAlt: "Belajar Dari Penurunan Peringkat Garuda Indonesia"
 sourceUrl: "https://incentric.co.id/belajar-dari-penurunan-peringkat-garuda-indonesia/"
-categories: ["Service Experience"]
+categories: []
 tags: ["Service"]
 draft: false
 ---
+
 **Belajar dari Penurunan Peringkat Garuda Indonesia**
 
 Kasus downgrade Skytrax ini mengingatkan semua pelaku bisnis bahwa kualitas layanan manusia (staf, crew) harus selaras dengan kualitas produk dan fasilitas (pesawat, sistem, infrastruktur). Jika satu sisi terabaikan, kepercayaan pelanggan bisa tergerus.

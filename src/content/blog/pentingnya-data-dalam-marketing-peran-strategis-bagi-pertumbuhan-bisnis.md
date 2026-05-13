@@ -1,14 +1,16 @@
 ---
 title: "Selamat Tinggal Asumsi: Saatnya Data Mengambil Alih Kemudi Bisnis Anda"
-description: Dalam beberapa tahun terakhir, metode pemasaran dan penawaran produk telah mengalami transformasi besar.
+description: "Dalam beberapa tahun terakhir, metode pemasaran dan penawaran produk telah mengalami transformasi besar."
 pubDate: 2026-02-25T17:35:58
-author: Al Fitra Noor
-sourceUrl: https://incentric.co.id/pentingnya-data-dalam-marketing-peran-strategis-bagi-pertumbuhan-bisnis/
-categories:
-  - WOW Marketing
+author: "Al Fitra Noor"
+heroImage: "https://mlczpqkasixx.i.optimole.com/cb:Lxyp.749/w:auto/h:auto/q:mauto/ig:avif/https://incentric.co.id/wp-content/uploads/2026/02/Artikel-Foto-2.jpg"
+heroImageAlt: "Selamat Tinggal Asumsi: Saatnya Data Mengambil Alih Kemudi Bisnis Anda"
+sourceUrl: "https://incentric.co.id/pentingnya-data-dalam-marketing-peran-strategis-bagi-pertumbuhan-bisnis/"
+categories: []
 tags: ["Research"]
 draft: false
 ---
+
 
 ![](data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%201024%20576%22%20width%3D%221024%22%20height%3D%22576%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Crect%20width%3D%221024%22%20height%3D%22576%22%20fill%3D%22transparent%22%2F%3E%3C%2Fsvg%3E)
 

@@ -3,11 +3,14 @@ title: "Masalahnya Bukan Gen Z. Masalahnya Service Climate Anda."
 description: "Generasi Z telah memasuki dunia kerja secara penuh, tetapi fakta mengejutkan menunjukkan 74% manajer merasa bekerja dengan Gen Z lebih sulit dibanding generasi sebelumnya — dan hampir setengahnya mendapati tantangan ini muncul hampir sepanjang waktu. Bukan sekadar “perasaan generasi lama”, statistik ini mengguncang asumsi kita tentang talenta muda. Paradigma lama tentang layanan pelanggan masih menempatkan"
 pubDate: 2026-02-21T00:08:37
 author: "Ronald Healtha"
+heroImage: "https://mlczpqkasixx.i.optimole.com/cb:Lxyp.749/w:auto/h:auto/q:mauto/ig:avif/https://incentric.co.id/wp-content/uploads/2026/02/Artikel-Foto.jpg"
+heroImageAlt: "Masalahnya Bukan Gen Z. Masalahnya Service Climate Anda."
 sourceUrl: "https://incentric.co.id/masalahnya-bukan-gen-z-masalahnya-service-climate-anda/"
-categories: ["WOW Service"]
+categories: []
 tags: ["Service"]
 draft: false
 ---
+
 Generasi Z telah memasuki dunia kerja secara penuh, tetapi fakta mengejutkan menunjukkan 74% manajer merasa bekerja dengan Gen Z lebih sulit dibanding generasi sebelumnya — dan hampir setengahnya mendapati tantangan ini muncul hampir sepanjang waktu. Bukan sekadar “perasaan generasi lama”, statistik ini mengguncang asumsi kita tentang talenta muda.
 
 Paradigma lama tentang layanan pelanggan masih menempatkan standar service sebagai instruksi operasional. Namun riset menunjukkan bahwa _service climate_ — yaitu persepsi bersama karyawan terhadap dukungan organisasi terhadap layanan berkualitas — merupakan prediktor utama performa layanan dan loyalitas pelanggan. Ini pengaruhnya nyata.

@@ -157,37 +157,51 @@ const tagOptions = ['Marketing', 'Service', 'Sales', 'CRM', 'Culture', 'Research
           >
             {latestPosts.map((post) => (
               <article
-                class="blog-card rounded-lg border border-slate-200 bg-white p-6 transition hover:border-brand-blue/30 hover:bg-slate-50 md:p-7"
+                class="blog-card group relative min-h-[430px] overflow-hidden rounded-lg border border-slate-200 bg-slate-950 transition hover:border-brand-blue/30"
                 data-latest-card
                 data-filter-values={getPostFilters(post).join('|||')}
                 data-title={post.data.title}
                 data-description={post.data.description}
               >
-                <div class="flex flex-wrap gap-2">
-                  {getPostTags(post)
-                    .slice(0, 1)
-                    .map((chip) => (
-                      <a
-                        href={getFilterUrl(chip)}
-                        class="rounded-md bg-slate-100 px-2.5 py-1 text-xs font-bold text-slate-700 transition hover:bg-brand-blue hover:text-white"
-                      >
-                        {chip}
+                <a href={`/blog/${post.slug}/`} class="absolute inset-0 z-10" aria-label={post.data.title}></a>
+                <img
+                  src={post.data.heroImage}
+                  alt={post.data.heroImageAlt ?? post.data.title}
+                  class="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                  loading="lazy"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/15"></div>
+
+                <div class="relative flex min-h-[430px] flex-col justify-between p-6 text-white md:p-7">
+                  <div class="flex flex-wrap gap-2">
+                    {getPostTags(post)
+                      .slice(0, 1)
+                      .map((chip) => (
+                        <a
+                          href={getFilterUrl(chip)}
+                          class="relative z-20 rounded-md bg-white px-2.5 py-1 text-xs font-bold text-slate-950 transition hover:bg-brand-yellow"
+                        >
+                          {chip}
+                        </a>
+                      ))}
+                  </div>
+
+                  <div>
+                    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm font-medium text-white/75">
+                      <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
+                      <span>by</span>
+                      <a href={getFilterUrl(post.data.author)} class="relative z-20 font-semibold text-white transition hover:text-brand-yellow">
+                        {post.data.author}
                       </a>
-                    ))}
+                    </div>
+                    <h3 class="mt-4 text-2xl font-bold leading-tight tracking-tight text-white">
+                      <a href={`/blog/${post.slug}/`} class="relative z-20 text-white transition group-hover:text-brand-yellow">
+                        {post.data.title}
+                      </a>
+                    </h3>
+                    <p class="mt-4 line-clamp-3 leading-relaxed text-white/78">{post.data.description}</p>
+                  </div>
                 </div>
-                <div class="mt-9 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm font-medium text-slate-500">
-                  <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
-                  <span>by</span>
-                  <a href={getFilterUrl(post.data.author)} class="font-semibold text-slate-950 transition hover:text-brand-blue">
-                    {post.data.author}
-                  </a>
-                </div>
-                <h3 class="mt-4 text-2xl font-bold leading-tight tracking-tight text-slate-950">
-                  <a href={`/blog/${post.slug}/`} class="transition hover:text-brand-blue">
-                    {post.data.title}
-                  </a>
-                </h3>
-                <p class="mt-4 line-clamp-3 leading-relaxed text-slate-600">{post.data.description}</p>
               </article>
             ))}
           </div>

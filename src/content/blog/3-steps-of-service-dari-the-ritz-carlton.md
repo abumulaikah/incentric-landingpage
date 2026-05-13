@@ -3,11 +3,14 @@ title: "3 Steps of Service dari The Ritz-Carlton, Panduan Sederhana tapi Powerfu
 description: "Saya masih ingat jelas tahun 1999, saat pertama kali melangkahkan kaki menjadi salah satu team di The Ritz-Carlton Bali, saya merasakan di tempat ini, “melayani” bukan sekadar pekerjaan tapi sebuah kehormatan. Saya bekerja di sana kurang lebih selama 13 tahun, memulai dari posisi paling dasar atau staff level sebagai Front Desk Agent hingga menjadi Sales"
 pubDate: 2026-02-10T01:20:13
 author: "Yana Sandhi"
+heroImage: "https://mlczpqkasixx.i.optimole.com/cb:Lxyp.749/w:auto/h:auto/q:mauto/ig:avif/https://incentric.co.id/wp-content/uploads/2026/02/Service-Experience-Video-Book.jpg"
+heroImageAlt: "3 Steps of Service dari The Ritz-Carlton, Panduan Sederhana tapi Powerfull Menciptakan WOW Customer Experience."
 sourceUrl: "https://incentric.co.id/3-steps-of-service-dari-the-ritz-carlton/"
-categories: ["WOW Service"]
+categories: []
 tags: ["Service"]
 draft: false
 ---
+
 Saya masih ingat jelas tahun 1999, saat pertama kali melangkahkan kaki menjadi salah satu team di The Ritz-Carlton Bali, saya merasakan di tempat ini, “melayani” bukan sekadar pekerjaan tapi sebuah kehormatan.
 
 Saya bekerja di sana kurang lebih selama 13 tahun, memulai dari posisi paling dasar atau staff level sebagai Front Desk Agent hingga menjadi Sales Manager. Setiap hari, saya selalu melihat semua karyawan di sana dari _bellboy_ sampai _general manager_ berinteraksi dengan tamu dengan cara yang sama, penuh perhatian, tulus, dan konsisten. Bukan karena itu adalah sebuah SOP yang harus dijalankan karena perintah dari perusahaan karena di Ritz-Carlton, _service_ sudah menjadi budaya, bukan sekadar instruksi.

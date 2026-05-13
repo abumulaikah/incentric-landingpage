@@ -3,11 +3,14 @@ title: "Bagaimana Culture Bisa Mendorong Revenue Growth."
 description: "Banyak pemilik bisnis percaya bahwa culture itu penting. Namun ketika pembicaraan mulai menyentuh angka—omzet, profit, atau pertumbuhan bisnis—sering muncul pertanyaan yang sama: Apa sebenarnya hubungan culture dengan revenue growth? Pertanyaan ini sangat wajar. Karena culture atau budaya sering dianggap sebagai sesuatu yang abstrak. Ia terdengar seperti nilai, prinsip, atau slogan yang ditempel di dinding kantor."
 pubDate: 2026-03-22T22:52:36
 author: "Arisdiansah"
+heroImage: "https://mlczpqkasixx.i.optimole.com/cb:Lxyp.749/w:auto/h:auto/q:mauto/ig:avif/https://incentric.co.id/wp-content/uploads/2026/03/Artikel-Foto-5.jpg"
+heroImageAlt: "Bagaimana Culture Bisa Mendorong Revenue Growth."
 sourceUrl: "https://incentric.co.id/bagaimana-culture-bisa-mendorong-revenue-growth/"
-categories: ["Uncategorized"]
+categories: []
 tags: ["Culture"]
 draft: false
 ---
+
 ![](https://mlczpqkasixx.i.optimole.com/cb:Lxyp.749/w:auto/h:auto/q:mauto/ig:avif/https://incentric.co.id/wp-content/uploads/2026/03/Artikel-Foto-5.jpg)
 
 Banyak pemilik bisnis percaya bahwa culture itu penting.
