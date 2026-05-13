@@ -6,13 +6,7 @@ author: Al Fitra Noor
 sourceUrl: https://incentric.co.id/pentingnya-data-dalam-marketing-peran-strategis-bagi-pertumbuhan-bisnis/
 categories:
   - WOW Marketing
-tags:
-  - analisis
-  - bisnis
-  - data
-  - konsultan
-  - marketing
-  - umkm
+tags: ["Research"]
 draft: false
 ---
 

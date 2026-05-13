@@ -5,7 +5,7 @@ pubDate: 2024-09-20T14:09:27
 author: "Arisdiansah"
 sourceUrl: "https://incentric.co.id/mengapa-customer-experience-menjadi-kunci-sukses-di-2025/"
 categories: ["Customer Experience"]
-tags: ["customer", "Customer experience", "pelanggan", "pelayanan"]
+tags: ["Service"]
 draft: false
 ---
 

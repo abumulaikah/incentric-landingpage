@@ -5,10 +5,9 @@ pubDate: 2023-09-09T02:21:39
 author: "Arisdiansah"
 sourceUrl: "https://incentric.co.id/authentic-storytelling/"
 categories: ["CRM"]
-tags: []
+tags: ["Marketing"]
 draft: false
 ---
-
 Menarik mengikuti perkembangan pembahasan para marketer dunia tentang authentic ditengah banyaknya gimmick marketing.
 
 Storytelling yang baguspun nantinya tidak cukub ketika customer menuntut kejujuran. Dan justru kejujuran dan keautentikan yang nantinya menjadi kekuatan marketing yang luar biasa.

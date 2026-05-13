@@ -5,10 +5,9 @@ pubDate: 2026-03-13T23:14:19
 author: "Ronald Healtha"
 sourceUrl: "https://incentric.co.id/belajar-dari-penurunan-peringkat-garuda-indonesia/"
 categories: ["Service Experience"]
-tags: ["Customer experience", "customer journey map", "service experience", "touchpoint"]
+tags: ["Service"]
 draft: false
 ---
-
 **Belajar dari Penurunan Peringkat Garuda Indonesia**
 
 Kasus downgrade Skytrax ini mengingatkan semua pelaku bisnis bahwa kualitas layanan manusia (staf, crew) harus selaras dengan kualitas produk dan fasilitas (pesawat, sistem, infrastruktur). Jika satu sisi terabaikan, kepercayaan pelanggan bisa tergerus.

@@ -62,10 +62,10 @@ export function Navbar({ theme = "auto" }: NavbarProps) {
   return (
     <div className="fixed top-5 left-0 right-0 z-50 flex justify-center px-5 pointer-events-none sm:top-6 sm:px-4">
       {/* Glass Background - Increased blur and adjusted opacity for better readability */}
-      <div className={`absolute w-[calc(100%-2.5rem)] max-w-5xl h-14 backdrop-blur-3xl border shadow-[0_8px_32px_rgba(0,0,0,0.1)] rounded-full pointer-events-auto transition-colors duration-500 sm:w-full sm:h-16 ${isDarkText ? 'bg-white/40 border-black/5' : 'bg-slate-950/40 border-white/10'}`} />
+      <div className={`absolute w-[calc(100%-2.5rem)] max-w-7xl h-14 backdrop-blur-3xl border shadow-[0_8px_32px_rgba(0,0,0,0.1)] rounded-full pointer-events-auto transition-colors duration-500 sm:w-full sm:h-16 ${isDarkText ? 'bg-white/40 border-black/5' : 'bg-slate-950/40 border-white/10'}`} />
       
       <motion.nav 
-        className={`pointer-events-auto w-full max-w-5xl h-14 flex items-center justify-between px-5 relative z-10 transition-colors duration-500 sm:h-16 sm:px-6 lg:px-8 ${isDarkText ? 'text-slate-900' : 'text-white'}`}
+        className={`pointer-events-auto w-full max-w-7xl h-14 flex items-center justify-between px-5 relative z-10 transition-colors duration-500 sm:h-16 sm:px-6 lg:px-8 ${isDarkText ? 'text-slate-900' : 'text-white'}`}
       >
         <div className="flex items-center">
           <a href="/#top" className="flex items-center space-x-2 hover:opacity-80 transition-opacity" aria-label="Back to top" onClick={() => setIsMenuOpen(false)}>

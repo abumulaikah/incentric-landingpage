@@ -5,7 +5,7 @@ pubDate: 2024-09-08T02:36:17
 author: "Arisdiansah"
 sourceUrl: "https://incentric.co.id/panduan-lengkap-tentang-crm-integrasi-penggunaan-untuk-layanan-pelanggan-penjualan-pemasaran-dan-praktik-terbaik/"
 categories: ["CRM"]
-tags: ["CRM", "customer", "Customer experience", "marketing", "retention marketing", "service culture", "strategi marketing"]
+tags: ["CRM"]
 draft: false
 ---
 

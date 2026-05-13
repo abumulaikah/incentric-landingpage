@@ -41,9 +41,9 @@ const displayDate = post.data.pubDate.toLocaleDateString('en-GB', {
   month: 'short',
   year: 'numeric',
 });
-const chips = [...post.data.tags, ...post.data.categories]
+const chips = post.data.tags
   .filter((value, index, values) => value && values.indexOf(value) === index)
-  .slice(0, 4);
+  .slice(0, 1);
 
 const getFilterUrl = (chip: string) => `/blog/?filter=${encodeURIComponent(chip)}`;
 const heroImageAlt = post.data.heroImageAlt ?? post.data.title;

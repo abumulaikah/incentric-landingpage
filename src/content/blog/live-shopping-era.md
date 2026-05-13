@@ -5,10 +5,9 @@ pubDate: 2023-05-30T02:24:58
 author: "Arisdiansah"
 sourceUrl: "https://incentric.co.id/live-shopping-era/"
 categories: ["Employee Experience"]
-tags: []
+tags: ["Sales"]
 draft: false
 ---
-
 Tentang Live sale harga gila2an.
 
 “Mas, aku beli jilbab itu hanya 100ribu, padahal harga normalnya 300ribuan. Gamis yang biasanya harga 1,3jutaan sekarang juga diobral jadi 500ribuan. Laris banget, sampai kita harus berebut untuk bisa keep…”

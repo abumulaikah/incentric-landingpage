@@ -5,10 +5,9 @@ pubDate: 2026-03-22T22:52:36
 author: "Arisdiansah"
 sourceUrl: "https://incentric.co.id/bagaimana-culture-bisa-mendorong-revenue-growth/"
 categories: ["Uncategorized"]
-tags: ["Business Strategy", "Corporate Culture", "Culture", "Employee Engagement", "Revenue Growth"]
+tags: ["Culture"]
 draft: false
 ---
-
 ![](https://mlczpqkasixx.i.optimole.com/cb:Lxyp.749/w:auto/h:auto/q:mauto/ig:avif/https://incentric.co.id/wp-content/uploads/2026/03/Artikel-Foto-5.jpg)
 
 Banyak pemilik bisnis percaya bahwa culture itu penting.

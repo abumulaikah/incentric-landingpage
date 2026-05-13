@@ -5,7 +5,7 @@ pubDate: 2023-08-25T16:12:30
 author: "Arisdiansah"
 sourceUrl: "https://incentric.co.id/storytelling-or-selling-a-story/"
 categories: ["Services Culture"]
-tags: []
+tags: ["Marketing"]
 draft: false
 ---
 

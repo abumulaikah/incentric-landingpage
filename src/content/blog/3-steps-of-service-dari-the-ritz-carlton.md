@@ -5,11 +5,10 @@ pubDate: 2026-02-10T01:20:13
 author: "Yana Sandhi"
 sourceUrl: "https://incentric.co.id/3-steps-of-service-dari-the-ritz-carlton/"
 categories: ["WOW Service"]
-tags: ["service culture"]
+tags: ["Service"]
 draft: false
 ---
-
-![300](data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%20300%20169%22%20width%3D%22300%22%20height%3D%22169%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Crect%20width%3D%22300%22%20height%3D%22169%22%20fill%3D%22transparent%22%2F%3E%3C%2Fsvg%3E)Saya masih ingat jelas tahun 1999, saat pertama kali melangkahkan kaki menjadi salah satu team di The Ritz-Carlton Bali, saya merasakan di tempat ini, “melayani” bukan sekadar pekerjaan tapi sebuah kehormatan.
+Saya masih ingat jelas tahun 1999, saat pertama kali melangkahkan kaki menjadi salah satu team di The Ritz-Carlton Bali, saya merasakan di tempat ini, “melayani” bukan sekadar pekerjaan tapi sebuah kehormatan.
 
 Saya bekerja di sana kurang lebih selama 13 tahun, memulai dari posisi paling dasar atau staff level sebagai Front Desk Agent hingga menjadi Sales Manager. Setiap hari, saya selalu melihat semua karyawan di sana dari _bellboy_ sampai _general manager_ berinteraksi dengan tamu dengan cara yang sama, penuh perhatian, tulus, dan konsisten. Bukan karena itu adalah sebuah SOP yang harus dijalankan karena perintah dari perusahaan karena di Ritz-Carlton, _service_ sudah menjadi budaya, bukan sekadar instruksi.
 

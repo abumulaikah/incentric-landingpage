@@ -5,7 +5,7 @@ pubDate: 2023-05-27T02:12:43
 author: "Arisdiansah"
 sourceUrl: "https://incentric.co.id/post-pandemic-challange/"
 categories: ["Services Culture"]
-tags: []
+tags: ["Research"]
 draft: false
 ---
 

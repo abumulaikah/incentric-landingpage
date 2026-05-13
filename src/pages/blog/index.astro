@@ -1,107 +1,335 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { Navbar } from '../../components/Navbar';
 
 const posts = (await getCollection('blog'))
   .filter((post) => !post.data.draft)
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
-const getPostChips = (post: (typeof posts)[number]) =>
-  [...post.data.tags, ...post.data.categories, post.data.author].filter(
+const getPostTags = (post: (typeof posts)[number]) =>
+  post.data.tags.filter((value, index, values) => value && values.indexOf(value) === index);
+
+const getPostFilters = (post: (typeof posts)[number]) =>
+  [...post.data.tags, post.data.author].filter(
     (value, index, values) => value && values.indexOf(value) === index,
   );
+
+const getPrimaryChip = (post: (typeof posts)[number]) =>
+  post.data.tags[0] ?? 'Insight';
+
+const getFilterUrl = (chip: string) => `/blog/?filter=${encodeURIComponent(chip)}`;
+
+const formatDate = (date: Date) =>
+  date.toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  });
+
+const featuredPosts = posts.slice(0, 5);
+const latestPosts = posts.slice(5);
+const tagOptions = ['Marketing', 'Service', 'Sales', 'CRM', 'Culture', 'Research', 'Management', 'Leadership', 'Product'];
 ---
 
 <BaseLayout title="Blog | Incentric CX" description="Ideas and insights from Incentric.">
-  <main class="min-h-screen bg-slate-50 px-6 py-24 text-slate-900">
-    <div class="mx-auto max-w-4xl">
-      <a href="/" class="text-sm font-bold text-brand-blue hover:underline">Back to home</a>
-      <div class="mt-8 border-b border-slate-200 pb-10">
-        <h1 class="text-4xl font-bold tracking-tight md:text-6xl">Blog</h1>
-        <p id="blog-description" class="mt-4 max-w-2xl text-lg leading-relaxed text-slate-600">
-          Customer experience thinking, frameworks, and practical notes from Incentric.
-        </p>
-        <div id="active-filter" class="mt-6 hidden items-center gap-3">
-          <span class="rounded-md bg-brand-blue px-3 py-1.5 text-sm font-bold text-white"></span>
-          <a href="/blog/" class="text-sm font-bold text-brand-blue hover:underline">Clear filter</a>
+  <main id="top" class="min-h-screen bg-[#f5f6f7] text-slate-950">
+    <Navbar theme="light" client:load />
+
+    <section class="mx-auto max-w-7xl px-6 pb-16 pt-32 md:pt-40">
+      <div class="grid gap-10 border-b border-slate-200 pb-12 lg:grid-cols-[minmax(0,1.45fr)_minmax(320px,0.55fr)] lg:items-end">
+        <div>
+          <p class="mb-6 text-sm font-bold uppercase tracking-[0.24em] text-brand-blue">Incentric Journal</p>
+          <h1 class="max-w-4xl text-6xl font-bold leading-[0.95] tracking-tight text-slate-950 md:text-8xl lg:text-[7.75rem]">
+            Ideas for better customer experiences
+          </h1>
+        </div>
+
+        <div class="max-w-xl lg:pb-3">
+          <p id="blog-description" class="text-lg leading-relaxed text-slate-600 md:text-xl">
+            Customer experience thinking, service culture, CRM, and practical notes for teams building stronger relationships with customers.
+          </p>
+          <div class="mt-7 flex flex-wrap gap-3">
+            <a href="/#contact" class="rounded-full bg-slate-950 px-5 py-3 text-sm font-bold text-white transition hover:bg-brand-blue">
+              Talk to Incentric
+            </a>
+            <a href="#articles" class="rounded-full border border-slate-300 px-5 py-3 text-sm font-bold text-slate-950 transition hover:border-brand-blue hover:text-brand-blue">
+              Read articles
+            </a>
+          </div>
+          <div id="active-filter" class="mt-7 hidden items-center gap-3">
+            <span class="rounded-md bg-brand-blue px-3 py-1.5 text-sm font-bold text-white"></span>
+            <a href="/blog/" class="text-sm font-bold text-brand-blue hover:underline">Clear filter</a>
+          </div>
         </div>
       </div>
 
-      <div id="blog-list" class="mt-10 grid gap-6">
+      <div id="blog-list" class="mt-8">
         {
-          posts.map((post) => (
-            <article
-              class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm transition hover:border-brand-blue/30 hover:shadow-md"
-              data-filter-values={getPostChips(post).join('|||')}
-            >
-              <p class="text-sm font-medium text-slate-500">
-                {post.data.pubDate.toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
-              </p>
-              <h2 class="mt-3 text-2xl font-bold">
-                <a href={`/blog/${post.slug}/`} class="hover:text-brand-blue">
-                  {post.data.title}
-                </a>
-              </h2>
-              <p class="mt-3 leading-relaxed text-slate-600">{post.data.description}</p>
-              {
-                getPostChips(post).length > 0 && (
-                  <div class="mt-5 flex flex-wrap gap-2">
-                    {getPostChips(post)
-                      .slice(0, 4)
-                      .map((chip) => (
-                        <a
-                          href={`/blog/?filter=${encodeURIComponent(chip)}`}
-                          class="rounded-md bg-slate-100 px-2.5 py-1 text-xs font-bold text-slate-700 transition hover:bg-brand-blue hover:text-white"
-                        >
-                          {chip}
+          featuredPosts.length > 0 && (
+            <section class="blog-section grid overflow-hidden rounded-lg border border-slate-200 bg-slate-200 lg:grid-cols-12">
+              {featuredPosts.map((post, index) => (
+                <article
+                  class:list={[
+                    'blog-card group relative min-h-[360px] overflow-hidden bg-slate-950',
+                    index === 0 && 'lg:col-span-6 lg:min-h-[610px]',
+                    index === 1 && 'lg:col-span-6 lg:min-h-[610px]',
+                    index > 1 && 'lg:col-span-4',
+                  ]}
+                  data-filter-values={getPostFilters(post).join('|||')}
+                >
+                  <a href={`/blog/${post.slug}/`} class="absolute inset-0 z-10" aria-label={post.data.title}></a>
+                  {post.data.heroImage ? (
+                    <img
+                      src={post.data.heroImage}
+                      alt={post.data.heroImageAlt ?? post.data.title}
+                      class="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                      loading={index < 2 ? 'eager' : 'lazy'}
+                    />
+                  ) : (
+                    <div class="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,188,0,0.42),transparent_28%),radial-gradient(circle_at_85%_15%,rgba(1,79,207,0.55),transparent_34%),linear-gradient(135deg,#020617_0%,#111827_54%,#0f172a_100%)] transition duration-700 group-hover:scale-105"></div>
+                  )}
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/10"></div>
+                  <div class="relative flex h-full min-h-[360px] flex-col justify-between p-6 text-white md:p-8 lg:min-h-[inherit]">
+                    <div>
+                      <a
+                        href={getFilterUrl(getPrimaryChip(post))}
+                        class="relative z-20 inline-flex rounded-md bg-white px-3 py-1.5 text-sm font-bold text-slate-950 transition hover:bg-brand-yellow"
+                      >
+                        {getPrimaryChip(post)}
+                      </a>
+                    </div>
+                    <div>
+                      <div class="mb-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm font-medium text-white/75">
+                        <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
+                        <span>by</span>
+                        <a href={getFilterUrl(post.data.author)} class="relative z-20 font-semibold text-white transition hover:text-brand-yellow">
+                          {post.data.author}
                         </a>
-                      ))}
+                      </div>
+                      <h2 class:list={['font-bold leading-tight tracking-tight text-white', index < 2 ? 'text-3xl md:text-5xl' : 'text-2xl md:text-3xl']}>
+                        <a href={`/blog/${post.slug}/`} class="relative z-20 text-white transition group-hover:text-brand-yellow">
+                          {post.data.title}
+                        </a>
+                      </h2>
+                    </div>
                   </div>
-                )
-              }
-            </article>
-          ))
+                </article>
+              ))}
+            </section>
+          )
         }
+
+        <section id="articles" class="blog-section mt-16">
+          <div class="mb-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(420px,0.72fr)] lg:items-end">
+            <div>
+              <p class="text-sm font-bold uppercase tracking-[0.24em] text-brand-blue">Latest</p>
+              <h2 class="mt-3 text-4xl font-bold tracking-tight md:text-6xl">More insights</h2>
+            </div>
+            <div class="grid gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+              <label class="block">
+                <span class="mb-2 block text-xs font-bold uppercase tracking-[0.16em] text-slate-500">Filter by tag</span>
+                <select
+                  id="tag-filter"
+                  class="h-12 w-full rounded-full border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-950 outline-none transition focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/15"
+                >
+                  <option value="">All tags</option>
+                  {tagOptions.map((tag) => (
+                    <option value={tag}>{tag}</option>
+                  ))}
+                </select>
+              </label>
+              <label class="block">
+                <span class="mb-2 block text-xs font-bold uppercase tracking-[0.16em] text-slate-500">Search article</span>
+                <input
+                  id="article-search"
+                  type="search"
+                  placeholder="Search title..."
+                  class="h-12 w-full rounded-full border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/15"
+                />
+              </label>
+            </div>
+          </div>
+
+          <div
+            id="latest-grid"
+            class="grid gap-4 md:grid-cols-2 lg:grid-cols-3"
+          >
+            {latestPosts.map((post) => (
+              <article
+                class="blog-card rounded-lg border border-slate-200 bg-white p-6 transition hover:border-brand-blue/30 hover:bg-slate-50 md:p-7"
+                data-latest-card
+                data-filter-values={getPostFilters(post).join('|||')}
+                data-title={post.data.title}
+                data-description={post.data.description}
+              >
+                <div class="flex flex-wrap gap-2">
+                  {getPostTags(post)
+                    .slice(0, 1)
+                    .map((chip) => (
+                      <a
+                        href={getFilterUrl(chip)}
+                        class="rounded-md bg-slate-100 px-2.5 py-1 text-xs font-bold text-slate-700 transition hover:bg-brand-blue hover:text-white"
+                      >
+                        {chip}
+                      </a>
+                    ))}
+                </div>
+                <div class="mt-9 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm font-medium text-slate-500">
+                  <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
+                  <span>by</span>
+                  <a href={getFilterUrl(post.data.author)} class="font-semibold text-slate-950 transition hover:text-brand-blue">
+                    {post.data.author}
+                  </a>
+                </div>
+                <h3 class="mt-4 text-2xl font-bold leading-tight tracking-tight text-slate-950">
+                  <a href={`/blog/${post.slug}/`} class="transition hover:text-brand-blue">
+                    {post.data.title}
+                  </a>
+                </h3>
+                <p class="mt-4 line-clamp-3 leading-relaxed text-slate-600">{post.data.description}</p>
+              </article>
+            ))}
+          </div>
+
+          <div class="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <p id="pagination-summary" class="text-sm font-medium text-slate-500"></p>
+            <div id="pagination-controls" class="flex flex-wrap gap-2"></div>
+          </div>
+        </section>
       </div>
 
       <p id="empty-filter" class="mt-10 hidden rounded-lg border border-slate-200 bg-white p-6 text-slate-600">
         No posts found for this filter.
       </p>
-    </div>
+    </section>
   </main>
 
   <script>
     const filter = new URLSearchParams(window.location.search).get('filter');
     const normalizedFilter = filter?.trim().toLowerCase();
     const posts = Array.from(document.querySelectorAll<HTMLElement>('[data-filter-values]'));
+    const featuredCards = posts.filter((post) => !post.hasAttribute('data-latest-card'));
+    const latestCards = Array.from(document.querySelectorAll<HTMLElement>('[data-latest-card]'));
     const activeFilter = document.querySelector<HTMLElement>('#active-filter');
     const activeFilterLabel = activeFilter?.querySelector('span');
     const description = document.querySelector<HTMLElement>('#blog-description');
     const emptyFilter = document.querySelector<HTMLElement>('#empty-filter');
+    const sections = Array.from(document.querySelectorAll<HTMLElement>('.blog-section'));
+    const tagFilter = document.querySelector<HTMLSelectElement>('#tag-filter');
+    const articleSearch = document.querySelector<HTMLInputElement>('#article-search');
+    const paginationSummary = document.querySelector<HTMLElement>('#pagination-summary');
+    const paginationControls = document.querySelector<HTMLElement>('#pagination-controls');
+    const pageSize = 9;
+    let currentPage = 1;
 
-    if (normalizedFilter && activeFilter && activeFilterLabel && description && emptyFilter) {
+    const getCardValues = (post: HTMLElement) =>
+      (post.dataset.filterValues ?? '')
+        .split('|||')
+        .map((value) => value.trim().toLowerCase());
+
+    const applyUrlFilter = () => {
       let visibleCount = 0;
-
       posts.forEach((post) => {
-        const values = (post.dataset.filterValues ?? '')
-          .split('|||')
-          .map((value) => value.trim().toLowerCase());
-        const isVisible = values.includes(normalizedFilter);
+        const isVisible = normalizedFilter ? getCardValues(post).includes(normalizedFilter) : true;
 
-        post.hidden = !isVisible;
+        post.dataset.urlVisible = String(isVisible);
         if (isVisible) visibleCount += 1;
       });
 
-      activeFilterLabel.textContent = filter;
-      activeFilter.classList.remove('hidden');
-      activeFilter.classList.add('flex');
-      description.textContent = `Showing ${visibleCount} post${visibleCount === 1 ? '' : 's'} filtered by "${filter}".`;
-      emptyFilter.classList.toggle('hidden', visibleCount > 0);
-      document.title = `${filter} | Blog | Incentric CX`;
-    }
+      if (normalizedFilter && activeFilter && activeFilterLabel && description && emptyFilter) {
+        activeFilterLabel.textContent = filter;
+        activeFilter.classList.remove('hidden');
+        activeFilter.classList.add('flex');
+        description.textContent = `Showing ${visibleCount} post${visibleCount === 1 ? '' : 's'} filtered by "${filter}".`;
+        document.title = `${filter} | Blog | Incentric CX`;
+      }
+    };
+
+    const renderPagination = (pageCount: number) => {
+      if (!paginationControls) return;
+      paginationControls.innerHTML = '';
+
+      if (pageCount <= 1) return;
+
+      for (let page = 1; page <= pageCount; page += 1) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.textContent = String(page);
+        button.className =
+          page === currentPage
+            ? 'h-10 min-w-10 rounded-full bg-slate-950 px-4 text-sm font-bold text-white'
+            : 'h-10 min-w-10 rounded-full border border-slate-300 bg-white px-4 text-sm font-bold text-slate-950 transition hover:border-brand-blue hover:text-brand-blue';
+        button.addEventListener('click', () => {
+          currentPage = page;
+          applyMoreInsightFilters();
+          document.querySelector('#articles')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+        paginationControls.append(button);
+      }
+    };
+
+    const applyMoreInsightFilters = () => {
+      const selectedTag = tagFilter?.value.trim().toLowerCase() ?? '';
+      const searchText = articleSearch?.value.trim().toLowerCase() ?? '';
+      const matchingLatestCards = latestCards.filter((card) => {
+        const passesUrlFilter = card.dataset.urlVisible !== 'false';
+        const values = getCardValues(card);
+        const searchableText = `${card.dataset.title ?? ''} ${card.dataset.description ?? ''}`.toLowerCase();
+        const passesTagFilter = selectedTag ? values.includes(selectedTag) : true;
+        const passesSearch = searchText ? searchableText.includes(searchText) : true;
+
+        return passesUrlFilter && passesTagFilter && passesSearch;
+      });
+
+      const pageCount = Math.max(1, Math.ceil(matchingLatestCards.length / pageSize));
+      if (currentPage > pageCount) currentPage = pageCount;
+      const start = (currentPage - 1) * pageSize;
+      const paginatedCards = new Set(matchingLatestCards.slice(start, start + pageSize));
+
+      latestCards.forEach((card) => {
+        card.hidden = !paginatedCards.has(card);
+      });
+
+      featuredCards.forEach((card) => {
+        card.hidden = card.dataset.urlVisible === 'false';
+      });
+
+      sections.forEach((section) => {
+        const visibleCards = Array.from(section.querySelectorAll<HTMLElement>('[data-filter-values]')).filter(
+          (card) => !card.hidden,
+        );
+        section.hidden = visibleCards.length === 0;
+      });
+
+      if (paginationSummary) {
+        if (matchingLatestCards.length === 0) {
+          paginationSummary.textContent = 'No matching articles in More insights.';
+        } else {
+          const end = Math.min(start + pageSize, matchingLatestCards.length);
+          paginationSummary.textContent = `Showing ${start + 1}-${end} of ${matchingLatestCards.length} articles`;
+        }
+      }
+
+      renderPagination(pageCount);
+
+      if (emptyFilter) {
+        const hasVisibleCard = posts.some((post) => !post.hidden);
+        emptyFilter.classList.toggle('hidden', hasVisibleCard);
+      }
+    };
+
+    applyUrlFilter();
+    applyMoreInsightFilters();
+
+    tagFilter?.addEventListener('change', () => {
+      currentPage = 1;
+      applyMoreInsightFilters();
+    });
+
+    articleSearch?.addEventListener('input', () => {
+      currentPage = 1;
+      applyMoreInsightFilters();
+    });
   </script>
 </BaseLayout>

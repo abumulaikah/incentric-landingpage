@@ -5,10 +5,9 @@ pubDate: 2023-05-30T02:22:59
 author: "Arisdiansah"
 sourceUrl: "https://incentric.co.id/authentic-is-the-new-gimmick/"
 categories: ["Employee Experience"]
-tags: []
+tags: ["Marketing"]
 draft: false
 ---
-
 Ketika marketer berusaha membuat sesuatu tampak “wow” dan hebat dengan konten maupun marcom-nya, pada akhirnya realita yang akan berbicara.
 
 Mengutip dari salah satu artikel di Forbes, bahwa salah satu unsur/variabel yang akan sangat menentukan didalam membangun customer experience adalah “Authenticity”.

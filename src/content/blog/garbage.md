@@ -5,7 +5,7 @@ pubDate: 2023-09-09T02:09:58
 author: "Arisdiansah"
 sourceUrl: "https://incentric.co.id/garbage/"
 categories: ["Insight", "Sales Experience"]
-tags: []
+tags: ["Leadership"]
 draft: false
 ---
 
