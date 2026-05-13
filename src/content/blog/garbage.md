@@ -2,7 +2,7 @@
 title: "Garbage"
 description: "Garbage in, garbage out…jika teko diisi kopi, maka akan mengeluarkan kopi. Jika sampah yang masuk, maka sampah juga yang akan keluar. Apa yang masuk, itu yang keluar. Hati-hati ketika “sampah”/toxic yang kita masukkan dalam kepala kita baik kita sadari atau tanpa kita sadari. Dari circle kita, dari yang kita baca, kita tonton, atau yang kita"
 pubDate: 2023-09-09T02:09:58
-author: "Admin"
+author: "Arisdiansah"
 sourceUrl: "https://incentric.co.id/garbage/"
 categories: ["Insight", "Sales Experience"]
 tags: []

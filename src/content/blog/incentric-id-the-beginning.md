@@ -2,7 +2,7 @@
 title: "Incentric.id The Beginning"
 description: "Salah satu adegan yang sangat menginspirasi saya diserial onepiece adalah ketika semua orang ingin “berbaiat” kepada Luffi usia mengalahkan Doflamingo di dresrossa. Dan ternyata Luffi tidak ingin menjadi “Bos” buat kru bajak laut yang lain, karena bagi Luffi semua orang punya kedudukan yang sama. Semua akan saling tolong menolong ketika yang lain mendapatkan kesulitan. Saya"
 pubDate: 2023-09-09T02:27:53
-author: "Admin"
+author: "Arisdiansah"
 sourceUrl: "https://incentric.co.id/incentric-id-the-beginning/"
 categories: ["Content Experience"]
 tags: []

@@ -2,7 +2,7 @@
 title: "Mengapa Customer Experience Menjadi Kunci Sukses di 2025"
 description: "Dalam era digital yang semakin kompleks ini, customer experience (CX) telah menempati posisi krusial sebagai pilar utama kesuksesan bisnis menjelang tahun 2025. Penting bagi Anda yang berkecimpung dalam dunia bisnis untuk memahami mengapa CX begitu esensial. Lebih dari sekadar menyediakan produk atau layanan yang berkualitas, CX tentang menciptakan perjalanan pelanggan yang seamless, nyaman, dan penuh"
 pubDate: 2024-09-20T14:09:27
-author: "Admin"
+author: "Arisdiansah"
 sourceUrl: "https://incentric.co.id/mengapa-customer-experience-menjadi-kunci-sukses-di-2025/"
 categories: ["Customer Experience"]
 tags: ["customer", "Customer experience", "pelanggan", "pelayanan"]

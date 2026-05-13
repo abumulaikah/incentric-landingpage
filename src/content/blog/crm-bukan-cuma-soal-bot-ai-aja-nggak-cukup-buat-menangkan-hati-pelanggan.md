@@ -2,7 +2,9 @@
 title: "CRM Bukan Cuma Soal Bot: AI Aja Nggak Cukup Buat Menangkan Hati Pelanggan"
 description: "Pernah nggak Anda ada di posisi ini: lagi butuh solusi cepat atau pengen tahu soal sebuah produk, terus Anda chat customer service. Wah, balasannya cepat banget! Tapi kok makin lama jawabannya cuma muter-muter, berulang, dan malah bikin bingung. Nggak lama, Anda sadar kalau dari tadi Anda cuma ngobrol sama bot atau AI yang belum di-training"
 pubDate: 2026-03-09T10:53:58
-author: "Admin"
+author: "Arisdiansah"
+heroImage: "https://mlczpqkasixx.i.optimole.com/cb:Lxyp.749/w:1280/h:720/q:mauto/ig:avif/https://incentric.co.id/wp-content/uploads/2026/03/Artikel-Foto.jpg"
+heroImageAlt: "CRM bukan cuma soal bot"
 sourceUrl: "https://incentric.co.id/crm-bukan-cuma-soal-bot-ai-aja-nggak-cukup-buat-menangkan-hati-pelanggan/"
 categories: ["CRM"]
 tags: ["AI", "CRM", "Customer experience", "Customer Service"]

@@ -1,6 +1,28 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { Navbar } from '../../components/Navbar';
+
+const teamImages = import.meta.glob('../../assets/team/*.jpg', {
+  eager: true,
+  import: 'default',
+}) as Record<string, string | { src: string }>;
+
+const getTeamImage = (fileName: string) => {
+  const image = teamImages[`../../assets/team/${fileName}`];
+  if (!image) return undefined;
+  return typeof image === 'string' ? image : image.src;
+};
+
+const authorAvatars: Record<string, string | undefined> = {
+  Admin: getTeamImage('arisdiansah.jpg'),
+  Arisdiansah: getTeamImage('arisdiansah.jpg'),
+  'Yana Sandhi': getTeamImage('yana.jpg'),
+  'Ronald Healtha': getTeamImage('ronald.jpg'),
+  'Wahyu Teguh': getTeamImage('wahyu.jpg'),
+  'Al Fitra N': getTeamImage('fitra.jpg'),
+  'Al Fitra Noor': getTeamImage('fitra.jpg'),
+};
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog', ({ data }) => !data.draft);
@@ -13,28 +35,167 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await render(post);
+
+const displayDate = post.data.pubDate.toLocaleDateString('en-GB', {
+  day: '2-digit',
+  month: 'short',
+  year: 'numeric',
+});
+const chips = [...post.data.tags, ...post.data.categories]
+  .filter((value, index, values) => value && values.indexOf(value) === index)
+  .slice(0, 4);
+
+const getFilterUrl = (chip: string) => `/blog/?filter=${encodeURIComponent(chip)}`;
+const heroImageAlt = post.data.heroImageAlt ?? post.data.title;
+const authorAvatar = post.data.authorAvatar ?? authorAvatars[post.data.author];
+const authorInitial = post.data.author.trim().charAt(0).toUpperCase();
 ---
 
 <BaseLayout title={`${post.data.title} | Incentric CX`} description={post.data.description}>
-  <main class="min-h-screen bg-slate-50 px-6 py-24 text-slate-900">
-    <article class="mx-auto max-w-3xl">
-      <a href="/blog/" class="not-prose text-sm font-bold text-brand-blue hover:underline">Back to blog</a>
-      <header class="not-prose mt-8 border-b border-slate-200 pb-10">
-        <p class="text-sm font-medium text-slate-500">
-          {post.data.pubDate.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-          })}
-          <span aria-hidden="true"> · </span>
-          {post.data.author}
-        </p>
-        <h1 class="mt-4 text-4xl font-bold tracking-tight md:text-6xl">{post.data.title}</h1>
-        <p class="mt-5 text-lg leading-relaxed text-slate-600">{post.data.description}</p>
-      </header>
-      <div class="mt-10 space-y-6 text-lg leading-relaxed text-slate-700">
+  <main id="top" class="min-h-screen bg-white text-slate-950">
+    <Navbar theme="light" client:load />
+
+    <article class="mx-auto max-w-7xl px-6 pb-24 pt-32 md:pt-40">
+      <div class="max-w-5xl">
+        <a href="/blog/" class="mb-5 inline-flex text-sm font-bold text-brand-blue underline-offset-4 transition hover:underline">
+          Back to blog
+        </a>
+
+        {
+          chips.length > 0 && (
+            <div class="flex flex-wrap gap-2">
+              {chips.map((chip) => (
+                <a
+                  href={getFilterUrl(chip)}
+                  class="rounded-md bg-slate-100 px-3 py-1.5 text-sm font-bold text-slate-950 transition hover:bg-brand-blue hover:text-white"
+                >
+                  {chip}
+                </a>
+              ))}
+            </div>
+          )
+        }
+
+        <h1 class="mt-8 max-w-5xl text-5xl font-bold leading-[0.98] tracking-tight text-slate-950 md:text-7xl lg:text-8xl">
+          {post.data.title}
+        </h1>
+
+        <div class="mt-8 flex flex-wrap items-center gap-x-4 gap-y-3 text-base text-slate-500">
+          <div class="flex items-center gap-3">
+            {
+              authorAvatar ? (
+                <img
+                  src={authorAvatar}
+                  alt={post.data.author}
+                  class="h-11 w-11 rounded-full object-cover ring-1 ring-slate-200"
+                  loading="eager"
+                />
+              ) : (
+                <span class="flex h-11 w-11 items-center justify-center rounded-full bg-slate-900 text-sm font-bold text-white">
+                  {authorInitial}
+                </span>
+              )
+            }
+            <p class="font-medium text-slate-500">
+              Writer{' '}
+              <a href={getFilterUrl(post.data.author)} class="font-semibold text-slate-950 underline-offset-4 transition hover:text-brand-blue hover:underline">
+                {post.data.author}
+              </a>
+            </p>
+          </div>
+          <span class="hidden h-1.5 w-1.5 rounded-full bg-slate-300 sm:block"></span>
+          <time datetime={post.data.pubDate.toISOString()} class="font-medium text-slate-500">
+            Posted: {displayDate}
+          </time>
+        </div>
+      </div>
+
+      {
+        post.data.heroImage ? (
+          <figure class="mt-6 overflow-hidden rounded-lg bg-slate-100">
+            <img
+              src={post.data.heroImage}
+              alt={heroImageAlt}
+              class="aspect-[16/9] w-full object-cover"
+              loading="eager"
+            />
+          </figure>
+        ) : (
+          <div class="mt-6 overflow-hidden rounded-lg bg-slate-950">
+            <div class="relative flex min-h-[330px] items-end overflow-hidden p-8 md:min-h-[520px] md:p-12">
+              <div class="absolute inset-0 bg-[radial-gradient(circle_at_22%_18%,rgba(255,188,0,0.42),transparent_30%),radial-gradient(circle_at_78%_28%,rgba(1,79,207,0.55),transparent_34%),linear-gradient(135deg,#020617_0%,#0f172a_48%,#111827_100%)]" />
+              <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/70 to-transparent" />
+              <div class="relative max-w-3xl text-white">
+                <p class="text-sm font-bold uppercase tracking-[0.18em] text-brand-yellow">Incentric Journal</p>
+                <p class="mt-4 text-2xl font-bold leading-tight md:text-4xl">{post.data.description}</p>
+              </div>
+            </div>
+          </div>
+        )
+      }
+
+      <div class="article-body mx-auto mt-16 max-w-3xl text-[1.08rem] leading-[1.85] text-slate-800 md:text-[1.18rem]">
         <Content />
       </div>
     </article>
   </main>
+
+  <style>
+    .article-body :global(p) {
+      margin-block: 1.35rem;
+    }
+
+    .article-body :global(h2),
+    .article-body :global(h3) {
+      color: #020617;
+      font-weight: 700;
+      letter-spacing: 0;
+      line-height: 1.08;
+      margin-block: 3.5rem 1.25rem;
+    }
+
+    .article-body :global(h2) {
+      font-size: clamp(2rem, 4vw, 3.5rem);
+    }
+
+    .article-body :global(h3) {
+      font-size: clamp(1.5rem, 2.4vw, 2.25rem);
+    }
+
+    .article-body :global(strong) {
+      color: #020617;
+      font-weight: 700;
+    }
+
+    .article-body :global(a) {
+      color: #014fcf;
+      font-weight: 700;
+      text-decoration: underline;
+      text-underline-offset: 0.18em;
+    }
+
+    .article-body :global(ul),
+    .article-body :global(ol) {
+      margin-block: 1.5rem;
+      padding-left: 1.5rem;
+    }
+
+    .article-body :global(ul) {
+      list-style: disc;
+    }
+
+    .article-body :global(ol) {
+      list-style: decimal;
+    }
+
+    .article-body :global(li) {
+      margin-block: 0.55rem;
+    }
+
+    .article-body :global(img) {
+      border-radius: 0.5rem;
+      margin-block: 2.5rem;
+      width: 100%;
+    }
+  </style>
 </BaseLayout>

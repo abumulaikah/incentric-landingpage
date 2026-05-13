@@ -2,7 +2,7 @@
 title: "Post Pandemic Challange"
 description: "“Kenapa habis pandemi bisnis makin sulit?” Banyak sekali pertanyaan yang sejenis. Ini bukan masalah skrang sudah kembali atau tidak kembali lagi dari pandemi. Ini tentang karakter customer. Karakter customer, dan karakter itu terbentuk karena karena kebiasaan. Ketika dahulu terjadi pandemi, sebenarnya karakter customer masih sama dengan sebelum pandemi. Namun secara bertahap terbentuk karena lingkungan memaksa"
 pubDate: 2023-05-27T02:12:43
-author: "Admin"
+author: "Arisdiansah"
 sourceUrl: "https://incentric.co.id/post-pandemic-challange/"
 categories: ["Services Culture"]
 tags: []

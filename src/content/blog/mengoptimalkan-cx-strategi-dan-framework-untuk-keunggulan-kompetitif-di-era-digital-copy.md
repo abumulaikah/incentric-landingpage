@@ -2,7 +2,7 @@
 title: "Mengoptimalkan CX: Strategi dan Framework untuk Keunggulan Kompetitif di Era Digital – Copy"
 description: "Pengalaman pelanggan (Customer Experience atau CX) telah menjadi salah satu elemen paling krusial dalam strategi bisnis modern. Di era digital yang semakin kompetitif, perusahaan tidak hanya bersaing berdasarkan produk dan harga, tetapi juga bagaimana mereka memperlakukan pelanggan di setiap titik kontak. Strategi pengalaman pelanggan yang efektif dapat menjadi pembeda utama yang memungkinkan perusahaan meraih kesetiaan"
 pubDate: 2025-09-02T03:48:21
-author: "Admin"
+author: "Arisdiansah"
 sourceUrl: "https://incentric.co.id/mengoptimalkan-cx-strategi-dan-framework-untuk-keunggulan-kompetitif-di-era-digital-copy/"
 categories: ["Service Experience"]
 tags: []

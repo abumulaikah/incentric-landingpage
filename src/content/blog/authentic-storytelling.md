@@ -2,7 +2,7 @@
 title: "Authentic Storytelling"
 description: "Menarik mengikuti perkembangan pembahasan para marketer dunia tentang authentic ditengah banyaknya gimmick marketing. Storytelling yang baguspun nantinya tidak cukub ketika customer menuntut kejujuran. Dan justru kejujuran dan keautentikan yang nantinya menjadi kekuatan marketing yang luar biasa. Customer bukan mulai jenuh lagi, tapi customer pada titik tertentu akan merasa muak dengan konten2 marketing, janji, dan klaim"
 pubDate: 2023-09-09T02:21:39
-author: "Admin"
+author: "Arisdiansah"
 sourceUrl: "https://incentric.co.id/authentic-storytelling/"
 categories: ["CRM"]
 tags: []

@@ -2,7 +2,7 @@
 title: "How to Budget for a Construction Business Expansions"
 description: "Praesentium taken the leap into entrepreneurship and it’s time to figure out how to get your business up and running. You need funding to start achieving your goals. If you’re looking at financing options, a startup business loan is a great solution that allows you to build your business’s credit history, which will help you"
 pubDate: 2023-04-07T08:19:48
-author: "Admin"
+author: "Arisdiansah"
 sourceUrl: "https://incentric.co.id/how-to-budget-for-a-construction-business-expansions/"
 categories: ["Business"]
 tags: ["Business Loans", "Small Business"]

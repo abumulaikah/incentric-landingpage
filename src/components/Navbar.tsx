@@ -10,11 +10,20 @@ const navLinks = [
   { label: "Blog", href: "/blog" },
 ];
 
-export function Navbar() {
-  const [isDarkText, setIsDarkText] = useState(false);
+interface NavbarProps {
+  theme?: "auto" | "light" | "dark";
+}
+
+export function Navbar({ theme = "auto" }: NavbarProps) {
+  const [isDarkText, setIsDarkText] = useState(theme === "light");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
+    if (theme !== "auto") {
+      setIsDarkText(theme === "light");
+      return;
+    }
+
     // Determine overlapping sections
     const handleScroll = () => {
       const navCenter = 32 + 24; // top-6 (24px) + half of h-16 (32px) = 56px from top
@@ -48,7 +57,7 @@ export function Navbar() {
     handleScroll();
 
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [theme]);
 
   return (
     <div className="fixed top-5 left-0 right-0 z-50 flex justify-center px-5 pointer-events-none sm:top-6 sm:px-4">
@@ -59,7 +68,7 @@ export function Navbar() {
         className={`pointer-events-auto w-full max-w-5xl h-14 flex items-center justify-between px-5 relative z-10 transition-colors duration-500 sm:h-16 sm:px-6 lg:px-8 ${isDarkText ? 'text-slate-900' : 'text-white'}`}
       >
         <div className="flex items-center">
-          <a href="#top" className="flex items-center space-x-2 hover:opacity-80 transition-opacity" aria-label="Back to top" onClick={() => setIsMenuOpen(false)}>
+          <a href="/#top" className="flex items-center space-x-2 hover:opacity-80 transition-opacity" aria-label="Back to top" onClick={() => setIsMenuOpen(false)}>
             <img
               src={isDarkText ? logoBlue.src : logoWhite.src}
               alt="Incentric"
@@ -74,7 +83,7 @@ export function Navbar() {
               {link.label}
             </a>
           ))}
-          <a href="#contact" className={`hidden px-4 py-2 rounded-full hover:scale-105 transition-all uppercase tracking-[0.1em] text-[10px] font-bold sm:inline-block sm:px-5 md:text-xs ${isDarkText ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'}`}>
+          <a href="/#contact" className={`hidden px-4 py-2 rounded-full hover:scale-105 transition-all uppercase tracking-[0.1em] text-[10px] font-bold sm:inline-block sm:px-5 md:text-xs ${isDarkText ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'}`}>
             Start Now
           </a>
           <button
@@ -108,7 +117,7 @@ export function Navbar() {
               </a>
             ))}
             <a
-              href="#contact"
+              href="/#contact"
               className={`mt-2 rounded-full px-4 py-3 text-center text-xs font-bold uppercase tracking-[0.1em] ${isDarkText ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'}`}
               onClick={() => setIsMenuOpen(false)}
             >

@@ -2,7 +2,7 @@
 title: "What you need to know before applying for a business loans"
 description: "Voluptas assumenda the leap into entrepreneurship and it’s time to figure out how to get your business up and running. You need funding to start achieving your goals. If you’re looking at financing options, a startup business loan is a great solution that allows you to build your business’s credit history, which will help you"
 pubDate: 2022-12-07T08:22:14
-author: "Admin"
+author: "Arisdiansah"
 sourceUrl: "https://incentric.co.id/what-you-need-to-know-before-applying-for-a-business-loans/"
 categories: ["Business"]
 tags: ["Business Loans", "Small Business"]

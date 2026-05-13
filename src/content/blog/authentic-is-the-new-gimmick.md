@@ -2,7 +2,7 @@
 title: "Authentic is The New Gimmick"
 description: "Ketika marketer berusaha membuat sesuatu tampak “wow” dan hebat dengan konten maupun marcom-nya, pada akhirnya realita yang akan berbicara. Mengutip dari salah satu artikel di Forbes, bahwa salah satu unsur/variabel yang akan sangat menentukan didalam membangun customer experience adalah “Authenticity”. Menjadi autentik membuat trust kepada sebuah brand menjadi meningkat. Brand yang terbranding jujur akan membuat"
 pubDate: 2023-05-30T02:22:59
-author: "Admin"
+author: "Arisdiansah"
 sourceUrl: "https://incentric.co.id/authentic-is-the-new-gimmick/"
 categories: ["Employee Experience"]
 tags: []

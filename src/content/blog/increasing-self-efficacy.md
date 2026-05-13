@@ -2,7 +2,7 @@
 title: "Increasing Self-efficacy"
 description: "Bagaimana meningkatkan kapasitas diri?? Saya sangat terbantu dengan tools berikut untuk kita bisa memahami tentang bagaimana kita bisa melihat kapasitas diri. Untuk keuntungan dalam waktu yang pendek, maka kita bisa dengan jalan meningkatkan pendapatan. Jadi ternyata uang itu memang bukan jaminan untuk kebahagiaan jangka panjang. Kalau anda ingin keuntungan jangka panjang, maka anda harus meningkatkan"
 pubDate: 2023-05-29T02:15:16
-author: "Admin"
+author: "Arisdiansah"
 sourceUrl: "https://incentric.co.id/increasing-self-efficacy/"
 categories: ["Employee Experience"]
 tags: []

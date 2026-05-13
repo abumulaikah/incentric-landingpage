@@ -2,7 +2,7 @@
 title: "Panduan Lengkap tentang CRM: Integrasi, Penggunaan untuk Layanan Pelanggan, Penjualan, Pemasaran, dan Praktik Terbaik"
 description: "Dalam dunia bisnis modern yang terus berkembang, Customer Relationship Management (CRM) telah menjadi alat penting untuk membangun dan mempertahankan hubungan yang kuat dengan pelanggan. Artikel ini akan membahas berbagai aspek penting dari CRM, termasuk CRM integration, penggunaan CRM untuk layanan pelanggan, penjualan, dan pemasaran, serta praktik terbaik dalam CRM. Kita juga akan menjelaskan tentang enterprise"
 pubDate: 2024-09-08T02:36:17
-author: "Admin"
+author: "Arisdiansah"
 sourceUrl: "https://incentric.co.id/panduan-lengkap-tentang-crm-integrasi-penggunaan-untuk-layanan-pelanggan-penjualan-pemasaran-dan-praktik-terbaik/"
 categories: ["CRM"]
 tags: ["CRM", "customer", "Customer experience", "marketing", "retention marketing", "service culture", "strategi marketing"]

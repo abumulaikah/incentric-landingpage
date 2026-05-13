@@ -2,7 +2,7 @@
 title: "Auditing Your Marketing Automation Platform"
 description: "So you’ve taken the leap into entrepreneurship and it’s time to figure out how to get your business up and running. You need funding to start achieving your goals. If you’re looking at financing options, a startup business loan is a great solution that allows you to build your business’s credit history, which will help"
 pubDate: 2022-12-08T07:05:59
-author: "Admin"
+author: "Arisdiansah"
 sourceUrl: "https://incentric.co.id/auditing-your-marketing-automation-platform/"
 categories: ["Our Blog"]
 tags: ["Business Loans", "Small Business"]

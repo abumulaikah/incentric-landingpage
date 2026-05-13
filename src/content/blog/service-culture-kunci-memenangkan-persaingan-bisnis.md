@@ -2,7 +2,7 @@
 title: "Service Culture, Kunci Memenangkan Persaingan Bisnis."
 description: "Dalam dunia bisnis yang kompetitif saat ini, tidak cukup hanya dengan menawarkan produk atau layanan yang lebih bagus. Perusahaan harus berusaha lebih keras untuk membedakan diri mereka dari para pesaing. Salah satu cara untuk melakukannya adalah dengan menciptakan Service Culture atau budaya layanan yang kuat. Service Culture atau budaya layanan adalah seperangkat nilai (values) dan"
 pubDate: 2024-01-04T00:57:20
-author: "Admin"
+author: "Arisdiansah"
 sourceUrl: "https://incentric.co.id/service-culture-kunci-memenangkan-persaingan-bisnis/"
 categories: ["Services Culture"]
 tags: []

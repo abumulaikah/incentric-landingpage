@@ -2,7 +2,7 @@
 title: "Things to Know Before Entering a Small Business"
 description: "So you’ve taken the leap into entrepreneurship and it’s time to figure out how to get your business up and running. You need funding to start achieving your goals. If you’re looking at financing options, a startup business loan is a great solution that allows you to build your business’s credit history, which will help"
 pubDate: 2023-02-06T13:43:15
-author: "Admin"
+author: "Arisdiansah"
 sourceUrl: "https://incentric.co.id/things-to-know-before-entering-a-small-business/"
 categories: ["Blog"]
 tags: ["Business Loans", "Small Business"]

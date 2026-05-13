@@ -2,7 +2,7 @@
 title: "Storytelling or selling a story"
 description: "Baik, kita coba ikut bicara tentang Inara… Jika saya bercerita tentang ibu Ina yang pergi ke Indomaret untuk beli susu bayi, mungkin teman2 tidak tertarik untuk mendengarnya. Jika saya bercerita tentang ibu Ina yang pergi ke Indomaret untuk beli susu bayinya yg menderita tumor ganas. Mungkin anda akan mulai tertarik menyimak ceritanya. Jika saya bercerita tentang"
 pubDate: 2023-08-25T16:12:30
-author: "Admin"
+author: "Arisdiansah"
 sourceUrl: "https://incentric.co.id/storytelling-or-selling-a-story/"
 categories: ["Services Culture"]
 tags: []
