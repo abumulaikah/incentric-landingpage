@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { Navbar } from '../../components/Navbar';
+import { Footer } from '../../components/Footer';
 
 const posts = (await getCollection('blog'))
   .filter((post) => !post.data.draft)
@@ -33,7 +34,7 @@ const tagOptions = ['Marketing', 'Service', 'Sales', 'CRM', 'Culture', 'Research
 ---
 
 <BaseLayout title="Blog | Incentric CX" description="Ideas and insights from Incentric.">
-  <main id="top" class="min-h-screen bg-[#f5f6f7] text-slate-950">
+  <main id="top" class="min-h-screen bg-[#e7eaee] text-slate-950">
     <Navbar theme="light" client:load />
 
     <section class="mx-auto max-w-7xl px-6 pb-16 pt-32 md:pt-40">
@@ -217,6 +218,8 @@ const tagOptions = ['Marketing', 'Service', 'Sales', 'CRM', 'Culture', 'Research
         No posts found for this filter.
       </p>
     </section>
+
+    <Footer client:load />
   </main>
 
   <script>
