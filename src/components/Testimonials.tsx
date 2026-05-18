@@ -1,14 +1,26 @@
 import { motion } from "motion/react";
+import { Play, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import grainOverlay from "../assets/grain-overlay.png";
 
-const testimonials = [
+const testimonialVideos = [
   {
-    quote: "Incentric completely reframed how we look at customer support. We stopped seeing it as a cost center.",
-    author: "Sarah D.",
-    role: "VP of Operations",
-    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800&auto=format&fit=crop",
-    logo: "TechCorp"
+    name: "dr. Yusuf Wibisono",
+    role: "Owner",
+    company: "Klinik Keluarga",
+    poster: "/media/dr-yusuf-wibisono-thumbnail.png",
+    src: "/media/dr-yusuf-wibisono.mp4",
   },
+  {
+    name: "M. Ubaidillah",
+    role: "CEO",
+    company: "Bebimart",
+    poster: "/media/m-ubaidillah-thumbnail.png",
+    src: "/media/m-ubaidillah-bebimart.mp4",
+  },
+];
+
+const testimonials = [
   {
     quote: "Using the WOW Experience Loop, our customer LTV shot up by 40% in just two quarters.",
     author: "Michael T.",
@@ -40,6 +52,27 @@ const testimonials = [
 ];
 
 export function Testimonials() {
+  const [activeVideo, setActiveVideo] = useState<(typeof testimonialVideos)[number] | null>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const openVideo = (video: (typeof testimonialVideos)[number]) => {
+    setActiveVideo(video);
+  };
+
+  const closeVideo = () => {
+    setActiveVideo(null);
+    if (videoRef.current) {
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0;
+    }
+  };
+
+  useEffect(() => {
+    if (!activeVideo) return;
+
+    void videoRef.current?.play().catch(() => undefined);
+  }, [activeVideo]);
+
   return (
     <section className="py-32 bg-slate-950 bg-[linear-gradient(180deg,#111d2d_0%,#10294d_48%,#0b326f_100%)] relative overflow-hidden">
       {/* Background accents */}
@@ -73,6 +106,42 @@ export function Testimonials() {
         </div>
 
         <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar relative w-full pt-4 pb-16 -mx-6 px-6 lg:-mx-12 lg:px-12">
+          {testimonialVideos.map((video) => (
+            <div key={video.name} className="shrink-0 pr-6 md:pr-8 snap-center">
+              <div className="w-[280px] md:w-[340px] aspect-[4/5] rounded-[2rem] overflow-hidden relative group shadow-xl shadow-slate-950/40 border border-white/20 bg-slate-900">
+                <button
+                  type="button"
+                  aria-label={`Open ${video.name} testimonial video`}
+                  onClick={() => openVideo(video)}
+                  className="absolute inset-0 h-full w-full cursor-pointer text-left"
+                >
+                  <img
+                    src={video.poster}
+                    alt={`${video.name}, ${video.role} ${video.company}`}
+                    className="absolute inset-0 h-full w-full object-cover brightness-105 transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-x-0 bottom-0 top-[42%] bg-gradient-to-t from-black/75 via-black/25 to-transparent"></div>
+                  <div className="absolute top-6 left-6 text-white/90 font-bold text-[13px] tracking-widest uppercase flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">
+                      <span className="w-3 h-3 rounded-full bg-white"></span>
+                    </div>
+                    {video.company}
+                  </div>
+                  <div className="absolute top-6 right-6 z-10">
+                    <div className="w-12 h-12 rounded-full bg-white/30 backdrop-blur-md flex items-center justify-center text-white shadow-[0_0_15px_rgba(0,0,0,0.2)] border border-white/30 transition-colors group-hover:bg-white/40">
+                      <Play className="h-6 w-6 fill-current" aria-hidden="true" />
+                    </div>
+                  </div>
+                  <div className="absolute bottom-0 left-0 right-0 p-8 flex flex-col justify-end">
+                    <div>
+                      <p className="text-white font-semibold text-lg">{video.name}</p>
+                      <p className="text-white/70 text-sm font-medium">{video.role}</p>
+                    </div>
+                  </div>
+                </button>
+              </div>
+            </div>
+          ))}
           {testimonials.map((item, index) => (
             <div key={index} className="shrink-0 pr-6 md:pr-8 snap-center">
               <div className="w-[280px] md:w-[340px] aspect-[4/5] rounded-[2rem] overflow-hidden relative group cursor-pointer shadow-xl shadow-slate-950/40 border border-white/20">
@@ -115,6 +184,36 @@ export function Testimonials() {
           ))}
         </div>
       </div>
+
+      {activeVideo && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/85 px-4 py-6 backdrop-blur-sm"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${activeVideo.name} testimonial video`}
+        >
+          <div className="relative w-full max-w-4xl overflow-hidden rounded-lg bg-black shadow-2xl shadow-black/50">
+            <button
+              type="button"
+              aria-label="Close video"
+              onClick={closeVideo}
+              className="absolute right-3 top-3 z-10 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/60 text-white transition hover:bg-white hover:text-brand-ink"
+            >
+              <X className="h-5 w-5" aria-hidden="true" />
+            </button>
+            <video
+              ref={videoRef}
+              src={activeVideo.src}
+              poster={activeVideo.poster}
+              title={`${activeVideo.name} testimonial`}
+              className="block max-h-[82vh] w-full bg-black object-contain"
+              controls
+              autoPlay
+              playsInline
+            />
+          </div>
+        </div>
+      )}
     </section>
   );
 }
