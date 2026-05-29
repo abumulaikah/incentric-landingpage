@@ -1,12 +1,71 @@
 import { motion } from "motion/react";
 import { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import { ChevronDown, Menu, X } from "lucide-react";
 import logoBlue from "../assets/logos/incentric-logo-blue.png";
 import logoWhite from "../assets/logos/incentric-logo-white.png";
+import { WHATSAPP_URL } from "../lib/contact";
 
 const navLinks = [
-  { label: "Services", href: "/services" },
-  { label: "Workshop", href: "/workshop" },
+  {
+    label: "Services",
+    href: "/services",
+    groups: [
+      {
+        label: "Surveys",
+        items: [
+          { label: "Employee Engagement", href: "/services/employee-engagement" },
+          { label: "NPS", href: "/services/nps" },
+        ],
+      },
+      {
+        label: "In-house Training",
+        items: [
+          { label: "Conscious Leadership", href: "/services#conscious-leadership" },
+          { label: "Sprint Productivity System", href: "/services#sprint-productivity-system" },
+          { label: "CRM", href: "/services#crm" },
+        ],
+      },
+      {
+        label: "Implementation Program",
+        items: [
+          { label: "CRM Architecture", href: "/services#crm-architecture" },
+          { label: "WOW Experience Loop", href: "/services#wow-experience-loop" },
+          { label: "Business Operating System by Coda", href: "/services#business-operating-system-by-coda" },
+        ],
+      },
+    ],
+  },
+  {
+    label: "Workshop",
+    href: "/workshop",
+    groups: [
+      {
+        label: "Workshop",
+        items: [
+          { label: "The Founder", href: "/workshop#the-founder" },
+          { label: "CRM Mastery", href: "/workshop#crm-mastery" },
+          { label: "Service Experience", href: "/workshop#service-experience" },
+        ],
+      },
+    ],
+  },
+  {
+    label: "Products",
+    href: "/#products",
+    groups: [
+      {
+        label: "Books",
+        items: [
+          { label: "Breaktime", href: "/#breaktime" },
+          { label: "Seni Merawat Pelanggan", href: "/#seni-merawat-pelanggan" },
+        ],
+      },
+      {
+        label: "Apps",
+        items: [{ label: "Apps", href: "/#apps" }],
+      },
+    ],
+  },
   { label: "Blog", href: "/blog" },
 ];
 
@@ -17,6 +76,8 @@ interface NavbarProps {
 export function Navbar({ theme = "auto" }: NavbarProps) {
   const [isDarkText, setIsDarkText] = useState(theme === "light");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
 
   useEffect(() => {
     if (theme !== "auto") {
@@ -79,11 +140,74 @@ export function Navbar({ theme = "auto" }: NavbarProps) {
         
         <div className="flex items-center space-x-4 md:space-x-8 text-xs md:text-sm font-bold">
           {navLinks.map((link) => (
-            <a key={link.href} href={link.href} className="hidden sm:inline-block hover:opacity-70 transition-opacity">
-              {link.label}
-            </a>
+            <div
+              key={link.href}
+              className="relative hidden sm:block"
+            >
+              <a
+                href={link.href}
+                className="inline-flex items-center gap-1 py-4 hover:opacity-70 transition-opacity"
+                aria-haspopup={"groups" in link && link.groups ? "menu" : undefined}
+                aria-expanded={"groups" in link && link.groups ? openDropdown === link.href : undefined}
+                onClick={(event) => {
+                  if ("groups" in link && link.groups) {
+                    event.preventDefault();
+                    setOpenDropdown((current) => {
+                      const next = current === link.href ? null : link.href;
+                      if (!next) setOpenSubmenu(null);
+                      return next;
+                    });
+                  }
+                }}
+              >
+                {link.label}
+                {"groups" in link && link.groups && (
+                  <ChevronDown
+                    size={14}
+                    strokeWidth={2.5}
+                    className={`transition-transform ${openDropdown === link.href ? 'rotate-180' : ''}`}
+                  />
+                )}
+              </a>
+              {"groups" in link && link.groups && (
+                <div className={`absolute left-1/2 top-full w-80 -translate-x-1/2 rounded-2xl border p-2 text-left shadow-[0_20px_60px_rgba(15,23,42,0.18)] backdrop-blur-3xl transition-all duration-200 ${openDropdown === link.href ? 'visible translate-y-0 opacity-100' : 'invisible translate-y-2 opacity-0'} ${isDarkText ? 'border-black/5 bg-white/95 text-slate-950' : 'border-white/10 bg-slate-950/95 text-white'}`}>
+                  <div className="space-y-1">
+                    {link.groups.map((group) => (
+                      <div key={group.label}>
+                        <button
+                          type="button"
+                          className={`flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left text-sm font-bold transition-colors ${openSubmenu === group.label ? (isDarkText ? 'bg-slate-100' : 'bg-white/10') : ''} ${isDarkText ? 'hover:bg-slate-100' : 'hover:bg-white/10'}`}
+                          aria-expanded={openSubmenu === group.label}
+                          onClick={() => setOpenSubmenu((current) => (current === group.label ? null : group.label))}
+                        >
+                          {group.label}
+                          <ChevronDown
+                            size={15}
+                            strokeWidth={2.5}
+                            className={`transition-transform ${openSubmenu === group.label ? 'rotate-180' : ''}`}
+                          />
+                        </button>
+                        {openSubmenu === group.label && (
+                          <div className="mt-1 grid gap-1 pl-3">
+                            {group.items.map((item) => (
+                              <a
+                                key={item.href}
+                                href={item.href}
+                                className={`block rounded-xl px-3 py-2 text-sm font-bold transition-colors ${isDarkText ? 'hover:bg-slate-100' : 'hover:bg-white/10'}`}
+                              >
+                                {item.label}
+                              </a>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           ))}
-          <a href="/#contact" className={`hidden px-4 py-2 rounded-full hover:scale-105 transition-all uppercase tracking-[0.1em] text-[10px] font-bold sm:inline-block sm:px-5 md:text-xs ${isDarkText ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'}`}>
+          <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className={`hidden px-4 py-2 rounded-full hover:scale-105 transition-all uppercase tracking-[0.1em] text-[10px] font-bold sm:inline-block sm:px-5 md:text-xs ${isDarkText ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'}`}>
             Start Now
           </a>
           <button
@@ -107,17 +231,66 @@ export function Navbar({ theme = "auto" }: NavbarProps) {
         >
           <div className="flex flex-col">
             {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className="rounded-2xl px-4 py-3 text-sm font-bold transition-colors hover:bg-white/10"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {link.label}
-              </a>
+              <div key={link.href}>
+                <a
+                  href={link.href}
+                  className={`block rounded-2xl px-4 py-3 text-sm font-bold transition-colors ${isDarkText ? 'hover:bg-slate-100' : 'hover:bg-white/10'}`}
+                  onClick={(event) => {
+                    if ("groups" in link && link.groups) {
+                      event.preventDefault();
+                      setOpenDropdown((current) => {
+                        const next = current === link.href ? null : link.href;
+                        if (!next) setOpenSubmenu(null);
+                        return next;
+                      });
+                      return;
+                    }
+                    setIsMenuOpen(false);
+                  }}
+                >
+                  {link.label}
+                </a>
+                {"groups" in link && link.groups && openDropdown === link.href && (
+                  <div className="px-4 pb-3">
+                    {link.groups.map((group) => (
+                      <div key={group.label} className="mt-2">
+                        <button
+                          type="button"
+                          className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-sm font-bold transition-colors ${isDarkText ? 'hover:bg-slate-100' : 'hover:bg-white/10'}`}
+                          aria-expanded={openSubmenu === group.label}
+                          onClick={() => setOpenSubmenu((current) => (current === group.label ? null : group.label))}
+                        >
+                          {group.label}
+                          <ChevronDown size={15} strokeWidth={2.5} className={`transition-transform ${openSubmenu === group.label ? 'rotate-180' : ''}`} />
+                        </button>
+                        {openSubmenu === group.label && (
+                          <div className="mt-1 grid gap-1 pl-3">
+                            {group.items.map((item) => (
+                              <a
+                                key={item.href}
+                                href={item.href}
+                                className={`rounded-xl px-3 py-2 text-sm font-semibold transition-colors ${isDarkText ? 'hover:bg-slate-100' : 'hover:bg-white/10'}`}
+                                onClick={() => {
+                                  setIsMenuOpen(false);
+                                  setOpenDropdown(null);
+                                  setOpenSubmenu(null);
+                                }}
+                              >
+                                {item.label}
+                              </a>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             ))}
             <a
-              href="/#contact"
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noreferrer"
               className={`mt-2 rounded-full px-4 py-3 text-center text-xs font-bold uppercase tracking-[0.1em] ${isDarkText ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'}`}
               onClick={() => setIsMenuOpen(false)}
             >

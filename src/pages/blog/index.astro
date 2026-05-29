@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { Navbar } from '../../components/Navbar';
 import { Footer } from '../../components/Footer';
+import { WHATSAPP_URL } from '../../lib/contact';
 
 const posts = (await getCollection('blog'))
   .filter((post) => !post.data.draft)
@@ -51,7 +52,7 @@ const tagOptions = ['Marketing', 'Service', 'Sales', 'CRM', 'Culture', 'Research
             Customer experience thinking, service culture, CRM, and practical notes for teams building stronger relationships with customers.
           </p>
           <div class="mt-7 flex flex-wrap gap-3">
-            <a href="/#contact" class="rounded-full bg-slate-950 px-5 py-3 text-sm font-bold text-white transition hover:bg-brand-blue">
+            <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" class="rounded-full bg-slate-950 px-5 py-3 text-sm font-bold text-white transition hover:bg-brand-blue">
               Talk to Incentric
             </a>
             <a href="#articles" class="rounded-full border border-slate-300 px-5 py-3 text-sm font-bold text-slate-950 transition hover:border-brand-blue hover:text-brand-blue">

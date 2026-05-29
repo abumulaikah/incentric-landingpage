@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import grainOverlay from "../assets/grain-overlay.png";
 import { useReducedEffects } from "../hooks/useReducedEffects";
+import { WHATSAPP_URL } from "../lib/contact";
 
 const words = [
   { text: "WOW", duration: 3000 },
@@ -377,7 +378,9 @@ export function Hero() {
           className="flex flex-col sm:flex-row items-center justify-center gap-6"
         >
           <a
-            href="#contact"
+            href={WHATSAPP_URL}
+            target="_blank"
+            rel="noreferrer"
             className="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-slate-900 transition-all duration-300 bg-brand-yellow rounded-full hover:scale-105 hover:shadow-[0_20px_40px_rgba(255,188,0,0.3)]"
           >
             <span className="relative z-10 flex items-center justify-center">

@@ -2,6 +2,7 @@ import { motion, useMotionValue, useSpring } from "motion/react";
 import { ArrowUpRight } from "lucide-react";
 import { useEffect } from "react";
 import { useReducedEffects } from "../hooks/useReducedEffects";
+import { WHATSAPP_URL } from "../lib/contact";
 
 function RotatingText() {
   const text = "CONTACT US | GET IN TOUCH | START A PROJECT | ";
@@ -100,11 +101,13 @@ export function Footer() {
       {/* Central Interactive Element */}
       <div className="relative z-10 flex flex-col items-center justify-center">
         <motion.a
-          href="mailto:hello@incentric.studio?subject=Start%20a%20Project"
+          href={WHATSAPP_URL}
+          target="_blank"
+          rel="noreferrer"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           className="relative group"
-          aria-label="Start a project by email"
+          aria-label="Start a project on WhatsApp"
         >
           <div className="relative w-44 h-44 md:w-64 md:h-64 rounded-full flex items-center justify-center transition-all duration-700">
             {/* Rotating Circular Text */}
@@ -127,7 +130,7 @@ export function Footer() {
         <div className="flex gap-12 text-center md:text-left font-bold">
           <span>Twitter (X)</span>
           <span>LinkedIn</span>
-          <a href="mailto:hello@incentric.studio" className="hover:text-slate-950 transition-colors">Email</a>
+          <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="hover:text-slate-950 transition-colors">WhatsApp</a>
         </div>
         
         <div className="flex flex-col md:flex-row items-center gap-6 md:gap-12 font-medium">
