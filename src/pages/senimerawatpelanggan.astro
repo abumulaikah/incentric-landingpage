@@ -13,21 +13,27 @@ const price = active ? BOOK_OFFER.offerPrice : BOOK_OFFER.regularPrice;
 const orderMessage = (value: number) => `Halo Incentric, saya mau pesan buku Seni Merawat Pelanggan karya Ronald Satria dengan harga ${money(value)}. Mohon info format buku, ketersediaan, total biaya, dan cara pembayarannya.`;
 const orderUrl = `${WHATSAPP_URL}&text=${encodeURIComponent(orderMessage(price))}`;
 const chapters = [
-  { number: '01', page: '1', title: 'Makna loyalitas pelanggan di era modern', text: 'Memahami perubahan perilaku pelanggan dan apa yang membuat mereka tetap memilih sebuah bisnis.' },
-  { number: '02', page: '16', title: 'Memahami pelanggan', text: 'Persona, mendengar aktif dengan model HURIER, data pelanggan, dan peta perjalanan pelanggan.' },
-  { number: '03', page: '29', title: 'Komunikasi yang menyentuh hati', text: 'Bahasa yang membangun kepercayaan, gaya komunikasi, kanal digital, serta penanganan konflik dan keluhan.' },
-  { number: '04', page: '66', title: 'Pengalaman pelanggan sebagai investasi emosional', text: 'Mengenali titik interaksi penting dan merancang perhatian kecil yang membuat pengalaman terasa berbeda.' },
-  { number: '05', page: '83', title: 'Membangun sistem pelayanan yang andal', text: 'Struktur tim, SOP yang memberi ruang untuk berpikir, pelatihan, budaya layanan, dan teknologi pendukung.' },
-  { number: '06', page: '107', title: 'Seni memberi nilai tambah', text: 'Program loyalitas, edukasi pelanggan, komunitas, dan nilai tambah yang melampaui potongan harga.' },
-  { number: '07', page: '127', title: 'Inovasi dalam merawat pelanggan', text: 'Memperbaiki proses dan budaya internal, menggunakan teknologi dengan tepat, serta melayani secara proaktif.' },
-  { number: '08', page: '155', title: 'Menciptakan kenangan', text: 'Peran emosi, momen berkesan yang tidak harus mahal, konsistensi, dan kejutan positif.' },
-  { number: '09', page: '180', title: 'Peran pemimpin dalam merawat pelanggan', text: 'Teladan di garis depan, coaching dalam pekerjaan sehari-hari, dan kebijakan yang memberdayakan tim.' },
-  { number: '10', page: '194', title: 'Dari dalam untuk tumbuh', text: 'Service-Profit Chain: hubungan antara layanan internal, kepuasan karyawan, dan pengalaman pelanggan.' },
+  { number: '01', page: '1', title: 'Makna loyalitas pelanggan di era modern', text: 'Perubahan perilaku pelanggan dan alasan mereka tetap memilih sebuah bisnis.' },
+  { number: '02', page: '16', title: 'Memahami pelanggan', text: 'Persona, mendengar aktif, data, dan peta perjalanan pelanggan.' },
+  { number: '03', page: '29', title: 'Komunikasi yang menyentuh hati', text: 'Pilihan bahasa, gaya komunikasi, kanal digital, konflik, dan keluhan.' },
+  { number: '04', page: '66', title: 'Pengalaman pelanggan sebagai investasi emosional', text: 'Titik interaksi penting, perhatian kecil, dan konsistensi layanan.' },
+  { number: '05', page: '83', title: 'Membangun sistem pelayanan yang andal', text: 'Struktur tim, SOP, pelatihan, budaya layanan, dan teknologi pendukung.' },
+  { number: '06', page: '107', title: 'Seni memberi nilai tambah', text: 'Program loyalitas, edukasi pelanggan, komunitas, serta nilai emosional dan sosial.' },
+  { number: '07', page: '127', title: 'Inovasi dalam merawat pelanggan', text: 'Perbaikan proses, budaya internal, teknologi, dan pelayanan proaktif.' },
+  { number: '08', page: '155', title: 'Menciptakan kenangan', text: 'Emosi, momen berkesan, konsistensi, dan kejutan positif.' },
+  { number: '09', page: '180', title: 'Peran pemimpin dalam merawat pelanggan', text: 'Teladan, coaching, pembentukan kebiasaan, dan kewenangan tim di garis depan.' },
+  { number: '10', page: '194', title: 'Dari dalam untuk tumbuh', text: 'Service-Profit Chain: layanan internal, kepuasan karyawan, dan pengalaman pelanggan.' },
+];
+const topics = [
+  { title: 'Mendengar keluhan sampai jelas masalahnya', text: 'Mendengar aktif, memahami perasaan pelanggan, dan memakai masukan mereka untuk memeriksa layanan.', chapter: 'Bab 2 · mulai halaman 16' },
+  { title: 'Menjawab pelanggan yang sedang kecewa', text: 'Memilih bahasa, menyesuaikan cara berkomunikasi, dan menangani konflik tanpa bersikap defensif.', chapter: 'Bab 3 · mulai halaman 29' },
+  { title: 'Memberi tim pegangan saat melayani', text: 'Menyusun SOP yang menjaga konsistensi sekaligus memberi ruang untuk menangani situasi pelanggan.', chapter: 'Bab 5 · mulai halaman 83' },
+  { title: 'Melatih kebiasaan layanan di tempat kerja', text: 'Memberi contoh, melakukan coaching, dan membantu tim mengambil keputusan sesuai kewenangannya.', chapter: 'Bab 9 · mulai halaman 180' },
 ];
 const situations = [
-  { id: 'keluhan', label: 'Saat ada komplain', chapter: 'BAB 03 · KOMUNIKASI & KELUHAN', before: '“Itu sudah sesuai prosedur kami.”', after: '“Pesanan Anda belum sampai, ya. Saya cek posisinya sekarang dan kabari Anda paling lambat pukul 15.00.”', text: 'Dengarkan masalahnya, akui ketidaknyamanannya, lalu beri tindakan dan waktu yang jelas. Pelanggan bisa melihat apa yang sedang Anda kerjakan.' },
-  { id: 'tim', label: 'Saat layanan tidak konsisten', chapter: 'BAB 05 & 09 · SISTEM & KEPEMIMPINAN', before: '“Kalau ada masalah, tunggu pemiliknya saja.”', after: '“Untuk kasus seperti ini, tim boleh menawarkan penggantian. Kita evaluasi penanganannya saat briefing.”', text: 'SOP perlu memberi batas keputusan yang jelas. Tim mendapat ruang untuk membantu; pemimpin tetap mengecek dan melatih cara kerjanya.' },
-  { id: 'kembali', label: 'Saat pelanggan menjauh', chapter: 'BAB 02 & 07 · MEMAHAMI & MENJADI PROAKTIF', before: '“Tidak ada komplain. Berarti semuanya beres.”', after: '“Setelah pemakaian pertama, ada bagian yang menyulitkan? Masukan Anda akan kami pakai untuk memperbaiki layanan.”', text: 'Buka percakapan sebelum masalah menjadi alasan untuk pergi. Catat masukan, tindak lanjuti, dan sampaikan apa yang sudah diperbaiki.' },
+  { id: 'keluhan', label: 'Pesanan terlambat', chapter: 'Contoh penerapan Bab 3', before: '“Itu sudah sesuai prosedur kami.”', after: '“Pesanan Anda belum sampai, ya. Saya cek posisinya sekarang dan kabari Anda paling lambat pukul 15.00.”', text: 'Pelanggan mendapat tindakan dan waktu yang jelas. Pilihan kata juga menunjukkan bahwa keluhannya didengar.' },
+  { id: 'tim', label: 'Staf menunggu pemilik', chapter: 'Contoh penerapan Bab 5 dan 9', before: '“Kalau ada masalah, tunggu pemiliknya saja.”', after: '“Untuk kasus seperti ini, tim boleh menawarkan penggantian. Kita evaluasi penanganannya saat briefing.”', text: 'Batas keputusan ditentukan sejak awal. Tim bisa membantu pelanggan, lalu pemimpin mengecek cara penanganannya.' },
+  { id: 'kembali', label: 'Pelanggan tidak komplain', chapter: 'Contoh penerapan Bab 2 dan 7', before: '“Tidak ada komplain. Berarti semuanya beres.”', after: '“Setelah pemakaian pertama, ada bagian yang menyulitkan? Masukan Anda akan kami pakai untuk memperbaiki layanan.”', text: 'Percakapan dibuka sebelum pelanggan mengeluh. Masukan yang masuk perlu dicatat dan ditindaklanjuti.' },
 ];
 const validPurchases = RECENT_BOOK_PURCHASES.filter(p => p.name.trim() && Number.isFinite(Date.parse(p.purchasedAt)) && Date.parse(p.purchasedAt) <= Date.now());
 ---
@@ -37,104 +43,116 @@ const validPurchases = RECENT_BOOK_PURCHASES.filter(p => p.name.trim() && Number
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Seni Merawat Pelanggan — Ronald Satria | Incentric</title>
-    <meta name="description" content="Pelanggan sudah membeli. Apa yang membuat mereka kembali? Pelajari komunikasi, penanganan keluhan, dan budaya layanan dalam buku Seni Merawat Pelanggan karya Ronald Satria. Pesan melalui WhatsApp Incentric." />
+    <meta name="description" content="Kenapa pelanggan hanya beli sekali? Baca cara memahami keluhan, menjawab pelanggan yang kecewa, dan menyiapkan tim layanan dalam buku Seni Merawat Pelanggan karya Ronald Satria." />
     <link rel="canonical" href={BOOK_OFFER.canonical} />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="id_ID" />
-    <meta property="og:title" content="Sudah beli. Kenapa belum kembali? — Seni Merawat Pelanggan" />
-    <meta property="og:description" content="Buku Ronald Satria tentang memahami pelanggan, menangani keluhan, dan membangun layanan yang konsisten. Pesan di Incentric." />
+    <meta property="og:title" content="Kenapa pelanggan hanya beli sekali? | Seni Merawat Pelanggan" />
+    <meta property="og:description" content="Buku Ronald Satria tentang memahami pelanggan, menangani keluhan, dan menyiapkan tim layanan. Pesan melalui WhatsApp Incentric." />
     <meta property="og:url" content={BOOK_OFFER.canonical} />
     <meta property="og:image" content="https://incentric.co.id/media/seni-merawat-pelanggan-cover.jpeg" />
     <meta name="theme-color" content="#ff771c" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   </head>
   <body>
     <a class="skip-link" href="#utama">Lewati ke isi halaman</a>
-    <div class="announcement"><span>BUKU SENI MERAWAT PELANGGAN</span><span class="announcement-offer">Penawaran <span data-price>{money(price)}</span> <span aria-hidden="true">↗</span></span></div>
     <header class="site-header container">
-      <a href="/" class="brand" aria-label="Kembali ke beranda Incentric"><Image src={logo} alt="Incentric" width={136} height={39} format="webp" densities={[1, 2]} /></a>
-      <nav aria-label="Navigasi halaman buku"><a href="#isi-buku">Isi buku</a><a href="#penulis">Penulis</a></nav>
-      <a class="nav-order" href={orderUrl} data-order>Pesan buku <span aria-hidden="true">↗</span></a>
+      <a href="/" class="brand" aria-label="Beranda Incentric"><Image src={logo} alt="Incentric" width={136} height={39} format="webp" densities={[1, 2]} /></a>
+      <nav aria-label="Navigasi buku"><a href="#isi-buku">Isi buku</a><a href="#penulis">Penulis</a><a class="nav-order" href={orderUrl} data-order>Pesan buku</a></nav>
     </header>
-
     <main id="utama">
-      <div class="hero-surface"><section class="hero container" aria-labelledby="hero-title">
-        <div class="hero-copy">
-          <p class="eyebrow"><span class="tiny-line" aria-hidden="true"></span> PELANGGAN BARU SUDAH DATANG. LALU?</p>
-          <h1 id="hero-title">Sudah beli.<br />Kenapa belum<br /><em>kembali?</em></h1>
-          <p class="hero-description">Promosi membawa orang datang. Cara Anda melayani memberi mereka alasan untuk kembali.</p>
-          <p class="hero-book">Di buku <strong>Seni Merawat Pelanggan</strong>, Ronald Satria membahas apa yang bisa Anda perbaiki: dari percakapan pertama, penanganan komplain, sampai kebiasaan kerja tim.</p>
-          <div class="hero-actions"><a class="button button-dark" href={orderUrl} data-order>Saya mau bukunya <span aria-hidden="true">↗</span></a><a class="text-link" href="#cuplikan">Intip isinya dulu <span aria-hidden="true">↓</span></a></div>
-          <div class="hero-price"><del data-old-price hidden={!active}>{money(BOOK_OFFER.regularPrice)}</del><strong data-price>{money(price)}</strong><span>Pesan lewat WhatsApp Incentric</span></div>
-        </div>
-        <div class="book-stage">
-          <div class="book-orbit" aria-hidden="true"></div>
-          <p class="stage-note">UNTUK DIBACA.<br />LALU DIPRAKTIKKAN.</p>
-          <div class="book-object"><img src="/media/seni-merawat-pelanggan-cover.jpeg" alt="Cover oranye buku Seni Merawat Pelanggan karya Ronald Satria, dengan ilustrasi menyiram tanaman" width="400" height="588" fetchpriority="high" /></div>
-          <div class="price-stamp"><span>HARGA PENAWARAN</span><strong data-price-short>{active ? '99' : '199'}<small>rb</small></strong><span>SENI MERAWAT PELANGGAN</span></div>
-          <p class="book-caption">Seni Merawat Pelanggan <span>Ronald Satria / 2025</span></p>
-        </div>
-      </section></div>
-
-      <div class="book-facts"><div class="container facts-inner"><span><b>10</b> bab utama + penutup</span><span>Contoh situasi layanan</span><span>Komunikasi, sistem & kepemimpinan</span><span class="facts-end">Baca. Pahami. Rawat. <span aria-hidden="true">↗</span></span></div></div>
+      <div class="hero-surface">
+        <section class="hero container" aria-labelledby="hero-title">
+          <figure class="hero-visual">
+            <div class="cover-frame"><img src="/media/seni-merawat-pelanggan-cover.jpeg" alt="Cover buku Seni Merawat Pelanggan karya Ronald Satria" width="400" height="588" fetchpriority="high" /></div>
+            <figcaption>10 bab utama dan penutup</figcaption>
+          </figure>
+          <div class="hero-main">
+            <div class="product-heading">
+              <img class="mobile-cover" src="/media/seni-merawat-pelanggan-cover.jpeg" alt="Cover Seni Merawat Pelanggan" width="80" height="118" />
+              <div><p class="product-name">Seni Merawat Pelanggan</p><p class="product-author">Ronald Satria</p></div>
+            </div>
+            <h1 id="hero-title">Kenapa pelanggan<br class="desktop-break" /> hanya beli sekali?</h1>
+            <p class="hero-description">Ada yang datang saat promo, lalu tidak pernah pesan lagi. Ada yang berhenti setelah komplain, meski masalahnya sudah diselesaikan. Kalau ini terjadi di bisnis Anda, apa yang perlu diperbaiki?</p>
+            <p class="hero-description">Buku ini membahas cara mendengar keluhan, berbicara dengan pelanggan yang kecewa, dan menyiapkan tim agar kualitas pelayanan tidak bergantung pada Anda seorang.</p>
+            <div class="hero-price"><del data-old-price hidden={!active}>{money(BOOK_OFFER.regularPrice)}</del><strong data-price>{money(price)}</strong><span data-savings hidden={!active}>Hemat Rp100.000</span></div>
+            <div class="hero-actions"><a class="button order-button" href={orderUrl} data-order>Pesan buku lewat WhatsApp</a><a class="sample-link" href="#cuplikan">Baca contoh isi</a></div>
+            <p class="order-note">Format buku dan total biaya dikonfirmasi lewat chat.</p>
+          </div>
+        </section>
+      </div>
 
       <section class="pain-section container section-pad" aria-labelledby="pain-title">
-        <div class="section-intro"><p class="eyebrow">MUNGKIN INI TERASA FAMILIER</p><h2 id="pain-title">Yang melelahkan,<br />harus mencari pelanggan<br /><em>dari awal lagi.</em></h2><p>Anda sudah keluar biaya untuk menarik perhatian. Tapi setelah transaksi, ada bagian dari pengalaman pelanggan yang luput dirawat.</p></div>
-        <div class="pain-list">
-          <article><span class="row-number">01</span><div><h3>Ramai ketika diskon. Sepi setelahnya.</h3><p>Harga memberi alasan untuk mencoba. Setelah itu, apa yang membuat pelanggan tetap memilih Anda?</p></div><span class="row-mark" aria-hidden="true">↘</span></article>
-          <article><span class="row-number">02</span><div><h3>Komplain selesai. Pelanggan ikut pergi.</h3><p>Solusi sudah diberikan, tetapi percakapannya membuat pelanggan merasa dipersulit atau tidak didengar.</p></div><span class="row-mark" aria-hidden="true">↘</span></article>
-          <article><span class="row-number">03</span><div><h3>Layanan bagus kalau Anda yang pegang.</h3><p>Begitu berganti orang atau shift, pengalaman pelanggan berubah. Tim butuh pegangan yang bisa dipakai sehari-hari.</p></div><span class="row-mark" aria-hidden="true">↘</span></article>
+        <div class="section-intro">
+          <h2 id="pain-title">Pelanggan yang berhenti membeli tidak selalu memberi tahu alasannya.</h2>
+          <p>Keluhan yang masuk bisa Anda tangani. Yang lebih sulit terlihat adalah pengalaman yang membuat pelanggan diam-diam memilih tempat lain.</p>
+          <p>Itulah sebabnya buku ini membahas apa yang terjadi sepanjang pelanggan berinteraksi dengan bisnis Anda, termasuk cara tim bekerja di belakangnya.</p>
+        </div>
+        <ul class="pain-list">
+          <li><h3>Pelanggan hanya datang saat diskon.</h3><p>Setelah membeli, mereka belum menemukan alasan untuk memilih Anda lagi.</p></li>
+          <li><h3>Keluhan ditangani, pelanggan tetap kecewa.</h3><p>Masalahnya selesai, tetapi cara menanggapinya membuat mereka merasa dipersulit.</p></li>
+          <li><h3>Layanan berubah saat staf berganti.</h3><p>Pelanggan mendapat pengalaman berbeda, tergantung siapa yang sedang bertugas.</p></li>
+        </ul>
+      </section>
+
+      <section id="cuplikan" class="preview-section section-pad" aria-labelledby="preview-title">
+        <div class="container">
+          <div class="preview-heading"><h2 id="preview-title">Lihat contoh pembahasannya.</h2><p>Di Bab 3, Ronald Satria membahas pilihan bahasa saat pelanggan menghadapi masalah.</p></div>
+          <figure class="book-excerpt"><blockquote>“Pelanggan ingin merasa dimengerti sebelum masalah mereka diselesaikan.”</blockquote><figcaption>Seni Merawat Pelanggan · Bab 3, halaman 30</figcaption></figure>
+          <p class="scenario-intro">Seperti apa penerapannya? Pilih salah satu situasi berikut.</p>
+          <div class="scenario-tabs" role="tablist" aria-label="Contoh situasi layanan">
+            {situations.map((s, i) => <button type="button" role="tab" id={`tab-${s.id}`} aria-controls={`panel-${s.id}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} data-tab={s.id}>{s.label}</button>)}
+          </div>
+          {situations.map((s, i) => <div class="scenario-panel" id={`panel-${s.id}`} role="tabpanel" aria-labelledby={`tab-${s.id}`} tabindex="0" hidden={i !== 0}>
+            <div class="response-before"><h3>Respons awal</h3><p>{s.before}</p></div>
+            <div class="response-after"><h3>Respons yang lebih membantu</h3><p>{s.after}</p></div>
+            <div class="scenario-explanation"><p>{s.text}</p><small>{s.chapter}. Respons disusun sebagai ilustrasi materi buku.</small></div>
+          </div>)}
         </div>
       </section>
 
-      <section class="quote-section" aria-label="Kutipan buku"><div class="container quote-inner"><span class="quote-mark" aria-hidden="true">“</span><blockquote>“Pelanggan ingin merasa dimengerti sebelum masalah mereka diselesaikan.”<cite>Ronald Satria · Seni Merawat Pelanggan · Bab 3, halaman 30</cite></blockquote><span class="quote-side">CATATAN<br />UNTUK TIM<br />LAYANAN ANDA.</span></div></section>
-
-      <section id="cuplikan" class="preview-section container section-pad" aria-labelledby="preview-title">
-        <div class="preview-heading"><div><p class="eyebrow">SEDIKIT GAMBARAN DARI ISINYA</p><h2 id="preview-title">Perbaikan bisa dimulai<br />dari <em>cara merespons.</em></h2></div><p>Buku ini membahas cara berpikir di balik pelayanan. Berikut contoh penerapannya pada situasi sehari-hari.</p></div>
-        <div class="scenario-tabs" role="tablist" aria-label="Pilih contoh situasi layanan">{situations.map((s, i) => <button type="button" role="tab" id={`tab-${s.id}`} aria-controls={`panel-${s.id}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} data-tab={s.id}>{s.label}</button>)}</div>
-        {situations.map((s, i) => <div class="scenario-panel" id={`panel-${s.id}`} role="tabpanel" aria-labelledby={`tab-${s.id}`} tabindex="0" hidden={i !== 0}>
-          <div class="response-before"><span class="mini-label">RESPONS YANG MENUTUP JALAN</span><p>{s.before}</p><span class="response-symbol" aria-hidden="true">×</span></div>
-          <div class="response-after"><span class="mini-label">RESPONS YANG MEMBERI ARAH</span><p>{s.after}</p><span class="response-symbol" aria-hidden="true">↗</span></div>
-          <div class="scenario-explanation"><span class="eyebrow">{s.chapter}</span><p>{s.text}</p><small>Contoh penerapan materi, bukan kutipan percakapan pelanggan.</small></div>
-        </div>)}
+      <section id="isi-buku" class="contents-section container section-pad" aria-labelledby="contents-title">
+        <div class="section-intro contents-intro"><h2 id="contents-title">Yang dibahas di buku ini</h2><p>Empat pembahasan berikut dekat dengan pekerjaan sehari-hari pemilik bisnis dan tim layanan.</p></div>
+        <div class="topics">{topics.map(topic => <article><h3>{topic.title}</h3><p>{topic.text}</p><span>{topic.chapter}</span></article>)}</div>
+        <details class="contents-disclosure">
+          <summary>Lihat daftar isi lengkap <span>10 bab utama dan penutup</span></summary>
+          <ol class="chapters">{chapters.map(c => <li class="chapter"><div class="chapter-heading"><h3>{c.title}</h3><span>Halaman {c.page}</span></div><p>{c.text}</p></li>)}</ol>
+          <p class="contents-end">Bab 11: Penutup · halaman 219</p>
+        </details>
       </section>
 
-      <section id="isi-buku" class="contents-section section-pad" aria-labelledby="contents-title"><div class="container">
-        <div class="contents-heading"><div><p class="eyebrow">APA YANG AKAN ANDA BACA</p><h2 id="contents-title">Dari memahami pelanggan,<br />sampai membenahi <em>timnya.</em></h2></div><span class="chapter-count">10<span>bab utama</span></span></div>
-        <div class="chapters">{chapters.map((c) => <details class="chapter"><summary><span class="chapter-number">{c.number}</span><span class="chapter-title">{c.title}</span><span class="chapter-toggle" aria-hidden="true">+</span></summary><div class="chapter-body"><p>{c.text}</p><span>Mulai halaman {c.page}</span></div></details>)}</div>
-        <div class="contents-foot"><p>Mulai dari bab yang paling dekat dengan masalah Anda. Bawa pembahasannya ke briefing atau percakapan dengan tim.</p><a class="text-link" href={orderUrl} data-order>Pesan buku ini <span aria-hidden="true">↗</span></a></div>
-      </div></section>
-
-      <section id="penulis" class="author-section container section-pad" aria-labelledby="author-title">
-        <div class="author-name"><p class="eyebrow">KENALI PENULISNYA</p><h2 id="author-title">Ronald<br /><em>Satria.</em></h2><span class="author-rule" aria-hidden="true"></span><p>Penulis Seni Merawat Pelanggan</p></div>
-        <div class="author-copy"><h3>Berangkat dari pekerjaan<br />mendampingi organisasi.</h3><p>Dalam prakata, Ronald Satria menjelaskan bahwa buku ini disusun dari referensi, contoh keberhasilan, dan pengalamannya mendampingi organisasi dalam pengembangan pelayanan pelanggan dan budaya layanan.</p><p>Pembahasannya menghubungkan cara melayani pelanggan dengan hal yang sering terlewat: bagaimana pemimpin memberi contoh, bagaimana tim dilatih, dan apakah sistem kerja membantu mereka melayani dengan baik.</p><div class="audience"><span class="mini-label">RELEVAN UNTUK</span><p>Pemilik bisnis, pemimpin tim, praktisi customer experience, dan orang yang sehari-hari berhadapan dengan pelanggan.</p></div></div>
-      </section>
-
-      <section id="pesan" class="order-section section-pad" aria-labelledby="order-title"><div class="container order-grid">
-        <div class="order-copy"><p class="eyebrow">RAWAT PELANGGAN YANG SUDAH PERCAYA</p><h2 id="order-title">Beri mereka alasan<br />untuk <em>kembali.</em></h2><p>Mulai dengan satu hal yang bisa Anda perbaiki minggu ini. Pilihan kata saat ada keluhan. Cara tim mengambil keputusan. Atau kebiasaan menanyakan pengalaman setelah membeli.</p><div class="order-book-mini"><img src="/media/seni-merawat-pelanggan-cover.jpeg" alt="Seni Merawat Pelanggan" width="68" height="100" loading="lazy" /><div><strong>Seni Merawat Pelanggan</strong><span>Ronald Satria</span><a href="#isi-buku">Lihat daftar isi <span aria-hidden="true">↑</span></a></div></div></div>
-        <div class="offer-card">
-          <div class="offer-top"><span class="eyebrow" data-offer-label>{active ? 'PENAWARAN BUKU' : 'HARGA BUKU'}</span><span class="saving-label" data-savings hidden={!active}>Hemat Rp100.000</span></div>
-          <del class="offer-old" data-old-price hidden={!active}>{money(BOOK_OFFER.regularPrice)}</del><div class="offer-price" data-price>{money(price)}</div>
-          <div class="real-countdown" data-countdown hidden={!hasDeadline || !active}><p>Penawaran berakhir pada <time datetime={BOOK_OFFER.promotionEndsAt || undefined}>{hasDeadline ? new Intl.DateTimeFormat('id-ID', {dateStyle: 'long', timeStyle: 'short', timeZone: 'Asia/Jakarta'}).format(deadline) + ' WIB' : ''}</time></p><div class="countdown-digits"><span><b data-hours>00</b><small>jam</small></span><i>:</i><span><b data-minutes>00</b><small>menit</small></span><i>:</i><span><b data-seconds>00</b><small>detik</small></span></div></div>
-          <p class="offer-description">Satu buku untuk membantu Anda melihat layanan dari sisi pelanggan dan membahas perbaikannya bersama tim.</p>
-          <a class="button button-dark offer-button" href={orderUrl} data-order>Pesan melalui WhatsApp <span aria-hidden="true">↗</span></a>
-          <p class="offer-note">Anda akan terhubung ke tim Incentric. Format buku, ketersediaan, serta total biaya dikonfirmasi sebelum pembayaran.</p>
-          <div class="order-steps"><span><b>01</b> Hubungi tim</span><span><b>02</b> Konfirmasi pesanan</span><span><b>03</b> Pembayaran</span></div>
+      <section id="penulis" class="author-section section-pad" aria-labelledby="author-title">
+        <div class="container author-grid">
+          <div><h2 id="author-title">Tentang Ronald Satria</h2><p>Ronald Satria menulis buku ini dari referensi, contoh keberhasilan, dan pengalamannya mendampingi organisasi dalam pengembangan pelayanan pelanggan dan budaya layanan.</p><p>Pembahasannya juga mencakup peran pemimpin: memberi contoh, melatih kebiasaan kerja, dan menetapkan kebijakan yang membantu tim melayani pelanggan.</p></div>
+          <aside class="audience"><h3>Untuk siapa buku ini?</h3><ul><li>Pemilik bisnis yang ingin memeriksa layanan setelah transaksi.</li><li>Pemimpin tim yang perlu menyamakan cara staf melayani.</li><li>Praktisi customer experience dan orang yang sehari-hari menghadapi pelanggan.</li></ul></aside>
         </div>
-      </div></section>
+      </section>
 
-      <section class="faq-section container section-pad" aria-labelledby="faq-title"><div><p class="eyebrow">SEBELUM MEMESAN</p><h2 id="faq-title">Masih ingin<br /><em>tahu sesuatu?</em></h2></div><div class="faqs">
-        <details><summary>Apakah buku ini cocok untuk bisnis kecil?<span aria-hidden="true">+</span></summary><p>Pembahasannya mencakup komunikasi, keluhan, SOP, dan kebiasaan tim. Anda bisa memilih bagian yang sesuai dengan ukuran dan kondisi bisnis, tanpa harus menerapkan semuanya sekaligus.</p></details>
-        <details><summary>Apakah isinya hanya teori?<span aria-hidden="true">+</span></summary><p>Buku memadukan referensi dengan contoh situasi layanan dan pembahasan penerapan: mendengar aktif, menangani komplain, memetakan perjalanan pelanggan, serta melatih tim dalam pekerjaan sehari-hari.</p></details>
-        <details><summary>Bukunya cetak atau digital? Bagaimana pengirimannya?<span aria-hidden="true">+</span></summary><p>Hubungi tim Incentric untuk memastikan format yang tersedia dan cara pengirimannya. Jika ada ongkos kirim atau biaya lain, minta totalnya sebelum melakukan pembayaran.</p></details>
-        <details><summary>Bagaimana cara memesan?<span aria-hidden="true">+</span></summary><p>Tekan tombol pesan. WhatsApp akan terbuka dengan pesan yang sudah terisi. Kirim pesan tersebut, lalu konfirmasi pesanan dan ikuti arahan pembayaran dari tim Incentric.</p></details>
-      </div></section>
+      <section id="pesan" class="order-section container section-pad" aria-labelledby="order-title">
+        <div class="order-heading"><h2 id="order-title">Pemesanan buku</h2><p>Pesanan dilayani oleh tim Incentric melalui WhatsApp.</p></div>
+        <div class="order-grid">
+          <div class="faqs">
+            <details open><summary>Bagaimana cara memesan?</summary><p>Tekan tombol pesan, lalu kirim pesan yang sudah terisi di WhatsApp. Tim Incentric akan membantu mengonfirmasi pesanan dan memberi arahan pembayaran.</p></details>
+            <details><summary>Bukunya cetak atau digital?</summary><p>Konfirmasikan format yang tersedia kepada tim Incentric sebelum membayar. Jika ada biaya pengiriman atau biaya lain, totalnya perlu dikonfirmasi dalam chat.</p></details>
+            <details><summary>Apakah cocok untuk bisnis kecil?</summary><p>Pembahasan komunikasi, keluhan, SOP, dan kebiasaan tim bisa Anda pilih sesuai kondisi bisnis. Anda tidak harus menerapkan seluruh pembahasan sekaligus.</p></details>
+            <details><summary>Apakah isinya hanya teori?</summary><p>Buku memadukan referensi dengan contoh situasi layanan dan pembahasan penerapan, seperti mendengar aktif, menangani komplain, memetakan perjalanan pelanggan, dan melatih tim saat bekerja.</p></details>
+          </div>
+          <div class="offer-card">
+            <div class="order-product"><img src="/media/seni-merawat-pelanggan-cover.jpeg" alt="Seni Merawat Pelanggan" width="76" height="112" loading="lazy" /><div><h3>Seni Merawat Pelanggan</h3><p>Ronald Satria</p><span>10 bab utama dan penutup</span></div></div>
+            <div class="offer-price-row"><del data-old-price hidden={!active}>{money(BOOK_OFFER.regularPrice)}</del><strong data-price>{money(price)}</strong></div>
+            <p class="saving-label" data-savings hidden={!active}>Hemat Rp100.000 dari harga Rp199.000.</p>
+            <div class="real-countdown" data-countdown hidden={!hasDeadline || !active}>
+              <p>Penawaran berakhir pada <time datetime={BOOK_OFFER.promotionEndsAt || undefined}>{hasDeadline ? new Intl.DateTimeFormat('id-ID', {dateStyle: 'long', timeStyle: 'short', timeZone: 'Asia/Jakarta'}).format(deadline) + ' WIB' : ''}</time></p>
+              <div class="countdown-digits"><span><b data-hours>00</b><small>jam</small></span><span><b data-minutes>00</b><small>menit</small></span><span><b data-seconds>00</b><small>detik</small></span></div>
+            </div>
+            <a class="button order-button offer-button" href={orderUrl} data-order>Pesan buku lewat WhatsApp</a>
+            <p class="order-note">Format, ketersediaan, dan total biaya dikonfirmasi sebelum pembayaran.</p>
+          </div>
+        </div>
+      </section>
     </main>
-    <footer class="footer container"><a class="brand" href="/" aria-label="Beranda Incentric"><Image src={logo} alt="Incentric" width={136} height={39} format="webp" densities={[1, 2]} loading="lazy" /></a><p>Hubungan baik perlu dirawat.</p><a href={orderUrl} data-order>Hubungi Incentric <span aria-hidden="true">↗</span></a><span>© {new Date().getFullYear()} Incentric</span></footer>
-    <aside class="mobile-order" aria-label="Pesan buku"><div><small>Seni Merawat Pelanggan</small><strong data-price>{money(price)}</strong></div><a class="button button-dark" href={orderUrl} data-order>Pesan buku <span aria-hidden="true">↗</span></a></aside>
-    {validPurchases.length > 0 && <aside class="purchase-notification" data-purchase-notification hidden aria-label="Pesanan terbaru"><span class="purchase-icon" aria-hidden="true">✓</span><div><strong data-purchase-name></strong><p>Memesan Seni Merawat Pelanggan</p><small data-purchase-time></small></div><button type="button" data-close-purchase aria-label="Tutup notifikasi pesanan">×</button></aside>}
+    <footer class="footer container"><a href="/">Incentric</a><a href={orderUrl} data-order>Hubungi tim Incentric</a><span>© {new Date().getFullYear()} Incentric</span></footer>
+    <aside class="mobile-order" aria-label="Pesan buku"><div><small>Seni Merawat Pelanggan</small><strong data-price>{money(price)}</strong></div><a class="button order-button" href={orderUrl} data-order>Pesan buku</a></aside>
+    {validPurchases.length > 0 && <aside class="purchase-notification" data-purchase-notification hidden aria-label="Pesanan terbaru"><div><strong data-purchase-name></strong><p>Memesan Seni Merawat Pelanggan</p><small data-purchase-time></small></div><button type="button" data-close-purchase aria-label="Tutup notifikasi pesanan">×</button></aside>}
     <script is:inline define:vars={{ bookOffer: BOOK_OFFER, whatsappBase: WHATSAPP_URL, recentBookOrders: validPurchases }}>
       const tabs = [...document.querySelectorAll('[data-tab]')];
       function selectTab(tab, focus = false) {
@@ -143,7 +161,15 @@ const validPurchases = RECENT_BOOK_PURCHASES.filter(p => p.name.trim() && Number
       }
       tabs.forEach((tab, index) => {
         tab.addEventListener('click', () => selectTab(tab));
-        tab.addEventListener('keydown', event => { let next = index; if (event.key === 'ArrowRight') next = (index + 1) % tabs.length; else if (event.key === 'ArrowLeft') next = (index - 1 + tabs.length) % tabs.length; else if (event.key === 'Home') next = 0; else if (event.key === 'End') next = tabs.length - 1; else return; event.preventDefault(); selectTab(tabs[next], true); });
+        tab.addEventListener('keydown', event => {
+          let next = index;
+          if (event.key === 'ArrowRight') next = (index + 1) % tabs.length;
+          else if (event.key === 'ArrowLeft') next = (index - 1 + tabs.length) % tabs.length;
+          else if (event.key === 'Home') next = 0;
+          else if (event.key === 'End') next = tabs.length - 1;
+          else return;
+          event.preventDefault(); selectTab(tabs[next], true);
+        });
       });
       const formatPrice = value => new Intl.NumberFormat('id-ID', {style: 'currency', currency: 'IDR', maximumFractionDigits: 0}).format(value).replace(/\s/g, '');
       const end = bookOffer.promotionEndsAt ? Date.parse(bookOffer.promotionEndsAt) : NaN;
@@ -160,9 +186,7 @@ const validPurchases = RECENT_BOOK_PURCHASES.filter(p => p.name.trim() && Number
         priceState = active;
         const price = active ? bookOffer.offerPrice : bookOffer.regularPrice;
         document.querySelectorAll('[data-price]').forEach(node => node.textContent = formatPrice(price));
-        document.querySelectorAll('[data-price-short]').forEach(node => { node.replaceChildren(document.createTextNode(String(price / 1000))); const suffix = document.createElement('small'); suffix.textContent = 'rb'; node.append(suffix); });
         document.querySelectorAll('[data-old-price], [data-savings]').forEach(node => node.hidden = !active);
-        document.querySelectorAll('[data-offer-label]').forEach(node => node.textContent = active ? 'PENAWARAN BUKU' : 'HARGA BUKU');
         const message = `Halo Incentric, saya mau pesan buku Seni Merawat Pelanggan karya Ronald Satria dengan harga ${formatPrice(price)}. Mohon info format buku, ketersediaan, total biaya, dan cara pembayarannya.`;
         document.querySelectorAll('[data-order]').forEach(link => link.href = `${whatsappBase}&text=${encodeURIComponent(message)}`);
       }

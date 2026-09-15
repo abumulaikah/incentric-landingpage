@@ -6,6 +6,17 @@ Halaman ini memakai cover asli, materi buku Ronald Satria, CSS khusus, dan
 kontak WhatsApp yang sudah digunakan project: `6281249017400`.
 Tidak ada dependensi baru.
 
+Pembukaan menyebut buku, penulis, masalah pelanggan, harga, dan cara memesan.
+Contoh isi dan empat pembahasan utama tampil langsung; daftar isi lengkap
+tersedia di satu panel yang dapat dibuka. Tipografi memakai font sistem tanpa
+unduhan font eksternal. Label dekoratif, judul serif miring, dan stempel harga
+telah dihapus.
+
+Rujukan UX: [Baymard, product descriptions](https://baymard.com/blog/product-descriptions)
+dan [Nielsen Norman Group, reading on the web](https://www.nngroup.com/articles/how-users-read-on-the-web/).
+Rujukan dipakai untuk kejelasan informasi dan pemindaian, bukan sebagai bukti
+bahwa halaman ini pasti menaikkan penjualan.
+
 ## File
 
 - `src/pages/senimerawatpelanggan.astro`: halaman, metadata, dan interaksi.
