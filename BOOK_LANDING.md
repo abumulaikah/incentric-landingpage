@@ -16,18 +16,29 @@ Hero memakai latar netral putih kehijauan, tipografi Segoe UI, cover asli dengan
 efek ketebalan buku berbasis CSS, dan tombol oranye dengan teks gelap.
 Tidak ada perubahan pada gambar cover atau ilustrasi sumber.
 
-## Mode demo komponen
+## Pratinjau untuk review internal
 
-Buka `/senimerawatpelanggan?demo=1` untuk meninjau contoh ulasan, countdown
-23 jam 17 menit, dan notifikasi melayang. Banner dan label lokal menyebutkan
+Buka `/senimerawatpelanggan` langsung untuk meninjau contoh ulasan, countdown
+23 jam 17 menit, dan notifikasi melayang. Tidak perlu parameter URL.
+`BOOK_PREVIEW.enabled` di `src/lib/book-preview.ts` sekarang bernilai `true`.
+Banner dan label lokal menyebutkan
 bahwa nama, teks ulasan, serta aktivitas pesanan adalah simulasi/rekaan.
 Mode ini tidak mengklaim pembelian nyata atau tenggat promo sebenarnya.
 Timer demo disimpan di sessionStorage agar tidak kembali ke awal saat refresh
 di tab yang sama; habisnya timer demo tidak mengubah harga jual.
 
-Tanpa `demo=1`, ketiga komponen contoh tetap tersembunyi. Jangan menghapus
-label untuk mengubah data contoh menjadi klaim penjualan. Gunakan ulasan
-asli dengan izin pembaca dan tenggat nyata untuk halaman penjualan.
+Data contoh ulasan, notifikasi, dan durasi timer dipisahkan di `book-preview.ts`.
+Untuk beralih ke data nyata:
+
+1. Isi `BOOK_TESTIMONIALS` dengan ulasan asli berizin di `src/lib/book-offer.ts`.
+2. Isi `RECENT_BOOK_PURCHASES` dengan nama berizin dan waktu ISO pesanan nyata.
+3. Isi `BOOK_OFFER.promotionEndsAt` dengan tenggat promo yang benar-benar berlaku.
+4. Set `BOOK_PREVIEW.enabled: false`, lalu build/deploy ulang.
+
+Saat preview dinonaktifkan, ulasan asli tampil tanpa label simulasi, countdown
+mengikuti tenggat promo, dan notifikasi memakai waktu relatif pesanan nyata.
+Data asli yang kosong tidak memunculkan klaim pengganti.
+Jangan menghapus label untuk mengubah data contoh menjadi klaim penjualan.
 
 Rujukan UX: [Baymard, product descriptions](https://baymard.com/blog/product-descriptions)
 dan [Nielsen Norman Group, reading on the web](https://www.nngroup.com/articles/how-users-read-on-the-web/).
@@ -39,6 +50,7 @@ bahwa halaman ini pasti menaikkan penjualan.
 - `src/pages/senimerawatpelanggan.astro`: halaman, metadata, dan interaksi.
 - `src/styles/book-landing.css`: tampilan khusus halaman buku.
 - `src/lib/book-offer.ts`: konfigurasi harga, tenggat, dan pesanan terbaru.
+- `src/lib/book-preview.ts`: sakelar dan data contoh untuk review internal.
 - `public/media/seni-merawat-pelanggan-cover.jpeg`: cover dari pemilik project.
 
 ## Penawaran

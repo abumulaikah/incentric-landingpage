@@ -1,6 +1,7 @@
 ---
 import { WHATSAPP_URL } from '../lib/contact';
-import { BOOK_OFFER, RECENT_BOOK_PURCHASES } from '../lib/book-offer';
+import { BOOK_OFFER, RECENT_BOOK_PURCHASES, BOOK_TESTIMONIALS } from '../lib/book-offer';
+import { BOOK_PREVIEW } from '../lib/book-preview';
 import logo from '../assets/logos/incentric-logo-blue.png';
 import { Image } from 'astro:assets';
 import '../styles/book-landing.css';
@@ -36,12 +37,7 @@ const situations = [
   { id: 'kembali', label: 'Pelanggan tidak komplain', chapter: 'Contoh penerapan Bab 2 dan 7', before: '“Tidak ada komplain. Berarti semuanya beres.”', after: '“Setelah pemakaian pertama, ada bagian yang menyulitkan? Masukan Anda akan kami pakai untuk memperbaiki layanan.”', text: 'Percakapan dibuka sebelum pelanggan mengeluh. Masukan yang masuk perlu dicatat dan ditindaklanjuti.' },
 ];
 const validPurchases = RECENT_BOOK_PURCHASES.filter(p => p.name.trim() && Number.isFinite(Date.parse(p.purchasedAt)) && Date.parse(p.purchasedAt) <= Date.now());
-// Prototype examples are opt-in and visibly labeled; never treated as real reviews/orders.
-const demoReviews = [
-  { name: 'Dina · contoh pembaca', role: 'Contoh untuk pemilik usaha', text: 'Saya ingin tahu cara menanggapi komplain tanpa membuat pelanggan merasa disalahkan. Pembahasan pilihan bahasa paling menarik buat saya.' },
-  { name: 'Heru · contoh pembaca', role: 'Contoh untuk pemimpin tim', text: 'Kalau semua keputusan harus menunggu saya, pelayanan ikut terhambat. Saya tertarik dengan bagian SOP dan kewenangan tim.' },
-  { name: 'Irwan · contoh pembaca', role: 'Contoh untuk tim layanan', text: 'Biasanya yang dicatat hanya komplain. Bagian tentang pelanggan yang diam membuat saya ingin memeriksa lagi cara kami meminta masukan.' },
-];
+const reviews = BOOK_PREVIEW.enabled ? BOOK_PREVIEW.reviews : BOOK_TESTIMONIALS;
 ---
 <!doctype html>
 <html lang="id">
@@ -61,7 +57,7 @@ const demoReviews = [
   </head>
   <body>
     <a class="skip-link" href="#utama">Lewati ke isi halaman</a>
-    <aside class="demo-banner" data-demo-only hidden>Mode demo: ulasan, hitung mundur, dan aktivitas pesanan di halaman ini adalah simulasi, bukan data pelanggan.</aside>
+    <aside class="demo-banner" data-demo-only hidden={!BOOK_PREVIEW.enabled}>Pratinjau untuk review: ulasan, hitung mundur, dan aktivitas pesanan di halaman ini adalah simulasi, bukan data pelanggan.</aside>
     <header class="site-header container">
       <a href="/" class="brand" aria-label="Beranda Incentric"><Image src={logo} alt="Incentric" width={136} height={39} format="webp" densities={[1, 2]} /></a>
       <nav aria-label="Navigasi buku"><a href="#isi-buku">Isi buku</a><a href="#penulis">Penulis</a><a class="nav-order" href={orderUrl} data-order>Pesan buku</a></nav>
@@ -83,7 +79,7 @@ const demoReviews = [
             <div class="hero-price"><del data-old-price hidden={!active}>{money(BOOK_OFFER.regularPrice)}</del><strong data-price>{money(price)}</strong><span data-savings hidden={!active}>Hemat Rp100.000</span></div>
             <div class="hero-actions"><a class="button order-button" href={orderUrl} data-order>Pesan buku lewat WhatsApp</a><a class="sample-link" href="#cuplikan">Baca contoh isi</a></div>
             <p class="order-note">Format buku dan total biaya dikonfirmasi lewat chat.</p>
-            <div class="demo-countdown" data-demo-only hidden><span>Simulasi hitung mundur · bukan batas promo</span><p><b data-demo-hours>23</b><small>jam</small><b data-demo-minutes>17</b><small>menit</small><b data-demo-seconds>42</b><small>detik</small></p></div>
+            <div class="demo-countdown" data-demo-only hidden={!BOOK_PREVIEW.enabled}><span>Simulasi hitung mundur · bukan batas promo</span><p><b data-demo-hours>23</b><small>jam</small><b data-demo-minutes>17</b><small>menit</small><b data-demo-seconds>42</b><small>detik</small></p></div>
           </div>
         </section>
         <div class="hero-footnote container"><span>Di dalam buku</span><p>Menangani keluhan</p><p>Menyiapkan SOP layanan</p><p>Melatih tim saat bekerja</p></div>
@@ -128,9 +124,9 @@ const demoReviews = [
         </details>
       </section>
 
-      <section class="demo-testimonials container section-pad" data-demo-only hidden aria-labelledby="reviews-title">
-        <div class="reviews-heading"><div><span class="demo-label">Simulasi testimoni</span><h2 id="reviews-title">Contoh tampilan ulasan pembaca</h2></div><p>Teks dan nama berikut adalah rekaan untuk pratinjau desain. Ganti dengan ulasan asli sebelum digunakan untuk penjualan.</p></div>
-        <div class="review-grid">{demoReviews.map(review => <figure class="review-card"><span class="review-mark" aria-hidden="true">“</span><blockquote>{review.text}</blockquote><figcaption><strong>{review.name}</strong><span>{review.role} · bukan ulasan asli</span></figcaption></figure>)}</div>
+      <section class="demo-testimonials container section-pad" hidden={reviews.length === 0} aria-labelledby="reviews-title">
+        <div class="reviews-heading"><div>{BOOK_PREVIEW.enabled && <span class="demo-label">Simulasi testimoni</span>}<h2 id="reviews-title">{BOOK_PREVIEW.enabled ? 'Contoh tampilan ulasan pembaca' : 'Ulasan pembaca'}</h2></div>{BOOK_PREVIEW.enabled && <p>Teks dan nama berikut adalah rekaan untuk pratinjau desain. Ganti dengan ulasan asli sebelum digunakan untuk penjualan.</p>}</div>
+        <div class="review-grid">{reviews.map(review => <figure class="review-card"><span class="review-mark" aria-hidden="true">“</span><blockquote>{review.text}</blockquote><figcaption><strong>{review.name}</strong><span>{review.role}{BOOK_PREVIEW.enabled ? ' · bukan ulasan asli' : ''}</span></figcaption></figure>)}</div>
       </section>
 
       <section id="penulis" class="author-section section-pad" aria-labelledby="author-title">
@@ -167,7 +163,7 @@ const demoReviews = [
     <aside class="mobile-order" aria-label="Pesan buku"><div><small>Seni Merawat Pelanggan</small><strong data-price>{money(price)}</strong></div><a class="button order-button" href={orderUrl} data-order>Pesan buku</a></aside>
     <aside class="purchase-notification demo-purchase" data-demo-purchase hidden aria-label="Simulasi notifikasi pembelian"><img src="/media/seni-merawat-pelanggan-cover.jpeg" alt="" width="38" height="56" /><div><span class="demo-label">Simulasi pesanan</span><strong data-demo-name>Irwan · nama contoh</strong><p>Memesan Seni Merawat Pelanggan</p><small data-demo-age>30 menit lalu · data rekaan</small></div><button type="button" data-close-demo aria-label="Tutup simulasi pesanan">×</button></aside>
     {validPurchases.length > 0 && <aside class="purchase-notification" data-purchase-notification hidden aria-label="Pesanan terbaru"><div><strong data-purchase-name></strong><p>Memesan Seni Merawat Pelanggan</p><small data-purchase-time></small></div><button type="button" data-close-purchase aria-label="Tutup notifikasi pesanan">×</button></aside>}
-    <script is:inline define:vars={{ bookOffer: BOOK_OFFER, whatsappBase: WHATSAPP_URL, recentBookOrders: validPurchases }}>
+    <script is:inline define:vars={{ bookOffer: BOOK_OFFER, whatsappBase: WHATSAPP_URL, recentBookOrders: validPurchases, bookPreview: BOOK_PREVIEW }}>
       const tabs = [...document.querySelectorAll('[data-tab]')];
       function selectTab(tab, focus = false) {
         tabs.forEach(button => { const selected = button === tab; button.setAttribute('aria-selected', String(selected)); button.tabIndex = selected ? 0 : -1; document.getElementById(`panel-${button.dataset.tab}`).hidden = !selected; });
@@ -206,7 +202,7 @@ const demoReviews = [
       }
       updateOffer();
       if (Number.isFinite(end)) setInterval(updateOffer, 1000);
-      const demoMode = new URLSearchParams(location.search).get('demo') === '1';
+      const demoMode = bookPreview.enabled;
       if (demoMode) {
         document.querySelectorAll('[data-demo-only]').forEach(node => node.hidden = false);
         // Persist an explicitly simulated deadline in this tab; refreshing does not reset it.
@@ -214,18 +210,18 @@ const demoReviews = [
         let demoEnd;
         try {
           demoEnd = Number(sessionStorage.getItem(demoKey));
-          if (!Number.isFinite(demoEnd) || demoEnd <= 0) { demoEnd = Date.now() + (23 * 3600 + 17 * 60 + 42) * 1000; sessionStorage.setItem(demoKey, String(demoEnd)); }
-        } catch { demoEnd = Date.now() + (23 * 3600 + 17 * 60 + 42) * 1000; }
+          if (!Number.isFinite(demoEnd) || demoEnd <= 0) { demoEnd = Date.now() + bookPreview.countdownSeconds * 1000; sessionStorage.setItem(demoKey, String(demoEnd)); }
+        } catch { demoEnd = Date.now() + bookPreview.countdownSeconds * 1000; }
         const tickDemo = () => {
           const seconds = Math.max(0, Math.floor((demoEnd - Date.now()) / 1000));
           [['hours', Math.floor(seconds / 3600)], ['minutes', Math.floor(seconds % 3600 / 60)], ['seconds', seconds % 60]].forEach(([key, value]) => document.querySelector(`[data-demo-${key}]`).textContent = String(value).padStart(2, '0'));
         };
         tickDemo(); setInterval(tickDemo, 1000);
         const demoNotice = document.querySelector('[data-demo-purchase]');
-        const examples = [{ name: 'Irwan · nama contoh', age: '30 menit lalu · data rekaan' }, { name: 'Heru · nama contoh', age: '2 jam lalu · data rekaan' }];
+        const examples = bookPreview.purchases;
         let exampleIndex = 0, demoDismissed = false;
         const showDemo = () => {
-          if (demoDismissed || document.hidden) return;
+          if (demoDismissed || document.hidden || !examples.length) return;
           const example = examples[exampleIndex++ % examples.length];
           demoNotice.querySelector('[data-demo-name]').textContent = example.name;
           demoNotice.querySelector('[data-demo-age]').textContent = example.age;

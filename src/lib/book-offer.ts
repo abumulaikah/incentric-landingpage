@@ -13,3 +13,7 @@ export const BOOK_OFFER = {
 // Timestamp harus ISO 8601. Daftar kosong tidak menampilkan notifikasi.
 export const RECENT_BOOK_PURCHASES: { name: string; purchasedAt: string }[] =
   [];
+
+// Ulasan asli dengan izin pembaca. Nonaktifkan BOOK_PREVIEW di book-preview.ts
+// untuk menggunakan daftar ini tanpa label simulasi.
+export const BOOK_TESTIMONIALS: { name: string; role: string; text: string }[] = [];
