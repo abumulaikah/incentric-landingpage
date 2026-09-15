@@ -12,6 +12,23 @@ tersedia di satu panel yang dapat dibuka. Tipografi memakai font sistem tanpa
 unduhan font eksternal. Label dekoratif, judul serif miring, dan stempel harga
 telah dihapus.
 
+Hero memakai latar netral putih kehijauan, tipografi Segoe UI, cover asli dengan
+efek ketebalan buku berbasis CSS, dan tombol oranye dengan teks gelap.
+Tidak ada perubahan pada gambar cover atau ilustrasi sumber.
+
+## Mode demo komponen
+
+Buka `/senimerawatpelanggan?demo=1` untuk meninjau contoh ulasan, countdown
+23 jam 17 menit, dan notifikasi melayang. Banner dan label lokal menyebutkan
+bahwa nama, teks ulasan, serta aktivitas pesanan adalah simulasi/rekaan.
+Mode ini tidak mengklaim pembelian nyata atau tenggat promo sebenarnya.
+Timer demo disimpan di sessionStorage agar tidak kembali ke awal saat refresh
+di tab yang sama; habisnya timer demo tidak mengubah harga jual.
+
+Tanpa `demo=1`, ketiga komponen contoh tetap tersembunyi. Jangan menghapus
+label untuk mengubah data contoh menjadi klaim penjualan. Gunakan ulasan
+asli dengan izin pembaca dan tenggat nyata untuk halaman penjualan.
+
 Rujukan UX: [Baymard, product descriptions](https://baymard.com/blog/product-descriptions)
 dan [Nielsen Norman Group, reading on the web](https://www.nngroup.com/articles/how-users-read-on-the-web/).
 Rujukan dipakai untuk kejelasan informasi dan pemindaian, bukan sebagai bukti

@@ -36,6 +36,12 @@ const situations = [
   { id: 'kembali', label: 'Pelanggan tidak komplain', chapter: 'Contoh penerapan Bab 2 dan 7', before: '“Tidak ada komplain. Berarti semuanya beres.”', after: '“Setelah pemakaian pertama, ada bagian yang menyulitkan? Masukan Anda akan kami pakai untuk memperbaiki layanan.”', text: 'Percakapan dibuka sebelum pelanggan mengeluh. Masukan yang masuk perlu dicatat dan ditindaklanjuti.' },
 ];
 const validPurchases = RECENT_BOOK_PURCHASES.filter(p => p.name.trim() && Number.isFinite(Date.parse(p.purchasedAt)) && Date.parse(p.purchasedAt) <= Date.now());
+// Prototype examples are opt-in and visibly labeled; never treated as real reviews/orders.
+const demoReviews = [
+  { name: 'Dina · contoh pembaca', role: 'Contoh untuk pemilik usaha', text: 'Saya ingin tahu cara menanggapi komplain tanpa membuat pelanggan merasa disalahkan. Pembahasan pilihan bahasa paling menarik buat saya.' },
+  { name: 'Heru · contoh pembaca', role: 'Contoh untuk pemimpin tim', text: 'Kalau semua keputusan harus menunggu saya, pelayanan ikut terhambat. Saya tertarik dengan bagian SOP dan kewenangan tim.' },
+  { name: 'Irwan · contoh pembaca', role: 'Contoh untuk tim layanan', text: 'Biasanya yang dicatat hanya komplain. Bagian tentang pelanggan yang diam membuat saya ingin memeriksa lagi cara kami meminta masukan.' },
+];
 ---
 <!doctype html>
 <html lang="id">
@@ -55,6 +61,7 @@ const validPurchases = RECENT_BOOK_PURCHASES.filter(p => p.name.trim() && Number
   </head>
   <body>
     <a class="skip-link" href="#utama">Lewati ke isi halaman</a>
+    <aside class="demo-banner" data-demo-only hidden>Mode demo: ulasan, hitung mundur, dan aktivitas pesanan di halaman ini adalah simulasi, bukan data pelanggan.</aside>
     <header class="site-header container">
       <a href="/" class="brand" aria-label="Beranda Incentric"><Image src={logo} alt="Incentric" width={136} height={39} format="webp" densities={[1, 2]} /></a>
       <nav aria-label="Navigasi buku"><a href="#isi-buku">Isi buku</a><a href="#penulis">Penulis</a><a class="nav-order" href={orderUrl} data-order>Pesan buku</a></nav>
@@ -63,22 +70,23 @@ const validPurchases = RECENT_BOOK_PURCHASES.filter(p => p.name.trim() && Number
       <div class="hero-surface">
         <section class="hero container" aria-labelledby="hero-title">
           <figure class="hero-visual">
-            <div class="cover-frame"><img src="/media/seni-merawat-pelanggan-cover.jpeg" alt="Cover buku Seni Merawat Pelanggan karya Ronald Satria" width="400" height="588" fetchpriority="high" /></div>
-            <figcaption>10 bab utama dan penutup</figcaption>
+            <div class="book-stage"><div class="cover-frame"><img src="/media/seni-merawat-pelanggan-cover.jpeg" alt="Cover buku Seni Merawat Pelanggan karya Ronald Satria" width="400" height="588" fetchpriority="high" /></div></div>
+            <figcaption><strong>Seni Merawat Pelanggan</strong><span>Ronald Satria · 10 bab utama dan penutup</span></figcaption>
           </figure>
           <div class="hero-main">
             <div class="product-heading">
-              <img class="mobile-cover" src="/media/seni-merawat-pelanggan-cover.jpeg" alt="Cover Seni Merawat Pelanggan" width="80" height="118" />
-              <div><p class="product-name">Seni Merawat Pelanggan</p><p class="product-author">Ronald Satria</p></div>
+              <p>Buku untuk pemilik bisnis &amp; tim layanan</p>
             </div>
             <h1 id="hero-title">Kenapa pelanggan<br class="desktop-break" /> hanya beli sekali?</h1>
-            <p class="hero-description">Ada yang datang saat promo, lalu tidak pernah pesan lagi. Ada yang berhenti setelah komplain, meski masalahnya sudah diselesaikan. Kalau ini terjadi di bisnis Anda, apa yang perlu diperbaiki?</p>
-            <p class="hero-description">Buku ini membahas cara mendengar keluhan, berbicara dengan pelanggan yang kecewa, dan menyiapkan tim agar kualitas pelayanan tidak bergantung pada Anda seorang.</p>
+            <p class="hero-description">Sudah rajin promosi, tapi pelanggan lama tidak pesan lagi? Ada yang hanya datang saat diskon. Ada juga yang berhenti setelah komplain.</p>
+            <p class="hero-description hero-book-description">Dalam <strong>Seni Merawat Pelanggan</strong>, Ronald Satria membahas cara menanggapi keluhan dan menyiapkan tim agar kualitas pelayanan tidak bergantung pada Anda seorang.</p>
             <div class="hero-price"><del data-old-price hidden={!active}>{money(BOOK_OFFER.regularPrice)}</del><strong data-price>{money(price)}</strong><span data-savings hidden={!active}>Hemat Rp100.000</span></div>
             <div class="hero-actions"><a class="button order-button" href={orderUrl} data-order>Pesan buku lewat WhatsApp</a><a class="sample-link" href="#cuplikan">Baca contoh isi</a></div>
             <p class="order-note">Format buku dan total biaya dikonfirmasi lewat chat.</p>
+            <div class="demo-countdown" data-demo-only hidden><span>Simulasi hitung mundur · bukan batas promo</span><p><b data-demo-hours>23</b><small>jam</small><b data-demo-minutes>17</b><small>menit</small><b data-demo-seconds>42</b><small>detik</small></p></div>
           </div>
         </section>
+        <div class="hero-footnote container"><span>Di dalam buku</span><p>Menangani keluhan</p><p>Menyiapkan SOP layanan</p><p>Melatih tim saat bekerja</p></div>
       </div>
 
       <section class="pain-section container section-pad" aria-labelledby="pain-title">
@@ -120,6 +128,11 @@ const validPurchases = RECENT_BOOK_PURCHASES.filter(p => p.name.trim() && Number
         </details>
       </section>
 
+      <section class="demo-testimonials container section-pad" data-demo-only hidden aria-labelledby="reviews-title">
+        <div class="reviews-heading"><div><span class="demo-label">Simulasi testimoni</span><h2 id="reviews-title">Contoh tampilan ulasan pembaca</h2></div><p>Teks dan nama berikut adalah rekaan untuk pratinjau desain. Ganti dengan ulasan asli sebelum digunakan untuk penjualan.</p></div>
+        <div class="review-grid">{demoReviews.map(review => <figure class="review-card"><span class="review-mark" aria-hidden="true">“</span><blockquote>{review.text}</blockquote><figcaption><strong>{review.name}</strong><span>{review.role} · bukan ulasan asli</span></figcaption></figure>)}</div>
+      </section>
+
       <section id="penulis" class="author-section section-pad" aria-labelledby="author-title">
         <div class="container author-grid">
           <div><h2 id="author-title">Tentang Ronald Satria</h2><p>Ronald Satria menulis buku ini dari referensi, contoh keberhasilan, dan pengalamannya mendampingi organisasi dalam pengembangan pelayanan pelanggan dan budaya layanan.</p><p>Pembahasannya juga mencakup peran pemimpin: memberi contoh, melatih kebiasaan kerja, dan menetapkan kebijakan yang membantu tim melayani pelanggan.</p></div>
@@ -152,6 +165,7 @@ const validPurchases = RECENT_BOOK_PURCHASES.filter(p => p.name.trim() && Number
     </main>
     <footer class="footer container"><a href="/">Incentric</a><a href={orderUrl} data-order>Hubungi tim Incentric</a><span>© {new Date().getFullYear()} Incentric</span></footer>
     <aside class="mobile-order" aria-label="Pesan buku"><div><small>Seni Merawat Pelanggan</small><strong data-price>{money(price)}</strong></div><a class="button order-button" href={orderUrl} data-order>Pesan buku</a></aside>
+    <aside class="purchase-notification demo-purchase" data-demo-purchase hidden aria-label="Simulasi notifikasi pembelian"><img src="/media/seni-merawat-pelanggan-cover.jpeg" alt="" width="38" height="56" /><div><span class="demo-label">Simulasi pesanan</span><strong data-demo-name>Irwan · nama contoh</strong><p>Memesan Seni Merawat Pelanggan</p><small data-demo-age>30 menit lalu · data rekaan</small></div><button type="button" data-close-demo aria-label="Tutup simulasi pesanan">×</button></aside>
     {validPurchases.length > 0 && <aside class="purchase-notification" data-purchase-notification hidden aria-label="Pesanan terbaru"><div><strong data-purchase-name></strong><p>Memesan Seni Merawat Pelanggan</p><small data-purchase-time></small></div><button type="button" data-close-purchase aria-label="Tutup notifikasi pesanan">×</button></aside>}
     <script is:inline define:vars={{ bookOffer: BOOK_OFFER, whatsappBase: WHATSAPP_URL, recentBookOrders: validPurchases }}>
       const tabs = [...document.querySelectorAll('[data-tab]')];
@@ -192,8 +206,37 @@ const validPurchases = RECENT_BOOK_PURCHASES.filter(p => p.name.trim() && Number
       }
       updateOffer();
       if (Number.isFinite(end)) setInterval(updateOffer, 1000);
+      const demoMode = new URLSearchParams(location.search).get('demo') === '1';
+      if (demoMode) {
+        document.querySelectorAll('[data-demo-only]').forEach(node => node.hidden = false);
+        // Persist an explicitly simulated deadline in this tab; refreshing does not reset it.
+        const demoKey = 'incentric-book-demo-deadline-v1';
+        let demoEnd;
+        try {
+          demoEnd = Number(sessionStorage.getItem(demoKey));
+          if (!Number.isFinite(demoEnd) || demoEnd <= 0) { demoEnd = Date.now() + (23 * 3600 + 17 * 60 + 42) * 1000; sessionStorage.setItem(demoKey, String(demoEnd)); }
+        } catch { demoEnd = Date.now() + (23 * 3600 + 17 * 60 + 42) * 1000; }
+        const tickDemo = () => {
+          const seconds = Math.max(0, Math.floor((demoEnd - Date.now()) / 1000));
+          [['hours', Math.floor(seconds / 3600)], ['minutes', Math.floor(seconds % 3600 / 60)], ['seconds', seconds % 60]].forEach(([key, value]) => document.querySelector(`[data-demo-${key}]`).textContent = String(value).padStart(2, '0'));
+        };
+        tickDemo(); setInterval(tickDemo, 1000);
+        const demoNotice = document.querySelector('[data-demo-purchase]');
+        const examples = [{ name: 'Irwan · nama contoh', age: '30 menit lalu · data rekaan' }, { name: 'Heru · nama contoh', age: '2 jam lalu · data rekaan' }];
+        let exampleIndex = 0, demoDismissed = false;
+        const showDemo = () => {
+          if (demoDismissed || document.hidden) return;
+          const example = examples[exampleIndex++ % examples.length];
+          demoNotice.querySelector('[data-demo-name]').textContent = example.name;
+          demoNotice.querySelector('[data-demo-age]').textContent = example.age;
+          demoNotice.hidden = false;
+          setTimeout(() => demoNotice.hidden = true, 7000);
+        };
+        demoNotice.querySelector('[data-close-demo]').addEventListener('click', () => { demoDismissed = true; demoNotice.hidden = true; });
+        setTimeout(showDemo, 2500); setInterval(showDemo, 24000);
+      }
       const notice = document.querySelector('[data-purchase-notification]');
-      if (notice && recentBookOrders.length) {
+      if (!demoMode && notice && recentBookOrders.length) {
         let purchaseIndex = 0, dismissed = false;
         const formatter = new Intl.RelativeTimeFormat('id-ID', {numeric: 'auto'});
         function showPurchase() {
