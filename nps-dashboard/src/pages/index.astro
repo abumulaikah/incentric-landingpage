@@ -1,0 +1,82 @@
+---
+import Base from '../layouts/Base.astro';
+import { CLIENTS } from '../lib/config';
+import { isAdmin, sessionCookie, verifySessionToken } from '../lib/auth';
+import { isDemoMode } from '../lib/env';
+
+export const prerender = false;
+
+const session = await verifySessionToken(Astro.cookies.get(sessionCookie.name)?.value);
+const admin = isAdmin(session);
+const demo = isDemoMode();
+---
+
+<Base title="Dashboard NPS · Incentric">
+  <div class="shell">
+    <header class="border-b border-slate-200 bg-white">
+      <div class="container-page flex items-center justify-between py-4">
+        <div class="flex items-center gap-3">
+          <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-ink text-base font-extrabold text-brand-yellow">i</span>
+          <span class="text-sm font-extrabold uppercase tracking-[0.2em]">incentric</span>
+        </div>
+        <div class="flex items-center gap-2">
+          {demo && <span class="badge badge-warn">Mode demo</span>}
+          {admin ? (
+            <a href="/admin" class="btn btn-dark !min-h-10 !px-4">Admin</a>
+          ) : (
+            <a href="/admin" class="btn btn-outline !min-h-10 !px-4">Masuk admin</a>
+          )}
+        </div>
+      </div>
+    </header>
+
+    <main class="container-page py-10 md:py-16">
+      <p class="text-[11px] font-bold uppercase tracking-[0.24em] text-brand-blue">Customer Experience Dashboard</p>
+      <h1 class="mt-4 max-w-3xl text-3xl font-extrabold leading-[1.08] tracking-tight md:text-5xl">
+        Setiap suara pasien, terbaca sebagai keputusan.
+      </h1>
+      <p class="mt-4 max-w-2xl text-base leading-relaxed text-slate-500">
+        Dashboard Net Promoter Score dan kepuasan layanan per tahap. Akses privat dengan kata sandi yang
+        dibagikan tim Incentric.
+      </p>
+
+      <div class="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        {CLIENTS.map((client) => (
+          <article class="card flex flex-col justify-between">
+            <div>
+              <p class="text-[11px] font-bold uppercase tracking-[0.14em] text-slate-400">Dashboard klien</p>
+              <h2 class="mt-2 text-xl font-extrabold leading-tight">{client.name}</h2>
+              <p class="mt-2 text-sm text-slate-500">Laporan NPS dan kepuasan layanan pasien.</p>
+            </div>
+            <a href={`/login/${client.slug}`} class="btn btn-primary mt-6 w-full">Buka dashboard</a>
+          </article>
+        ))}
+
+        {CLIENTS.length === 0 && (
+          <div class="card">
+            <h2 class="text-lg font-extrabold">Belum ada client</h2>
+            <p class="mt-2 text-sm text-slate-500">Tambahkan client di <code class="font-mono">src/lib/config.ts</code>.</p>
+          </div>
+        )}
+      </div>
+
+      <div class="mt-12 grid gap-4 md:grid-cols-3">
+        {[
+          { title: 'NPS & distribusi', copy: 'Skor NPS, proporsi promoter, passive, dan detractor.' },
+          { title: 'Skor per tahap', copy: 'Kedatangan, pendaftaran, pemeriksaan, kasir & farmasi, fasilitas.' },
+          { title: 'Korelasi loyalitas', copy: 'Tahap mana yang paling menentukan loyalitas pasien.' },
+        ].map((item) => (
+          <div class="rounded-xl border border-slate-200 bg-white/60 p-5">
+            <h3 class="text-sm font-extrabold">{item.title}</h3>
+            <p class="mt-1.5 text-xs leading-relaxed text-slate-500">{item.copy}</p>
+          </div>
+        ))}
+      </div>
+
+      <p class="mt-12 max-w-2xl text-xs leading-relaxed text-slate-400">
+        Data survei bersifat rahasia dan hanya untuk kepentingan internal klien. Jangan membagikan tautan
+        maupun kata sandi kepada pihak luar.
+      </p>
+    </main>
+  </div>
+</Base>
