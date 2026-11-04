@@ -14,3 +14,4 @@ nps-dashboard/dist/
 nps-dashboard/.astro/
 nps-dashboard/.vercel/
 nps-dashboard/node_modules/
+.vercel
