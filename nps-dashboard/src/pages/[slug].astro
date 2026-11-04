@@ -71,6 +71,10 @@ const hasData = Boolean(nps && nps.total > 0);
 const trendDates = (data?.dailyTrend ?? []).map((point) => point.date).filter((date) => date !== 'unknown').sort();
 const rangeFrom = filters.from ?? trendDates[0] ?? null;
 const rangeTo = filters.to ?? trendDates[trendDates.length - 1] ?? null;
+
+const lowestStage = [...(data?.stages ?? [])]
+  .filter((stage) => stage.score !== null && !stage.optional)
+  .sort((a, b) => (a.score ?? 0) - (b.score ?? 0))[0];
 ---
 
 <Base title={`Dashboard NPS · ${client.name}`}>
@@ -216,7 +220,7 @@ const rangeTo = filters.to ?? trendDates[trendDates.length - 1] ?? null;
               <p class="mt-4 text-xs font-semibold text-slate-500">
                 Skor terendah:{' '}
                 <span class="font-extrabold text-slate-800">
-                  {[...(data?.stages ?? [])].filter((stage) => stage.score !== null).sort((a, b) => (a.score ?? 0) - (b.score ?? 0))[0]?.shortLabel ?? '–'}
+                  {lowestStage?.shortLabel ?? '–'}
                 </span>
               </p>
             </div>
