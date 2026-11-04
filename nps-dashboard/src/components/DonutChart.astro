@@ -1,7 +1,7 @@
 ---
 /**
  * Donut chart proporsi loyalitas (Promoter / Passive / Detractor).
- * Digambar dengan SVG murni agar tidak menambah dependency runtime.
+ * Digambar dengan SVG path agar tidak bergantung pada pembulatan dasharray.
  */
 interface Slice {
   label: string;
@@ -21,44 +21,83 @@ const { slices, total, centerValue, centerLabel } = Astro.props;
 
 const sum = slices.reduce((acc, slice) => acc + slice.value, 0);
 const denominator = sum > 0 ? sum : total;
-const radius = 62;
-const stroke = 26;
-const circumference = 2 * Math.PI * radius;
 
-let offset = 0;
+const size = 160;
+const center = size / 2;
+const outer = 74;
+const inner = 48;
+
+const point = (radius: number, angle: number) => {
+  const rad = ((angle - 90) * Math.PI) / 180;
+  return [center + radius * Math.cos(rad), center + radius * Math.sin(rad)] as const;
+};
+
+let cursor = 0;
 const arcs = slices
   .filter((slice) => slice.value > 0)
   .map((slice) => {
-    const length = (slice.value / denominator) * circumference;
-    const arc = { ...slice, length, offset };
-    offset += length;
-    return arc;
+    const sweep = (slice.value / denominator) * 360;
+    const start = cursor;
+    const end = Math.min(360, cursor + sweep);
+    cursor = end;
+
+    // Lingkaran penuh tidak bisa digambar dengan satu arc.
+    if (sweep >= 359.999) {
+      return {
+        ...slice,
+        path: [
+          `M${center},${center - outer}`,
+          `A${outer},${outer} 0 1 1 ${center},${center + outer}`,
+          `A${outer},${outer} 0 1 1 ${center},${center - outer}`,
+          `Z`,
+          `M${center},${center - inner}`,
+          `A${inner},${inner} 0 1 0 ${center},${center + inner}`,
+          `A${inner},${inner} 0 1 0 ${center},${center - inner}`,
+          `Z`,
+        ].join(' '),
+        full: true,
+      };
+    }
+
+    const largeArc = end - start > 180 ? 1 : 0;
+    const [x1, y1] = point(outer, start);
+    const [x2, y2] = point(outer, end);
+    const [x3, y3] = point(inner, end);
+    const [x4, y4] = point(inner, start);
+
+    return {
+      ...slice,
+      path: [
+        `M${x1.toFixed(2)},${y1.toFixed(2)}`,
+        `A${outer},${outer} 0 ${largeArc} 1 ${x2.toFixed(2)},${y2.toFixed(2)}`,
+        `L${x3.toFixed(2)},${y3.toFixed(2)}`,
+        `A${inner},${inner} 0 ${largeArc} 0 ${x4.toFixed(2)},${y4.toFixed(2)}`,
+        `Z`,
+      ].join(' '),
+      full: false,
+    };
   });
 ---
 
 <div class="flex flex-col items-center gap-6 sm:flex-row sm:items-center sm:gap-8">
   <div class="relative shrink-0">
-    <svg viewBox="0 0 160 160" class="h-44 w-44 -rotate-90" role="img" aria-label="Proporsi loyalitas pasien">
-      <circle cx="80" cy="80" r={radius} fill="none" stroke="#f1f5f9" stroke-width={stroke} />
+    <svg viewBox={`0 0 ${size} ${size}`} class="h-44 w-44" role="img" aria-label="Proporsi loyalitas pasien">
+      {arcs.length === 0 ? (
+        <circle cx={center} cy={center} r={(outer + inner) / 2} fill="none" stroke="#f1f5f9" stroke-width={outer - inner} />
+      ) : (
+        arcs.map((arc) => (
+          <path
+            d={arc.path}
+            fill={arc.color}
+            fill-rule="evenodd"
+            stroke="#ffffff"
+            stroke-width={arcs.length > 1 && !arc.full ? 1.5 : 0}
+          >
+            <title>{arc.label}: {arc.value.toFixed(1)}% ({arc.count})</title>
+          </path>
+        ))
+      )}
     </svg>
-    <div class="pointer-events-none absolute inset-0 -rotate-90">
-      <svg viewBox="0 0 160 160" class="h-44 w-44" aria-hidden="true">
-        <circle cx="80" cy="80" r={radius} fill="none" stroke="#f1f5f9" stroke-width={stroke} />
-        {arcs.map((arc) => (
-          <circle
-            cx="80"
-            cy="80"
-            r={radius}
-            fill="none"
-            stroke={arc.color}
-            stroke-width={stroke}
-            stroke-dasharray={`${arc.length} ${circumference - arc.length}`}
-            stroke-dashoffset={-arc.offset}
-            stroke-linecap="butt"
-          />
-        ))}
-      </svg>
-    </div>
     <div class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
       <span class="text-3xl font-extrabold leading-none tracking-tight">{centerValue}</span>
       <span class="mt-1 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">{centerLabel}</span>
