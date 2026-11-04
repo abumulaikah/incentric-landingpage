@@ -112,7 +112,7 @@ const lowestStage = [...(data?.stages ?? [])]
 
     <main class="container-page space-y-5 py-6 md:space-y-6 md:py-8">
       <!-- Title + filter -->
-      <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+      <div class="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
         <div>
           <h1 class="text-2xl font-extrabold tracking-tight md:text-[2rem]">Laporan Pengalaman Pasien</h1>
           <p class="mt-1.5 text-sm text-slate-500">
@@ -122,27 +122,27 @@ const lowestStage = [...(data?.stages ?? [])]
           </p>
         </div>
 
-        <form method="GET" class="no-print flex flex-wrap items-end gap-2">
-          <label class="flex flex-col gap-1">
+        <form method="GET" class="no-print flex w-full flex-wrap items-end gap-2 xl:w-auto">
+          <label class="flex min-w-0 flex-1 basis-[140px] flex-col gap-1 sm:flex-none sm:basis-auto">
             <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Dari</span>
-            <input type="date" name="from" value={filters.from ?? ''} class="field !w-auto !min-w-[150px]" />
+            <input type="date" name="from" value={filters.from ?? ''} class="field !w-full !min-w-0 sm:!w-[150px]" />
           </label>
-          <label class="flex flex-col gap-1">
+          <label class="flex min-w-0 flex-1 basis-[140px] flex-col gap-1 sm:flex-none sm:basis-auto">
             <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Sampai</span>
-            <input type="date" name="to" value={filters.to ?? ''} class="field !w-auto !min-w-[150px]" />
+            <input type="date" name="to" value={filters.to ?? ''} class="field !w-full !min-w-0 sm:!w-[150px]" />
           </label>
-          <label class="flex flex-col gap-1">
+          <label class="flex min-w-0 flex-1 basis-[160px] flex-col gap-1 sm:flex-none sm:basis-auto">
             <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Layanan</span>
-            <select name="service" class="field !w-auto !min-w-[180px]">
+            <select name="service" class="field !w-full !min-w-0 sm:!w-[180px]">
               <option value="">Semua layanan</option>
               {(data?.availableServices ?? []).map((service) => (
                 <option value={service} selected={service === filters.service}>{service}</option>
               ))}
             </select>
           </label>
-          <button type="submit" class="btn btn-primary !min-h-11">Terapkan</button>
+          <button type="submit" class="btn btn-primary !min-h-11 shrink-0 whitespace-nowrap">Terapkan</button>
           {(filters.from || filters.to || filters.service) && (
-            <a href={`/${client.slug}`} class="btn btn-outline !min-h-11">Reset</a>
+            <a href={`/${client.slug}`} class="btn btn-outline !min-h-11 shrink-0">Reset</a>
           )}
         </form>
       </div>

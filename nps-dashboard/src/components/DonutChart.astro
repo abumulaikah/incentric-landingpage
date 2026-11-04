@@ -19,38 +19,46 @@ interface Props {
 
 const { slices, total, centerValue, centerLabel } = Astro.props;
 
-const visible = slices.filter((slice) => slice.value > 0);
+const sum = slices.reduce((acc, slice) => acc + slice.value, 0);
+const denominator = sum > 0 ? sum : total;
 const radius = 62;
 const stroke = 26;
 const circumference = 2 * Math.PI * radius;
 
 let offset = 0;
-const arcs = visible.map((slice) => {
-  const length = total > 0 ? (slice.value / total) * circumference : 0;
-  const arc = { ...slice, length, offset };
-  offset += length;
-  return arc;
-});
+const arcs = slices
+  .filter((slice) => slice.value > 0)
+  .map((slice) => {
+    const length = (slice.value / denominator) * circumference;
+    const arc = { ...slice, length, offset };
+    offset += length;
+    return arc;
+  });
 ---
 
 <div class="flex flex-col items-center gap-6 sm:flex-row sm:items-center sm:gap-8">
   <div class="relative shrink-0">
     <svg viewBox="0 0 160 160" class="h-44 w-44 -rotate-90" role="img" aria-label="Proporsi loyalitas pasien">
       <circle cx="80" cy="80" r={radius} fill="none" stroke="#f1f5f9" stroke-width={stroke} />
-      {arcs.map((arc) => (
-        <circle
-          cx="80"
-          cy="80"
-          r={radius}
-          fill="none"
-          stroke={arc.color}
-          stroke-width={stroke}
-          stroke-dasharray={`${arc.length} ${circumference - arc.length}`}
-          stroke-dashoffset={-arc.offset}
-          stroke-linecap="butt"
-        />
-      ))}
     </svg>
+    <div class="pointer-events-none absolute inset-0 -rotate-90">
+      <svg viewBox="0 0 160 160" class="h-44 w-44" aria-hidden="true">
+        <circle cx="80" cy="80" r={radius} fill="none" stroke="#f1f5f9" stroke-width={stroke} />
+        {arcs.map((arc) => (
+          <circle
+            cx="80"
+            cy="80"
+            r={radius}
+            fill="none"
+            stroke={arc.color}
+            stroke-width={stroke}
+            stroke-dasharray={`${arc.length} ${circumference - arc.length}`}
+            stroke-dashoffset={-arc.offset}
+            stroke-linecap="butt"
+          />
+        ))}
+      </svg>
+    </div>
     <div class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
       <span class="text-3xl font-extrabold leading-none tracking-tight">{centerValue}</span>
       <span class="mt-1 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">{centerLabel}</span>
