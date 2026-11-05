@@ -36,17 +36,21 @@ const points = items.filter((item) => item.score !== null);
 const columnWidth = 104;
 const labelWidth = 34;
 const plotWidth = points.length * columnWidth + labelWidth;
-const plotHeight = 380;
+const plotHeight = 420;
 
+const axisY = 306;
 const padTop = 34;
-const padBottom = 74;
 const plotLeft = labelWidth + 8;
 const plotRight = plotWidth - 52;
-const usable = plotHeight - padTop - padBottom;
+const usable = axisY - padTop;
 const scoreRange = max - min || 1;
 
-// Label pertanyaan dimulai tepat di bawah sumbu X, bukan jauh di dasar kanvas.
-const labelTopY = plotHeight - padBottom + 11;
+// Jarak vertikal area sumbu X.
+const axisLabelGap = 18; // garis sumbu → baris label pertama
+const labelLineHeight = 13; // antar baris label
+const labelBlockBottom = axisLabelGap + labelLineHeight + 8;
+const groupDividerY = axisY + labelBlockBottom + 10;
+const groupLabelY = axisY + labelBlockBottom + 24;
 
 const xOf = (index: number) =>
   points.length === 1 ? (plotLeft + plotRight) / 2 : plotLeft + (index * (plotRight - plotLeft)) / (points.length - 1);
@@ -113,7 +117,7 @@ const highPoints = sorted.slice(-2).reverse();
               y1={yOf(tick).toFixed(1)}
               x2={plotRight}
               y2={yOf(tick).toFixed(1)}
-              stroke="#eef2f7"
+              stroke={tick === min ? '#cbd5e1' : '#eef2f7'}
               stroke-width="1"
             />
             <text x={plotLeft - 8} y={yOf(tick) + 3.5} text-anchor="end" class="fill-slate-400" style="font-size:9.5px;font-weight:600">
@@ -126,15 +130,24 @@ const highPoints = sorted.slice(-2).reverse();
         {stageAnchors
           .filter((anchor) => anchor.startsStage && anchor.index > 0)
           .map((anchor) => (
-            <line
-              x1={(xOf(anchor.index) - columnWidth / 2).toFixed(1)}
-              y1={padTop}
-              x2={(xOf(anchor.index) - columnWidth / 2).toFixed(1)}
-              y2={plotHeight - padBottom}
-              stroke="#e2e8f0"
-              stroke-width="1"
-              stroke-dasharray="4 4"
-            />
+            <g>
+              <line
+                x1={(xOf(anchor.index) - columnWidth / 2).toFixed(1)}
+                y1={padTop}
+                x2={(xOf(anchor.index) - columnWidth / 2).toFixed(1)}
+                y2={plotHeight - 24}
+                stroke="#e2e8f0"
+                stroke-width="1"
+                stroke-dasharray="4 4"
+              />
+              <rect
+                x={(xOf(anchor.index) - columnWidth / 2).toFixed(1)}
+                y={groupDividerY.toFixed(1)}
+                width={columnWidth}
+                height={2}
+                fill="transparent"
+              />
+            </g>
           ))}
 
         <!-- garis tren -->
@@ -171,26 +184,36 @@ const highPoints = sorted.slice(-2).reverse();
           );
         })}
 
-        <!-- garis penghubung titik ke label (berhenti di atas label) -->
+        <!-- garis penghubung titik ke label -->
         {points.map((item, index) => (
           <line
             x1={xOf(index).toFixed(1)}
             y1={(yOf(item.score as number) + 8).toFixed(1)}
             x2={xOf(index).toFixed(1)}
-            y2={(labelTopY - 7).toFixed(1)}
+            y2={axisY - 7}
             stroke="#cbd5e1"
             stroke-width="1"
             stroke-dasharray="3 3"
           />
         ))}
 
-        <!-- label pertanyaan (menempel di bawah garis) -->
+        <!-- garis sumbu X -->
+        <line
+          x1={labelWidth + 6}
+          y1={axisY}
+          x2={plotRight}
+          y2={axisY}
+          stroke="#cbd5e1"
+          stroke-width="1"
+        />
+
+        <!-- label pertanyaan -->
         {points.map((item, index) => (
           <g>
             {wrapLabel(item.label).map((line, lineIndex) => (
               <text
                 x={xOf(index).toFixed(1)}
-                y={(labelTopY + lineIndex * 12).toFixed(1)}
+                y={(axisY + axisLabelGap + lineIndex * labelLineHeight).toFixed(1)}
                 text-anchor="middle"
                 class="fill-slate-600"
                 style="font-size:10px;font-weight:700"
@@ -201,31 +224,33 @@ const highPoints = sorted.slice(-2).reverse();
           </g>
         ))}
 
-        <!-- sumbu X -->
+        <!-- pembatas pergantian tahap layanan -->
         <line
           x1={labelWidth + 6}
-          y1={(plotHeight - padBottom).toFixed(1)}
+          y1={groupDividerY.toFixed(1)}
           x2={plotRight}
-          y2={(plotHeight - padBottom).toFixed(1)}
-          stroke="#cbd5e1"
+          y2={groupDividerY.toFixed(1)}
+          stroke="#e2e8f0"
           stroke-width="1"
+          stroke-dasharray="4 4"
         />
 
+        <!-- label tahap layanan dengan pemisah vertikal -->
         {stageAnchors
           .filter((anchor) => anchor.startsStage)
           .map((anchor) => (
             <g>
               <line
-                x1={xOf(anchor.index).toFixed(1)}
-                y1={(plotHeight - padBottom).toFixed(1)}
-                x2={xOf(anchor.index).toFixed(1)}
-                y2={(plotHeight - padBottom + 5).toFixed(1)}
-                stroke="#94a3b8"
+                x1={(xOf(anchor.index) - columnWidth / 2).toFixed(1)}
+                y1={axisY}
+                x2={(xOf(anchor.index) - columnWidth / 2).toFixed(1)}
+                y2={(groupDividerY + 4).toFixed(1)}
+                stroke="#cbd5e1"
                 stroke-width="1"
               />
               <text
                 x={xOf(anchor.index).toFixed(1)}
-                y={(labelTopY + 24).toFixed(1)}
+                y={groupLabelY.toFixed(1)}
                 text-anchor="middle"
                 class="fill-brand-blue/80"
                 style="font-size:9px;font-weight:800;letter-spacing:0.05em"
