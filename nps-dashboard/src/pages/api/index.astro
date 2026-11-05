@@ -4,51 +4,58 @@ import '../../styles/global.css';
 export const prerender = false;
 
 const origin = Astro.url.origin;
-const base = `${origin}/api/v1`;
+const apiBase = `${origin}/api/v1`;
 
 const endpoints = [
   {
     method: 'GET',
     path: '/clients',
     title: 'List clients',
-    copy: 'All client dashboards this key can read, with response count and current NPS.',
+    copy: 'Every client this key can read, with the latest response count and NPS score.',
     params: [],
+    response: 'Array of { slug, name, npsScale, responses, nps, lastUpdated }',
   },
   {
     method: 'GET',
     path: '/nps/{slug}',
-    title: 'NPS summary',
-    copy: 'Score, promoter split, stage scores and correlations for one client.',
+    title: 'NPS report',
+    copy: 'Score, respondent split, stage scores, correlations and — with detail=full — items, distribution, trend and comments.',
     params: [
-      ['from', 'ISO date', 'Start of period, e.g. 2026-01-01'],
+      ['from', 'ISO date', 'Start of period, e.g. 2026-11-01'],
       ['to', 'ISO date', 'End of period'],
-      ['service', 'string', 'Filter by service type'],
-      ['detail', 'summary | full', 'full adds items, distribution, trend and comments'],
+      ['service', 'string', 'Filter by service type (exact match)'],
+      ['detail', 'summary | full', 'Default summary. full adds items, distribution, serviceBreakdown, respondentBreakdown, trend and comments'],
     ],
+    response: 'Single object (see example below)',
   },
   {
     method: 'GET',
     path: '/nps/{slug}/comments',
-    title: 'Comments',
-    copy: 'Patient comments only, newest first.',
+    title: 'Verbatim comments',
+    copy: 'Patient comments only, newest first. The same records returned inside detail=full.',
     params: [['limit', '1-200', 'Default 50']],
+    response: 'Array of { submittedAt, stage, service, respondentType, text }',
   },
   {
     method: 'GET',
     path: '/nps/{slug}/export',
     title: 'CSV export',
-    copy: 'Data mentah bergaya export Tally (default: ringkasan laporan).',
+    copy: 'Raw Tally-style CSV (one row per submission, one column per question) or the summary report.',
     params: [
       ['from', 'ISO date', 'Optional'],
       ['to', 'ISO date', 'Optional'],
       ['service', 'string', 'Optional'],
-      ['format', 'raw | summary', 'raw = satu baris per submission, kolom = pertanyaan asli'],
+      ['format', 'raw | summary', 'Default summary'],
     ],
+    response: 'text/csv attachment',
   },
 ];
 
-const example = `curl "${base}/nps/rsananda?detail=summary" \\
-  -H "Authorization: Bearer nps_live_xxxxxxxxxxxxxxxx"`;
+const example = `curl "${apiBase}/nps/rsananda?detail=full" \\
+  -H "Authorization: Bearer nps_live_<your-key>"`;
+
+const exampleComments = `curl "${apiBase}/nps/rsananda/comments?limit=20" \\
+  -H "Authorization: Bearer nps_live_<your-key>"`;
 
 const sampleBody = `{
   "data": {
@@ -56,19 +63,21 @@ const sampleBody = `{
     "name": "RSU Ananda Srengat",
     "npsScale": "1-5",
     "period": { "from": null, "to": null },
-    "totalRespondents": 29,
+    "filters": { "service": null },
+    "totalRespondents": 37,
     "nps": {
-      "score": 72.4,
-      "promoters": 21,
-      "passives": 8,
+      "score": 70.3,
+      "promoters": 26,
+      "passives": 11,
       "detractors": 0,
-      "promoterPct": 72.4,
-      "passivePct": 27.6,
+      "promoterPct": 70.3,
+      "passivePct": 29.7,
       "detractorPct": 0
     },
     "overallMean": 4.62,
     "stages": [
-      { "key": "kedatangan", "label": "Kedatangan", "score": 4.71, "responses": 29 }
+      { "key": "kedatangan", "label": "Kedatangan", "score": 4.71, "responses": 37 },
+      { "key": "pemeriksaan", "label": "Pemeriksaan", "score": 4.68, "responses": 37 }
     ],
     "correlations": [
       {
@@ -77,7 +86,7 @@ const sampleBody = `{
         "score": 4.68,
         "r": 0.418,
         "strength": "Moderate",
-        "respondents": 29,
+        "respondents": 37,
         "recommendation": "Supporting factor of the experience"
       }
     ],
@@ -85,6 +94,27 @@ const sampleBody = `{
   },
   "meta": { "remainingQuota": 57, "source": "tally" }
 }`;
+
+const fullFields = [
+  ['items', 'Score per individual question'],
+  ['distribution', 'Response count for every point on the scale'],
+  ['serviceBreakdown', 'Responses, NPS, mean score and category counts per service'],
+  ['respondentBreakdown', 'Respondent type counts (patient, companion, …)'],
+  ['trend', 'Daily NPS and response count'],
+  ['comments', 'Verbatim comments with stage, service and respondent type'],
+];
+
+const permissions = [
+  ['Read NPS score, promoter split and respondent counts', true],
+  ['Read stage scores and per-item scores', true],
+  ['Read correlations, strength and recommendations', true],
+  ['Read score distribution, daily trend and service breakdown', true],
+  ['Read verbatim comments', true],
+  ['Download CSV (raw or summary)', true],
+  ['Create, edit or delete responses', false],
+  ['Change stages, labels or client settings', false],
+  ['Read staff names or patient identities', false],
+];
 ---
 
 <!doctype html>
@@ -123,7 +153,7 @@ const sampleBody = `{
 
       <div class="mt-6 flex flex-wrap gap-2">
         <span class="badge badge-great">Version v1</span>
-        <span class="badge badge-muted">Base URL {base}</span>
+        <span class="badge badge-muted">Base URL {apiBase}</span>
         <span class="badge badge-muted">60 requests / minute</span>
         <span class="badge badge-muted">Read-only</span>
       </div>
@@ -133,12 +163,14 @@ const sampleBody = `{
         <p class="card-title">Authentication</p>
         <h2 class="card-heading">Bearer API key</h2>
         <p class="prose-note mt-2">
-          Send the key in the <code class="font-mono">Authorization</code> header. Keys start with
-          <code class="font-mono">nps_live_</code> and are scoped to one client or to all clients.
+          Send the key in the <code class="font-mono">Authorization</code> header. Keys look like
+          <code class="font-mono">nps_live_</code> followed by 48 hexadecimal characters, and are scoped
+          to one client or to all clients.
         </p>
-        <pre class="mt-4 overflow-x-auto rounded-lg bg-brand-night p-4 text-[12.5px] leading-relaxed text-slate-100"><code>Authorization: Bearer nps_live_xxxxxxxxxxxxxxxx</code></pre>
+        <pre class="mt-4 overflow-x-auto rounded-lg bg-brand-night p-4 text-[12.5px] leading-relaxed text-slate-100"><code>Authorization: Bearer nps_live_&lt;your-key&gt;</code></pre>
         <p class="prose-note mt-3">
-          Keys are shown once when created and stored only as a hash. Revoke a key any time from the admin page.
+          Keys are shown once when created and stored only as a SHA-256 hash. Revoke a key at any time
+          from the admin page; revocation takes effect immediately.
         </p>
       </section>
 
@@ -171,19 +203,84 @@ const sampleBody = `{
                 </table>
               </div>
             )}
+            <p class="mt-3 text-[12px] text-slate-500">
+              <span class="font-bold uppercase tracking-wider text-slate-400">Returns</span>
+              <span class="ml-2">{endpoint.response}</span>
+            </p>
           </article>
         ))}
       </section>
 
+      <!-- Response shape -->
+      <section class="card mt-10">
+        <p class="card-title">Response shape</p>
+        <h2 class="card-heading">What detail=full adds</h2>
+        <div class="table-wrap mt-4">
+          <table class="data-table !min-w-0">
+            <thead>
+              <tr><th>Field</th><th>Content</th></tr>
+            </thead>
+            <tbody>
+              {fullFields.map((field) => (
+                <tr>
+                  <td class="font-mono text-[12px] font-bold">{field[0]}</td>
+                  <td class="text-[13px] text-slate-600">{field[1]}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p class="prose-note mt-4">
+          All scores are numbers. <code class="font-mono">strength</code> is one of
+          <code class="font-mono">Very Strong</code>, <code class="font-mono">Strong</code>,
+          <code class="font-mono">Moderate</code>, <code class="font-mono">Weak</code> or
+          <code class="font-mono">None</code>, based on the absolute value of <code class="font-mono">r</code>.
+        </p>
+      </section>
+
       <!-- Examples -->
       <section class="mt-10">
-        <h2 class="text-2xl font-extrabold tracking-tight">Example request</h2>
+        <h2 class="text-2xl font-extrabold tracking-tight">Example requests</h2>
         <pre class="mt-4 overflow-x-auto rounded-lg bg-brand-night p-4 text-[12.5px] leading-relaxed text-slate-100"><code>{example}</code></pre>
+        <pre class="mt-3 overflow-x-auto rounded-lg bg-brand-night p-4 text-[12.5px] leading-relaxed text-slate-100"><code>{exampleComments}</code></pre>
       </section>
 
       <section class="mt-10">
         <h2 class="text-2xl font-extrabold tracking-tight">Example response</h2>
+        <p class="prose-note mt-2">
+          Trimmed to two array entries for readability. Real responses include every stage and every
+          correlation.
+        </p>
         <pre class="mt-4 overflow-x-auto rounded-lg bg-brand-night p-4 text-[12.5px] leading-relaxed text-slate-100"><code>{sampleBody}</code></pre>
+      </section>
+
+      <!-- Permissions -->
+      <section class="card mt-10">
+        <p class="card-title">Permissions</p>
+        <h2 class="card-heading">What partners can and cannot do</h2>
+        <div class="table-wrap mt-4">
+          <table class="data-table !min-w-0">
+            <thead>
+              <tr><th>Capability</th><th>Allowed</th></tr>
+            </thead>
+            <tbody>
+              {permissions.map((row) => (
+                <tr>
+                  <td>{row[0]}</td>
+                  <td>
+                    {row[1]
+                      ? <span class="badge badge-great">Yes</span>
+                      : <span class="badge badge-bad">No</span>}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p class="prose-note mt-4">
+          Any request other than <code class="font-mono">GET</code>, <code class="font-mono">HEAD</code>
+          or <code class="font-mono">OPTIONS</code> returns <code class="font-mono">405 Method Not Allowed</code>.
+        </p>
       </section>
 
       <!-- Errors -->
@@ -202,13 +299,27 @@ const sampleBody = `{
               <tr><td class="font-mono font-bold">404</td><td>Unknown client slug</td></tr>
               <tr><td class="font-mono font-bold">405</td><td>Method not allowed (API is read-only)</td></tr>
               <tr><td class="font-mono font-bold">429</td><td>Rate limit exceeded (60 per minute)</td></tr>
+              <tr><td class="font-mono font-bold">500 / 502</td><td>Upstream failure (Tally API or export)</td></tr>
             </tbody>
           </table>
         </div>
         <p class="prose-note mt-4">
-          Errors return <code class="font-mono">{'{ "error": { "code": "...", "message": "..." } }'}</code>.
-          Data is cached for 5 minutes, so <code class="font-mono">updatedAt</code> may lag behind Tally slightly.
+          Errors use the shape <code class="font-mono">{'{ "error": { "code": "...", "message": "..." } }'}</code>.
+          Successful responses include the header <code class="font-mono">x-ratelimit-remaining</code>.
         </p>
+      </section>
+
+      <!-- Notes -->
+      <section class="card mt-6">
+        <p class="card-title">Notes</p>
+        <h2 class="card-heading">Caching and data scope</h2>
+        <ul class="mt-3 space-y-2 text-sm leading-relaxed text-slate-600">
+          <li>Data is cached for 5 minutes, so <code class="font-mono">updatedAt</code> may lag behind Tally slightly.</li>
+          <li>Only completed submissions are counted. Partial submissions are ignored.</li>
+          <li>Scores use the client scale: <code class="font-mono">1-5</code> or <code class="font-mono">0-10</code>.</li>
+          <li>Correlations are computed per respondent and are indicative for small samples.</li>
+          <li>Keys scoped to a single client return <code class="font-mono">403</code> for every other slug.</li>
+        </ul>
       </section>
 
       <section class="card mt-6">
@@ -219,33 +330,6 @@ const sampleBody = `{
           and the client you need to read. Keys are read-only and cannot modify data.
         </p>
         <a href="/admin" class="btn btn-primary mt-5">Admin</a>
-      </section>
-
-      <section class="card mt-6">
-        <p class="card-title">Permissions</p>
-        <h2 class="card-heading">What partners can and cannot do</h2>
-        <div class="table-wrap mt-4">
-          <table class="data-table !min-w-0">
-            <thead>
-              <tr><th>Capability</th><th>Allowed</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>Read NPS score, promoter split and respondent counts</td><td><span class="badge badge-great">Yes</span></td></tr>
-              <tr><td>Read stage scores and per-item scores</td><td><span class="badge badge-great">Yes</span></td></tr>
-              <tr><td>Read correlations, strength and recommendations</td><td><span class="badge badge-great">Yes</span></td></tr>
-              <tr><td>Read score distribution, daily trend and service breakdown</td><td><span class="badge badge-great">Yes</span></td></tr>
-              <tr><td>Read verbatim comments (text, stage, date, respondent type)</td><td><span class="badge badge-great">Yes</span></td></tr>
-              <tr><td>Download CSV (<code class="font-mono">raw</code> or <code class="font-mono">summary</code>)</td><td><span class="badge badge-great">Yes</span></td></tr>
-              <tr><td>Create, edit or delete responses</td><td><span class="badge badge-bad">No</span></td></tr>
-              <tr><td>Change stages, labels or client settings</td><td><span class="badge badge-bad">No</span></td></tr>
-              <tr><td>Read staff names or patient identities</td><td><span class="badge badge-bad">No</span></td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="prose-note mt-4">
-          Any request other than <code class="font-mono">GET</code>, <code class="font-mono">HEAD</code>
-          or <code class="font-mono">OPTIONS</code> is rejected with <code class="font-mono">405 Method Not Allowed</code>.
-        </p>
       </section>
 
       <p class="prose-note mt-10 pb-6">
