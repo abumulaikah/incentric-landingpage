@@ -7,13 +7,14 @@ interface Props {
   noindex?: boolean;
 }
 
-const { title, description = 'Dashboard NPS Incentric.', noindex = true } = Astro.props;
+const { title, description = 'NPS dashboard by Incentric.', noindex = true } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="id">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
