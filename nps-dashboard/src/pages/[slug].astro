@@ -251,9 +251,9 @@ const lowestStage = [...(data?.stages ?? [])]
             </div>
           </section>
 
-          <!-- Stage scores -->
-          <section class="grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
-            <div class="card">
+          <!-- Butir + tahap: kolom grafik lebih lebar, statistik di samping -->
+          <section class="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.55fr)]">
+            <div class="card self-start">
               <div class="flex items-start justify-between gap-4">
                 <div>
                   <p class="card-title">Evaluasi per tahap</p>
@@ -270,7 +270,7 @@ const lowestStage = [...(data?.stages ?? [])]
                   emptyMessage="Belum ada skor tahap layanan."
                 />
               </div>
-              <p class="prose-note mt-5">
+              <p class="prose-note mt-6">
                 Rata-rata dihitung dari butir pertanyaan penyusun tiap tahap. Tahap kamar rawat inap
                 hanya muncul bila ada pasien rawat inap yang menjawab.
               </p>
@@ -283,12 +283,12 @@ const lowestStage = [...(data?.stages ?? [])]
                   <h2 class="card-heading">Naik-turun pengalaman per pertanyaan</h2>
                   <p class="prose-note mt-2 max-w-2xl">
                     Urutan mengikuti alur layanan, dari kedatangan sampai fasilitas umum.
-                    Garis tren menunjukkan titik mana yang menurun dan perlu perhatian.
+                    Baris putus-putus menandai batas tiap tahap layanan.
                   </p>
                 </div>
                 <span class="badge badge-muted shrink-0">{formatNumber(data?.items.length)} butir</span>
               </div>
-              <div class="mt-5">
+              <div class="mt-7">
                 <ItemScoreChart
                   items={data?.items ?? []}
                   stages={STAGES.map((stage) => ({ key: stage.key, shortLabel: stage.shortLabel }))}
