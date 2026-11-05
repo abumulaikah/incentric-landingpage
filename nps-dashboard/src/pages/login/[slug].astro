@@ -1,14 +1,14 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { getClient } from '../../lib/config';
+import { resolveClient } from '../../lib/resolve-client';
 import {
-  checkClientPassword,
   cookieOptionsFor,
   createSessionToken,
   isAdmin,
   resetAttempts,
   sessionCookie,
   tooManyAttempts,
+  verifyClientPassword,
   verifySessionToken,
 } from '../../lib/auth';
 import { isDemoMode } from '../../lib/env';
@@ -16,7 +16,8 @@ import { isDemoMode } from '../../lib/env';
 export const prerender = false;
 
 const slug = Astro.params.slug ?? '';
-const client = getClient(slug);
+const resolved = await resolveClient(slug);
+const client = resolved?.client;
 const demo = isDemoMode();
 
 let error: string | null = null;
@@ -27,9 +28,9 @@ if (client && Astro.request.method === 'POST') {
   const identifier = `login:${client.slug}:${Astro.clientAddress ?? 'local'}`;
 
   if (tooManyAttempts(identifier)) {
-    error = 'Terlalu banyak percobaan. Coba lagi beberapa menit lagi.';
-  } else if (!checkClientPassword(client.slug, password)) {
-    error = 'Kata sandi salah. Periksa kembali dari pesan tim Incentric.';
+    error = 'Too many attempts. Please try again in a few minutes.';
+  } else if (!(await verifyClientPassword(client.slug, password, resolved?.record.passwordHash))) {
+    error = 'Incorrect password. Please check the message from the Incentric team.';
   } else {
     resetAttempts(identifier);
     const token = await createSessionToken([client.slug]);

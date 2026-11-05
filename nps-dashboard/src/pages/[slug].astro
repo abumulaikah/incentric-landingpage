@@ -8,7 +8,7 @@ import ItemScoreChart from '../components/ItemScoreChart.astro';
 import TrendChart from '../components/TrendChart.astro';
 import { isAdmin, verifySessionToken, sessionCookie } from '../lib/auth';
 import { COLORS } from '../lib/colors';
-import { getClient } from '../lib/config';
+import { resolveClient } from '../lib/resolve-client';
 import { loadDashboard } from '../lib/data';
 import {
   formatDate,
@@ -21,11 +21,12 @@ import {
 export const prerender = false;
 
 const slug = Astro.params.slug ?? '';
-const client = getClient(slug);
 
-if (!client) {
-  return Astro.redirect('/');
-}
+// Rute khusus (mis. /admin/new) tidak boleh dianggap sebagai slug client.
+const RESERVED = new Set(['admin', 'login', 'api', 'favicon.svg']);
+const resolvedClient = RESERVED.has(slug) ? null : await resolveClient(slug);
+if (!resolvedClient) return Astro.redirect('/');
+const client = resolvedClient.client;
 
 const session = await verifySessionToken(Astro.cookies.get(sessionCookie.name)?.value);
 const authorized = isAdmin(session) || session?.scopes.includes(client.slug);

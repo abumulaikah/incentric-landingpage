@@ -1,8 +1,9 @@
 ﻿import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
-import { CLIENTS, getClient, type StageDef } from './config';
+import { CLIENTS, type ClientConfig, type StageDef } from './config';
 import { cacheTtlSeconds, clientFormId, isDemoMode, readEnv } from './env';
-import { buildStages, normalizeSubmissions, type FormBlock, type SubmissionRecord } from './normalize';
+import { buildStages, normalizeSubmissions, type FormBlock, type MappingLookup, type SubmissionRecord } from './normalize';
+import { resolveClient, resolveAllClients } from './resolve-client';
 import { SAMPLE_COMMENTS } from './sample-comments';
 import { buildDashboard, type DashboardData } from './stats';
 import { fetchTallySubmissions, TallyError } from './tally';
@@ -35,10 +36,11 @@ export interface LoadResult {
 }
 
 export async function loadDashboard(slug: string, filters: Filters = {}): Promise<LoadResult | null> {
-  const client = getClient(slug);
-  if (!client) return null;
+  const resolved = await resolveClient(slug);
+  if (!resolved) return null;
+  const client = resolved.client;
 
-  const raw = await getRaw(client.slug, client.formId);
+  const raw = await getRaw(client.slug, client.formId, resolved.mapping);
   const service = filters.service?.trim() || null;
   const from = filters.from?.trim() || null;
   const to = filters.to?.trim() || null;
@@ -57,30 +59,39 @@ export async function loadDashboard(slug: string, filters: Filters = {}): Promis
     totalSubmissions: raw.totalSubmissions,
     filters: { from, to, service },
     availableServices: collectServices(raw.responses),
-    stages: raw.stages,
+    stages: resolved.stages ?? raw.stages,
+    questionLabels: resolved.mapping
+      ? new Map([...resolved.mapping.entries()].map(([id, value]) => [value.key, value.label]))
+      : undefined,
     warning: raw.warning,
   });
 
   return { data, error: raw.warning };
 }
 
-async function getRaw(slug: string, fallbackFormId: string): Promise<RawStore> {
+async function getRaw(slug: string, fallbackFormId: string, mapping: MappingLookup | null): Promise<RawStore> {
   const demo = isDemoMode();
   const key = `${slug}:${demo ? 'demo' : 'live'}`;
   const ttl = cacheTtlSeconds() * 1000;
   const hit = cache.get(key);
   if (hit && hit.expiresAt > Date.now()) return hit;
 
-  const loaded = await loadRaw(slug, fallbackFormId, demo);
+  const loaded = await loadRaw(slug, fallbackFormId, demo, mapping);
   cache.set(key, { ...loaded, expiresAt: Date.now() + ttl });
   return loaded;
 }
 
-async function loadRaw(slug: string, fallbackFormId: string, demo: boolean): Promise<RawStore> {
-  const client = getClient(slug);
-  if (!client) {
+async function loadRaw(
+  slug: string,
+  fallbackFormId: string,
+  demo: boolean,
+  mapping: MappingLookup | null,
+): Promise<RawStore> {
+  const resolved = await resolveClient(slug);
+  if (!resolved) {
     return { responses: [], totalSubmissions: 0, source: 'fixture', stages: [], warning: 'Client tidak ditemukan.' };
   }
+  const client = resolved.client;
 
   if (demo) return loadFixture(slug);
 
@@ -100,7 +111,7 @@ async function loadRaw(slug: string, fallbackFormId: string, demo: boolean): Pro
 
   try {
     const { records, truncated, completedTotal, blueprint } = await fetchTallySubmissions(apiKey, formId);
-    return buildRaw(records, client, truncated, completedTotal ?? undefined, blueprint);
+    return buildRaw(records, client, truncated, completedTotal ?? undefined, blueprint, mapping);
   } catch (error) {
     const message =
       error instanceof TallyError
@@ -122,12 +133,13 @@ async function loadRaw(slug: string, fallbackFormId: string, demo: boolean): Pro
 
 function buildRaw(
   records: SubmissionRecord[],
-  client: NonNullable<ReturnType<typeof getClient>>,
+  client: ClientConfig,
   truncated: boolean,
   completedTotal?: number,
   blueprint?: FormBlock[],
+  mapping?: MappingLookup | null,
 ): RawStore {
-  const { responses, unmappedTitles, scoreKeys } = normalizeSubmissions(records, client);
+  const { responses, unmappedTitles, scoreKeys } = normalizeSubmissions(records, client, mapping ?? undefined);
   const warnings: string[] = [];
   if (truncated) warnings.push('Sebagian submission tidak diambil karena melebihi batas halaman.');
   if (unmappedTitles.length > 0) {
@@ -144,10 +156,11 @@ function buildRaw(
 }
 
 export async function loadFixture(slug: string): Promise<RawStore> {
-  const client = getClient(slug);
-  if (!client) {
+  const resolved = await resolveClient(slug);
+  if (!resolved) {
     return { responses: [], totalSubmissions: 0, source: 'fixture', stages: [], warning: 'Client tidak ditemukan.' };
   }
+  const client = resolved.client;
 
   try {
     const file = fileURLToPath(new URL(`../fixtures/${slug}.json`, import.meta.url));
@@ -174,20 +187,25 @@ function collectServices(responses: SurveyResponse[]): string[] {
   return [...new Set(responses.map((response) => response.serviceType).filter(Boolean))].sort();
 }
 
-/** Ringkasan seluruh client untuk halaman admin. */
+/** Ringkasan seluruh client untuk halaman admin (database + fallback kode). */
 export async function loadAllClients() {
   const results = [];
-  for (const client of CLIENTS) {
-    const loaded = await loadDashboard(client.slug);
+  const resolved = await resolveAllClients();
+
+  for (const item of resolved) {
+    const loaded = await loadDashboard(item.client.slug);
     results.push({
-      slug: client.slug,
-      name: client.name,
-      shortName: client.shortName,
-      formId: clientFormId(client.slug, client.formId),
+      id: item.record.id,
+      slug: item.client.slug,
+      name: item.client.name,
+      shortName: item.client.shortName,
+      formId: clientFormId(item.client.slug, item.client.formId),
+      manage: Boolean(item.record.id),
       data: loaded?.data ?? null,
       error: loaded?.error,
     });
   }
+
   return results;
 }
 

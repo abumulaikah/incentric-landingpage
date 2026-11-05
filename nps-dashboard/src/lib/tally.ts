@@ -107,20 +107,34 @@ interface TallyBlock {
 
 /** Ambil struktur form (urutan heading dan pertanyaan) dari Tally. */
 export async function fetchFormBlueprint(apiKey: string, formId: string): Promise<FormBlock[]> {
-  const response = await fetch(`${TALLY_API}/forms/${encodeURIComponent(formId)}`, {
-    headers: { Authorization: `Bearer ${apiKey}`, Accept: 'application/json' },
-  });
+  const [formResponse, questionResponse] = await Promise.all([
+    fetch(`${TALLY_API}/forms/${encodeURIComponent(formId)}`, {
+      headers: { Authorization: `Bearer ${apiKey}`, Accept: 'application/json' },
+    }),
+    fetch(`${TALLY_API}/forms/${encodeURIComponent(formId)}/questions?limit=500`, {
+      headers: { Authorization: `Bearer ${apiKey}`, Accept: 'application/json' },
+    }),
+  ]);
 
-  if (!response.ok) {
-    const body = await response.text().catch(() => '');
-    throw new TallyError(`Tally API ${response.status}: ${body.slice(0, 200) || response.statusText}`, response.status);
+  if (!formResponse.ok) {
+    const body = await formResponse.text().catch(() => '');
+    throw new TallyError(`Tally API ${formResponse.status}: ${body.slice(0, 200) || formResponse.statusText}`, formResponse.status);
   }
 
-  const payload = (await response.json()) as { blocks?: TallyBlock[] };
-  return (payload.blocks ?? []).map((block) => ({
-    type: block.type ?? '',
-    title: blockTitle(block.payload),
-  }));
+  const payload = (await formResponse.json()) as { blocks?: TallyBlock[] };
+  const questions = questionResponse.ok
+    ? ((await questionResponse.json()) as { questions?: TallyQuestion[] }).questions ?? []
+    : [];
+
+  // Urutan pertanyaan di endpoint questions mengikuti urutan blok.
+  // Cocokkan posisional agar judul duplikat (mis. "waktu menunggu") tidak tertukar.
+  let cursor = 0;
+  return (payload.blocks ?? []).map((block) => {
+    const title = blockTitle(block.payload);
+    const isQuestion = /^TITLE$/i.test(block.type ?? '');
+    const questionId = isQuestion ? questions[cursor++]?.id : undefined;
+    return { type: block.type ?? '', title, questionId };
+  });
 }
 
 function blockTitle(payload: TallyBlockPayload | undefined): string {
@@ -142,7 +156,11 @@ function apiToRecord(submission: TallySubmission, titles: Map<string, string>): 
     fields: (submission.responses ?? []).map((response) => {
       const title = response.questionId ? titles.get(response.questionId) ?? '' : '';
       const value = response.answer ?? response.formattedAnswer ?? '';
-      return { title, value: Array.isArray(value) ? value.map(toText).join(', ') : value };
+      return {
+        title,
+        value: Array.isArray(value) ? value.map(toText).join(', ') : value,
+        questionId: response.questionId,
+      };
     }),
   };
 }

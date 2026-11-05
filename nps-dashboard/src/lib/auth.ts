@@ -103,6 +103,22 @@ export function checkClientPassword(slug: string, input: string): boolean {
   return matchesConfigured(clientPassword(slug), input);
 }
 
+/**
+ * Verifikasi password client: hash dari database lebih dulu,
+ * lalu fallback ke environment variable (client bawaan kode).
+ */
+export async function verifyClientPassword(
+  slug: string,
+  input: string,
+  storedHash?: string | null,
+): Promise<boolean> {
+  if (storedHash) {
+    const { verifyPassword } = await import('./password');
+    return verifyPassword(input, storedHash);
+  }
+  return matchesConfigured(clientPassword(slug), input);
+}
+
 export function checkAdminPassword(input: string): boolean {
   return matchesConfigured(adminPassword(), input);
 }

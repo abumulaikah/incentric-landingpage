@@ -5,12 +5,16 @@ import type { CommentRecord, SurveyResponse } from './types';
 export interface FieldRecord {
   title: string;
   value: unknown;
+  /** ID pertanyaan Tally; dipakai untuk mapping yang stabil. */
+  questionId?: string;
 }
 
 /** Potongan form Tally berurutan, termasuk heading sebagai penanda tahap. */
 export interface FormBlock {
   type: string;
   title: string;
+  /** ID pertanyaan (kosong untuk heading/divider). */
+  questionId?: string;
 }
 
 export interface SubmissionRecord {
@@ -41,6 +45,15 @@ const STAGE_OF_QUESTION: Record<QuestionKey, string> = {
   kamar: 'kamarInap',
   fasilitasUmum: 'fasilitasUmum',
 };
+
+/** Mapping pertanyaan dari database, per questionId Tally. */
+export interface QuestionMapping {
+  key: string;
+  label: string;
+  stageKey: string | null;
+}
+
+export type MappingLookup = Map<string, QuestionMapping>;
 
 const stripHtml = (value: string) =>
   value
@@ -275,9 +288,12 @@ function shortLabelFor(label: string): string {
 export function normalizeSubmissions(
   records: SubmissionRecord[],
   client: ClientConfig,
-): { responses: SurveyResponse[]; unmappedTitles: string[]; scoreKeys: Set<QuestionKey> } {
+  mapping?: MappingLookup,
+): { responses: SurveyResponse[]; unmappedTitles: string[]; scoreKeys: Set<QuestionKey>; labels: Map<string, string>; stageOf: Map<string, string | null> } {
   const unmapped = new Set<string>();
   const scoreKeys = new Set<QuestionKey>();
+  const labels = new Map<string, string>();
+  const stageOf = new Map<string, string | null>();
   const responses: SurveyResponse[] = [];
 
   for (const record of records) {
@@ -313,12 +329,19 @@ export function normalizeSubmissions(
         continue;
       }
 
-      const key = matchQuestionKey(title);
+      const override = field.questionId ? mapping?.get(field.questionId) : undefined;
+
+      // Untuk client dari database, kunci skor memakai questionId Tally yang stabil.
+      const key = override ? override.key : matchQuestionKey(title);
       if (key) {
         const value = parseScaleValue(field.value, client);
         if (value !== null) {
           scores[key] = value;
           scoreKeys.add(key);
+          if (override) {
+            labels.set(key, override.label);
+            stageOf.set(key, override.stageKey);
+          }
         }
         lastScoreKey = key;
         continue;
@@ -356,8 +379,18 @@ export function normalizeSubmissions(
       comments,
     });
   }
+  // Lengkapi label dari katalog bawaan untuk pertanyaan yang cocok lewat judul.
+  for (const key of scoreKeys) {
+    if (!labels.has(key)) {
+      const known = QUESTIONS.find((question) => question.key === key);
+      if (known) labels.set(key, known.label);
+    }
+    if (!stageOf.has(key)) {
+      stageOf.set(key, STAGE_OF_QUESTION[key] ?? null);
+    }
+  }
 
-  return { responses, unmappedTitles: [...unmapped], scoreKeys };
+  return { responses, unmappedTitles: [...unmapped], scoreKeys, labels, stageOf };
 }
 
 export function toText(value: unknown): string {

@@ -1,16 +1,15 @@
 import type { APIRoute } from 'astro';
 import {
   checkAdminPassword,
-  checkClientPassword,
-  cookieOptionsFor,
   createSessionToken,
+  cookieOptionsFor,
   resetAttempts,
   sessionCookie,
   tooManyAttempts,
   verifySessionToken,
 } from '../../lib/auth';
-import { getClient } from '../../lib/config';
-import { authSecret } from '../../lib/env';
+import { getClientRecord } from '../../lib/clients';
+import { hasDatabase } from '../../lib/db';
 
 export const prerender = false;
 
@@ -42,12 +41,12 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   const identifier = `${isAdminLogin ? 'admin' : slug}:${request.headers.get('x-forwarded-for') ?? 'local'}`;
 
   if (tooManyAttempts(identifier)) {
-    return json({ ok: false, error: 'Terlalu banyak percobaan. Coba lagi beberapa menit lagi.' }, 429);
+    return json({ ok: false, error: 'Too many attempts. Try again in a few minutes.' }, 429);
   }
 
   if (isAdminLogin) {
     if (!checkAdminPassword(password)) {
-      return json({ ok: false, error: 'Kata sandi admin salah.' }, 401);
+      return json({ ok: false, error: 'Incorrect admin password.' }, 401);
     }
     resetAttempts(identifier);
     const token = await createSessionToken(['admin']);
@@ -55,17 +54,17 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     return json({ ok: true, redirect: '/admin' });
   }
 
-  const client = getClient(slug);
-  if (!client) return json({ ok: false, error: 'Kode klien tidak dikenali.' }, 404);
+  const record = hasDatabase() ? await getClientRecord(slug) : null;
+  if (!record) return json({ ok: false, error: 'Unknown client code.' }, 404);
 
-  if (!checkClientPassword(client.slug, password)) {
-    return json({ ok: false, error: 'Kata sandi salah.' }, 401);
-  }
+  const { verifyClientPassword } = await import('../../lib/auth');
+  const valid = await verifyClientPassword(record.slug, password, record.passwordHash);
+  if (!valid) return json({ ok: false, error: 'Incorrect password.' }, 401);
 
   resetAttempts(identifier);
-  const token = await createSessionToken([client.slug]);
+  const token = await createSessionToken([record.slug]);
   cookies.set(sessionCookie.name, token, cookieOptionsFor(request.url));
-  return json({ ok: true, redirect: `/${client.slug}` });
+  return json({ ok: true, redirect: `/${record.slug}` });
 };
 
 export const GET: APIRoute = async ({ cookies }) => {
@@ -77,6 +76,5 @@ export const GET: APIRoute = async ({ cookies }) => {
 
 export const DELETE: APIRoute = async ({ cookies }) => {
   cookies.delete(sessionCookie.name, { path: '/' });
-  void authSecret;
   return json({ ok: true });
 };

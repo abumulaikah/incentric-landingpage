@@ -5,17 +5,11 @@
  * dan pemetaan pertanyaan ke tahap layanan.
  */
 
-export type QuestionKey =
-  | 'parkir'
-  | 'satpam'
-  | 'pendaftaran'
-  | 'tungguDokter'
-  | 'pemeriksaanDokter'
-  | 'kasir'
-  | 'obat'
-  | 'farmasi'
-  | 'kamar'
-  | 'fasilitasUmum';
+/**
+ * Kunci pertanyaan. Bebas (string) supaya client baru bisa menambah
+ * pertanyaan sendiri tanpa mengubah kode.
+ */
+export type QuestionKey = string;
 
 export interface QuestionDef {
   key: QuestionKey;

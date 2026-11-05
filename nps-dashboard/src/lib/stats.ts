@@ -173,6 +173,8 @@ export interface BuildOptions {
   availableServices: string[];
   /** Tahap layanan; default STAGES bila form tidak memakai Heading. */
   stages?: StageDef[];
+  /** Label tampilan per kunci pertanyaan (hasil mapping database). */
+  questionLabels?: Map<string, string>;
   warning?: string;
 }
 
@@ -251,6 +253,12 @@ export function buildDashboard(options: BuildOptions): DashboardData {
   const correlations: CorrelationResult[] = [];
   const distribution = buildDistribution(npsValues, client.npsScale);
   const items = buildItems(responses, stageDefs);
+  if (options.questionLabels) {
+    for (const item of items) {
+      const label = options.questionLabels.get(item.key);
+      if (label) item.label = label;
+    }
+  }
   for (const stageDef of stageDefs) {
     const stage = stages.find((item) => item.key === stageDef.key);
     if (!stage) continue;
@@ -433,18 +441,35 @@ function buildItems(responses: SurveyResponse[], stageDefs: StageDef[]): ItemSco
     for (const question of stage.questions) stageOfItem.set(question, stage.key);
   }
 
-  return QUESTIONS.map((question) => {
-    const values = responses
-      .map((response) => response.scores[question.key])
-      .filter((value): value is number => typeof value === 'number');
-    return {
-      key: question.key,
-      label: question.label,
-      score: values.length ? round2(mean(values) as number) : null,
-      responses: values.length,
-      stageKey: stageOfItem.get(question.key) ?? ITEM_STAGE[question.key] ?? null,
-    };
-  }).filter((item) => item.responses > 0);
+  const catalog = new Set(QUESTIONS.map((question) => question.key));
+
+  // Pertanyaan yang hanya dikenal lewat database (client baru) tetap muncul.
+  const extraKeys = new Set<string>();
+  for (const response of responses) {
+    for (const key of Object.keys(response.scores)) {
+      if (!catalog.has(key)) extraKeys.add(key);
+    }
+  }
+
+  const keys: { key: string; label: string }[] = [
+    ...QUESTIONS.map((question) => ({ key: question.key, label: question.label })),
+    ...[...extraKeys].map((key) => ({ key, label: key })),
+  ];
+
+  return keys
+    .map((question) => {
+      const values = responses
+        .map((response) => response.scores[question.key])
+        .filter((value): value is number => typeof value === 'number');
+      return {
+        key: question.key,
+        label: question.label,
+        score: values.length ? round2(mean(values) as number) : null,
+        responses: values.length,
+        stageKey: stageOfItem.get(question.key) ?? ITEM_STAGE[question.key] ?? null,
+      };
+    })
+    .filter((item) => item.responses > 0);
 }
 
 function stageLabelOf(stageKey: string | null, stageDefs: StageDef[] = STAGES): string {
