@@ -31,7 +31,7 @@ export interface CorrelationResult {
   score: number | null;
   r: number | null;
   n: number;
-  strength: 'Sangat Kuat' | 'Kuat' | 'Sedang' | 'Lemah' | 'Tidak Ada';
+  strength: 'Very Strong' | 'Strong' | 'Moderate' | 'Weak' | 'None';
   recommendation: string;
   rank: number;
 }
@@ -140,22 +140,22 @@ export function pearson(xs: number[], ys: number[]): number | null {
 }
 
 export function strengthOf(r: number | null): CorrelationResult['strength'] {
-  if (r === null) return 'Tidak Ada';
+  if (r === null) return 'None';
   const abs = Math.abs(r);
-  if (abs >= 0.7) return 'Sangat Kuat';
-  if (abs >= 0.5) return 'Kuat';
-  if (abs >= 0.3) return 'Sedang';
-  if (abs >= 0.1) return 'Lemah';
-  return 'Tidak Ada';
+  if (abs >= 0.7) return 'Very Strong';
+  if (abs >= 0.5) return 'Strong';
+  if (abs >= 0.3) return 'Moderate';
+  if (abs >= 0.1) return 'Weak';
+  return 'None';
 }
 
 function recommendationOf(strength: CorrelationResult['strength'], r: number | null): string {
-  if (r === null) return 'Data belum cukup untuk analisis';
-  if (strength === 'Sangat Kuat') return 'Driver utama loyalitas';
-  if (strength === 'Kuat') return 'Prioritas utama perbaikan';
-  if (strength === 'Sedang') return 'Faktor penunjang pengalaman';
-  if (strength === 'Lemah') return 'Pemenuhan standar layanan';
-  return 'Belum terlihat pengaruh terhadap loyalitas';
+  if (r === null) return 'Not enough data for analysis';
+  if (strength === 'Very Strong') return 'Primary driver of loyalty';
+  if (strength === 'Strong') return 'Top priority for improvement';
+  if (strength === 'Moderate') return 'Supporting factor of the experience';
+  if (strength === 'Weak') return 'Service standard compliance';
+  return 'No visible impact on loyalty';
 }
 
 export function stageScoreOf(scores: Partial<Record<QuestionKey, number>>, questions: QuestionKey[]): number | null {

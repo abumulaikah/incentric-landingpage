@@ -39,18 +39,20 @@ const plotWidth = points.length * columnWidth + labelWidth;
 const plotHeight = 380;
 
 const padTop = 34;
-const padBottom = 112;
+const padBottom = 74;
 const plotLeft = labelWidth + 8;
 const plotRight = plotWidth - 52;
 const usable = plotHeight - padTop - padBottom;
 const scoreRange = max - min || 1;
+
+// Label pertanyaan dimulai tepat di bawah sumbu X, bukan jauh di dasar kanvas.
+const labelTopY = plotHeight - padBottom + 11;
 
 const xOf = (index: number) =>
   points.length === 1 ? (plotLeft + plotRight) / 2 : plotLeft + (index * (plotRight - plotLeft)) / (points.length - 1);
 const yOf = (value: number) => padTop + ((max - value) / scoreRange) * usable;
 
 const baseline = Math.min(max, Math.max(min, 3));
-const baselineY = yOf(baseline);
 
 const linePath = points.map((item, index) => `${index === 0 ? 'M' : 'L'}${xOf(index).toFixed(1)},${yOf(item.score as number).toFixed(1)}`).join(' ');
 
@@ -82,7 +84,6 @@ const stageAnchors = points.map((item, index) => {
 const sorted = [...points].sort((a, b) => (a.score as number) - (b.score as number));
 const lowPoints = sorted.slice(0, 2);
 const highPoints = sorted.slice(-2).reverse();
-const belowBaseline = points.filter((item) => (item.score as number) < baseline);
 ---
 
 {items.length === 0 ? (
@@ -120,13 +121,6 @@ const belowBaseline = points.filter((item) => (item.score as number) < baseline)
             </text>
           </g>
         ))}
-
-        <!-- area di bawah baseline -->
-        <rect x={plotLeft} y={baselineY} width={plotRight - plotLeft} height={Math.max(0, yOf(min) - baselineY)} fill="#fef2f2" opacity="0.7" />
-        <line x1={plotLeft} y1={baselineY.toFixed(1)} x2={plotRight} y2={baselineY.toFixed(1)} stroke="#e11d48" stroke-width="1.5" stroke-dasharray="6 4" />
-        <text x={plotRight} y={baselineY - 6} text-anchor="end" class="fill-rose-600" style="font-size:9px;font-weight:800;letter-spacing:0.04em">
-          BASELINE {baseline.toFixed(0)}
-        </text>
 
         <!-- pemisah tahap -->
         {stageAnchors
@@ -177,29 +171,26 @@ const belowBaseline = points.filter((item) => (item.score as number) < baseline)
           );
         })}
 
-        <!-- garis penghubung titik ke label -->
+        <!-- garis penghubung titik ke label (berhenti di atas label) -->
         {points.map((item, index) => (
-          <g>
-            <line
-              x1={xOf(index).toFixed(1)}
-              y1={(yOf(item.score as number) + 8).toFixed(1)}
-              x2={xOf(index).toFixed(1)}
-              y2={(plotHeight - padBottom - 10).toFixed(1)}
-              stroke="#cbd5e1"
-              stroke-width="1"
-              stroke-dasharray="3 3"
-            />
-            <circle cx={xOf(index).toFixed(1)} cy={(plotHeight - padBottom - 10).toFixed(1)} r="1.8" fill="#94a3b8" />
-          </g>
+          <line
+            x1={xOf(index).toFixed(1)}
+            y1={(yOf(item.score as number) + 8).toFixed(1)}
+            x2={xOf(index).toFixed(1)}
+            y2={(labelTopY - 7).toFixed(1)}
+            stroke="#cbd5e1"
+            stroke-width="1"
+            stroke-dasharray="3 3"
+          />
         ))}
 
-        <!-- label pertanyaan -->
+        <!-- label pertanyaan (menempel di bawah garis) -->
         {points.map((item, index) => (
           <g>
             {wrapLabel(item.label).map((line, lineIndex) => (
               <text
                 x={xOf(index).toFixed(1)}
-                y={(plotHeight - padBottom + lineIndex * 12).toFixed(1)}
+                y={(labelTopY + lineIndex * 12).toFixed(1)}
                 text-anchor="middle"
                 class="fill-slate-600"
                 style="font-size:10px;font-weight:700"
@@ -210,10 +201,7 @@ const belowBaseline = points.filter((item) => (item.score as number) < baseline)
           </g>
         ))}
 
-        <!-- legend di bawah sumbu X -->
-        <text x={plotLeft - 8} y={plotHeight - padBottom} text-anchor="end" class="fill-slate-400" style="font-size:9px;font-weight:800">
-          BUTIR
-        </text>
+        <!-- sumbu X -->
         <line
           x1={labelWidth + 6}
           y1={(plotHeight - padBottom).toFixed(1)}
@@ -237,7 +225,7 @@ const belowBaseline = points.filter((item) => (item.score as number) < baseline)
               />
               <text
                 x={xOf(anchor.index).toFixed(1)}
-                y={plotHeight - 8}
+                y={(labelTopY + 24).toFixed(1)}
                 text-anchor="middle"
                 class="fill-brand-blue/80"
                 style="font-size:9px;font-weight:800;letter-spacing:0.05em"
@@ -251,25 +239,17 @@ const belowBaseline = points.filter((item) => (item.score as number) < baseline)
 
     <div class="grid gap-3 sm:grid-cols-2">
       <div class="rounded-lg bg-rose-50/70 px-4 py-3">
-        <p class="text-[10px] font-bold uppercase tracking-[0.14em] text-rose-600">Titik terendah</p>
+        <p class="text-[10px] font-bold uppercase tracking-[0.14em] text-rose-600">Lowest Points</p>
         <p class="mt-1.5 text-[12px] font-semibold leading-relaxed text-slate-700">
           {lowPoints.map((item, index) => `${index > 0 ? ' · ' : ''}${item.label} (${formatScoreLocal(item.score)})`).join('') || '–'}
         </p>
       </div>
       <div class="rounded-lg bg-emerald-50/70 px-4 py-3">
-        <p class="text-[10px] font-bold uppercase tracking-[0.14em] text-emerald-700">Titik tertinggi</p>
+        <p class="text-[10px] font-bold uppercase tracking-[0.14em] text-emerald-700">Highest Points</p>
         <p class="mt-1.5 text-[12px] font-semibold leading-relaxed text-slate-700">
           {highPoints.map((item, index) => `${index > 0 ? ' · ' : ''}${item.label} (${formatScoreLocal(item.score)})`).join('') || '–'}
         </p>
       </div>
     </div>
-
-    <p class="text-[11px] leading-relaxed text-slate-500">
-      Sumbu skor dimulai dari {min.toFixed(0)} agar perbedaan antar tahap lebih terlihat.
-      Garis putus-putus merah adalah <strong class="font-bold text-slate-700">baseline {baseline.toFixed(0)}</strong>.
-      {belowBaseline.length === 0
-        ? 'Semua butir berada di atas baseline.'
-        : `${belowBaseline.length} butir berada di bawah baseline: ${belowBaseline.map((item) => item.label).join(', ')}.`}
-    </p>
   </div>
 )}

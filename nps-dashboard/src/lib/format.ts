@@ -1,6 +1,6 @@
 export function formatNumber(value: number | null | undefined, digits = 0): string {
   if (value === null || value === undefined || Number.isNaN(value)) return '–';
-  return new Intl.NumberFormat('id-ID', {
+  return new Intl.NumberFormat('en-GB', {
     minimumFractionDigits: digits,
     maximumFractionDigits: digits,
   }).format(value);
@@ -25,13 +25,13 @@ export function formatDate(value: string | null | undefined): string {
   if (!value) return '–';
   const date = /^\d{4}-\d{2}-\d{2}$/.test(value) ? new Date(`${value}T00:00:00`) : new Date(value);
   if (Number.isNaN(date.getTime())) return value;
-  return new Intl.DateTimeFormat('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }).format(date);
+  return new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).format(date);
 }
 
 export function formatDateShort(value: string): string {
   const date = new Date(`${value}T00:00:00`);
   if (Number.isNaN(date.getTime())) return value;
-  return new Intl.DateTimeFormat('id-ID', { day: '2-digit', month: 'short' }).format(date);
+  return new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short' }).format(date);
 }
 
 export function categoryLabel(value: string): string {
@@ -42,17 +42,17 @@ export function categoryLabel(value: string): string {
 }
 
 export function npsBand(score: number | null | undefined): { label: string; tone: 'great' | 'good' | 'warn' | 'bad' } {
-  if (score === null || score === undefined) return { label: 'Belum ada data', tone: 'bad' };
-  if (score >= 50) return { label: 'Sangat baik', tone: 'great' };
-  if (score >= 0) return { label: 'Baik', tone: 'good' };
-  if (score >= -50) return { label: 'Perlu perhatian', tone: 'warn' };
-  return { label: 'Kritis', tone: 'bad' };
+  if (score === null || score === undefined) return { label: 'No data yet', tone: 'bad' };
+  if (score >= 50) return { label: 'Excellent', tone: 'great' };
+  if (score >= 0) return { label: 'Good', tone: 'good' };
+  if (score >= -50) return { label: 'Needs attention', tone: 'warn' };
+  return { label: 'Critical', tone: 'bad' };
 }
 
 export function strengthTone(strength: string): 'great' | 'good' | 'warn' | 'muted' {
-  if (strength === 'Sangat Kuat') return 'great';
-  if (strength === 'Kuat') return 'good';
-  if (strength === 'Sedang') return 'warn';
+  if (strength === 'Very Strong') return 'great';
+  if (strength === 'Strong') return 'good';
+  if (strength === 'Moderate') return 'warn';
   return 'muted';
 }
 
