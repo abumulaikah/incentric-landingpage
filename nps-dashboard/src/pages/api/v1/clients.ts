@@ -1,5 +1,5 @@
 ﻿import type { APIRoute } from 'astro';
-import { assertClientScope, guard, isResponse, json } from '../../../lib/api';
+import { assertClientScope, guard, isResponse, json, methodNotAllowed, preflight } from '../../../lib/api';
 import { loadDashboard } from '../../../lib/data';
 import { resolveAllClients } from '../../../lib/resolve-client';
 
@@ -37,3 +37,7 @@ export const GET: APIRoute = async ({ request }) => {
 };
 
 export { assertClientScope };
+
+/* API read-only: metode lain ditolak, preflight dijawab duluan. */
+export const OPTIONS: APIRoute = () => preflight();
+export const ALL: APIRoute = () => methodNotAllowed();

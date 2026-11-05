@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { apiError, assertClientScope, guard, isResponse, json } from '../../../../lib/api';
+import { apiError, assertClientScope, guard, isResponse, json, methodNotAllowed, preflight } from '../../../../lib/api';
 import { resolveClient } from '../../../../lib/resolve-client';
 import { loadDashboard } from '../../../../lib/data';
 
@@ -90,3 +90,7 @@ export const GET: APIRoute = async ({ request, params, url }) => {
     { 'x-ratelimit-remaining': String(auth.remaining) },
   );
 };
+
+/* API read-only: metode lain ditolak. */
+export const OPTIONS: APIRoute = () => preflight();
+export const ALL: APIRoute = () => methodNotAllowed();

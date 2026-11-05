@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { apiError, assertClientScope, guard, isResponse } from '../../../../../lib/api';
+import { apiError, assertClientScope, guard, isResponse, methodNotAllowed, preflight } from '../../../../../lib/api';
 import { loadDashboard } from '../../../../../lib/data';
 import { csvFileName, dashboardToCsv } from '../../../../../lib/csv-export';
 import { rawCsvFileName, rawSubmissionsToCsv } from '../../../../../lib/csv-raw';
@@ -82,3 +82,7 @@ export const GET: APIRoute = async ({ request, params, url }) => {
     },
   });
 };
+
+/* API read-only: metode lain ditolak. */
+export const OPTIONS: APIRoute = () => preflight();
+export const ALL: APIRoute = () => methodNotAllowed();

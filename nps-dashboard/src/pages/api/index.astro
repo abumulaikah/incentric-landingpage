@@ -117,13 +117,15 @@ const sampleBody = `{
       <h1 class="display mt-3">NPS API</h1>
       <p class="mt-4 max-w-2xl text-base leading-relaxed text-slate-600">
         A read-only REST API for client NPS data. Every request needs an API key issued by the
-        Incentric team. Responses are JSON, except the CSV export endpoint.
+        Incentric team. Partners can read scores, breakdowns, correlations and verbatim comments,
+        but can never modify data.
       </p>
 
       <div class="mt-6 flex flex-wrap gap-2">
         <span class="badge badge-great">Version v1</span>
         <span class="badge badge-muted">Base URL {base}</span>
         <span class="badge badge-muted">60 requests / minute</span>
+        <span class="badge badge-muted">Read-only</span>
       </div>
 
       <!-- Authentication -->
@@ -198,6 +200,7 @@ const sampleBody = `{
               <tr><td class="font-mono font-bold">401</td><td>Missing or invalid API key</td></tr>
               <tr><td class="font-mono font-bold">403</td><td>Key is not scoped to this client</td></tr>
               <tr><td class="font-mono font-bold">404</td><td>Unknown client slug</td></tr>
+              <tr><td class="font-mono font-bold">405</td><td>Method not allowed (API is read-only)</td></tr>
               <tr><td class="font-mono font-bold">429</td><td>Rate limit exceeded (60 per minute)</td></tr>
             </tbody>
           </table>
@@ -216,6 +219,33 @@ const sampleBody = `{
           and the client you need to read. Keys are read-only and cannot modify data.
         </p>
         <a href="/admin" class="btn btn-primary mt-5">Admin</a>
+      </section>
+
+      <section class="card mt-6">
+        <p class="card-title">Permissions</p>
+        <h2 class="card-heading">What partners can and cannot do</h2>
+        <div class="table-wrap mt-4">
+          <table class="data-table !min-w-0">
+            <thead>
+              <tr><th>Capability</th><th>Allowed</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Read NPS score, promoter split and respondent counts</td><td><span class="badge badge-great">Yes</span></td></tr>
+              <tr><td>Read stage scores and per-item scores</td><td><span class="badge badge-great">Yes</span></td></tr>
+              <tr><td>Read correlations, strength and recommendations</td><td><span class="badge badge-great">Yes</span></td></tr>
+              <tr><td>Read score distribution, daily trend and service breakdown</td><td><span class="badge badge-great">Yes</span></td></tr>
+              <tr><td>Read verbatim comments (text, stage, date, respondent type)</td><td><span class="badge badge-great">Yes</span></td></tr>
+              <tr><td>Download CSV (<code class="font-mono">raw</code> or <code class="font-mono">summary</code>)</td><td><span class="badge badge-great">Yes</span></td></tr>
+              <tr><td>Create, edit or delete responses</td><td><span class="badge badge-bad">No</span></td></tr>
+              <tr><td>Change stages, labels or client settings</td><td><span class="badge badge-bad">No</span></td></tr>
+              <tr><td>Read staff names or patient identities</td><td><span class="badge badge-bad">No</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="prose-note mt-4">
+          Any request other than <code class="font-mono">GET</code>, <code class="font-mono">HEAD</code>
+          or <code class="font-mono">OPTIONS</code> is rejected with <code class="font-mono">405 Method Not Allowed</code>.
+        </p>
       </section>
 
       <p class="prose-note mt-10 pb-6">

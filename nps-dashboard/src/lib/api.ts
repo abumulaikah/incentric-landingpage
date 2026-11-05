@@ -51,6 +51,41 @@ export function isResponse(value: ApiGuard | Response): value is Response {
   return value instanceof Response;
 }
 
+export const CORS_HEADERS = {
+  'access-control-allow-origin': '*',
+  'access-control-allow-methods': 'GET, HEAD, OPTIONS',
+  'access-control-allow-headers': 'Authorization, Content-Type',
+  'access-control-max-age': '86400',
+} as const;
+
+/** Endpoint v1 hanya boleh dibaca. Metode lain ditolak eksplisit. */
+export function methodNotAllowed(): Response {
+  return new Response(
+    JSON.stringify(
+      {
+        error: {
+          code: 'method_not_allowed',
+          message: 'This API is read-only. Use GET to read data.',
+        },
+      },
+      null,
+      2,
+    ),
+    {
+      status: 405,
+      headers: {
+        'content-type': 'application/json; charset=utf-8',
+        allow: 'GET, HEAD, OPTIONS',
+        ...CORS_HEADERS,
+      },
+    },
+  );
+}
+
+export function preflight(): Response {
+  return new Response(null, { status: 204, headers: CORS_HEADERS });
+}
+
 /** Pastikan key hanya boleh membaca client yang diizinkan. */
 export function assertClientScope(key: ApiKeyContext, slug: string): Response | null {
   if (key.slug && key.slug !== slug) {
