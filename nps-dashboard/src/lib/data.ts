@@ -1,8 +1,8 @@
-import { readFile } from 'node:fs/promises';
+﻿import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
-import { CLIENTS, getClient } from './config';
+import { CLIENTS, getClient, type StageDef } from './config';
 import { cacheTtlSeconds, clientFormId, isDemoMode, readEnv } from './env';
-import { normalizeSubmissions, type SubmissionRecord } from './normalize';
+import { buildStages, normalizeSubmissions, type FormBlock, type SubmissionRecord } from './normalize';
 import { SAMPLE_COMMENTS } from './sample-comments';
 import { buildDashboard, type DashboardData } from './stats';
 import { fetchTallySubmissions, TallyError } from './tally';
@@ -18,6 +18,8 @@ interface RawStore {
   responses: SurveyResponse[];
   totalSubmissions: number;
   source: 'tally' | 'fixture';
+  /** Tahap layanan hasil pembacaan Heading form Tally. */
+  stages: StageDef[];
   warning?: string;
 }
 
@@ -55,6 +57,7 @@ export async function loadDashboard(slug: string, filters: Filters = {}): Promis
     totalSubmissions: raw.totalSubmissions,
     filters: { from, to, service },
     availableServices: collectServices(raw.responses),
+    stages: raw.stages,
     warning: raw.warning,
   });
 
@@ -76,7 +79,7 @@ async function getRaw(slug: string, fallbackFormId: string): Promise<RawStore> {
 async function loadRaw(slug: string, fallbackFormId: string, demo: boolean): Promise<RawStore> {
   const client = getClient(slug);
   if (!client) {
-    return { responses: [], totalSubmissions: 0, source: 'fixture', warning: 'Client tidak ditemukan.' };
+    return { responses: [], totalSubmissions: 0, source: 'fixture', stages: [], warning: 'Client tidak ditemukan.' };
   }
 
   if (demo) return loadFixture(slug);
@@ -87,6 +90,7 @@ async function loadRaw(slug: string, fallbackFormId: string, demo: boolean): Pro
       responses: [],
       totalSubmissions: 0,
       source: 'tally',
+      stages: [],
       warning:
         'TALLY_API_KEY belum diatur. Dashboard akan menampilkan data setelah API key Tally dipasang di environment Vercel.',
     };
@@ -95,8 +99,8 @@ async function loadRaw(slug: string, fallbackFormId: string, demo: boolean): Pro
   const formId = clientFormId(slug, fallbackFormId);
 
   try {
-    const { records, truncated, completedTotal } = await fetchTallySubmissions(apiKey, formId);
-    return buildRaw(records, client, truncated, completedTotal ?? undefined);
+    const { records, truncated, completedTotal, blueprint } = await fetchTallySubmissions(apiKey, formId);
+    return buildRaw(records, client, truncated, completedTotal ?? undefined, blueprint);
   } catch (error) {
     const message =
       error instanceof TallyError
@@ -110,6 +114,7 @@ async function loadRaw(slug: string, fallbackFormId: string, demo: boolean): Pro
       responses: [],
       totalSubmissions: 0,
       source: 'tally',
+      stages: [],
       warning: `Data Tally tidak dapat diambil: ${message}`,
     };
   }
@@ -120,8 +125,9 @@ function buildRaw(
   client: NonNullable<ReturnType<typeof getClient>>,
   truncated: boolean,
   completedTotal?: number,
+  blueprint?: FormBlock[],
 ): RawStore {
-  const { responses, unmappedTitles } = normalizeSubmissions(records, client);
+  const { responses, unmappedTitles, scoreKeys } = normalizeSubmissions(records, client);
   const warnings: string[] = [];
   if (truncated) warnings.push('Sebagian submission tidak diambil karena melebihi batas halaman.');
   if (unmappedTitles.length > 0) {
@@ -132,6 +138,7 @@ function buildRaw(
     responses,
     totalSubmissions: completedTotal ?? records.length,
     source: 'tally',
+    stages: buildStages(blueprint, scoreKeys),
     warning: warnings.length ? warnings.join(' ') : undefined,
   };
 }
@@ -139,7 +146,7 @@ function buildRaw(
 export async function loadFixture(slug: string): Promise<RawStore> {
   const client = getClient(slug);
   if (!client) {
-    return { responses: [], totalSubmissions: 0, source: 'fixture', warning: 'Client tidak ditemukan.' };
+    return { responses: [], totalSubmissions: 0, source: 'fixture', stages: [], warning: 'Client tidak ditemukan.' };
   }
 
   try {
@@ -157,6 +164,7 @@ export async function loadFixture(slug: string): Promise<RawStore> {
       responses: [],
       totalSubmissions: 0,
       source: 'fixture',
+      stages: [],
       warning: 'Data demo belum tersedia. Jalankan npm run fixture terlebih dahulu.',
     };
   }

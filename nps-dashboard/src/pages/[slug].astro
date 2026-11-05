@@ -8,7 +8,7 @@ import ItemScoreChart from '../components/ItemScoreChart.astro';
 import TrendChart from '../components/TrendChart.astro';
 import { isAdmin, verifySessionToken, sessionCookie } from '../lib/auth';
 import { COLORS } from '../lib/colors';
-import { getClient, STAGES } from '../lib/config';
+import { getClient } from '../lib/config';
 import { loadDashboard } from '../lib/data';
 import {
   formatDate,
@@ -260,7 +260,7 @@ const lowestStage = [...(data?.stages ?? [])]
             <div class="mt-7">
               <ItemScoreChart
                 items={data?.items ?? []}
-                stages={STAGES.map((stage) => ({ key: stage.key, shortLabel: stage.shortLabel }))}
+                stages={(data?.stages ?? []).map((stage) => ({ key: stage.key, shortLabel: stage.shortLabel }))}
                 max={scoreMax}
               />
             </div>

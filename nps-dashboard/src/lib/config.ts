@@ -36,6 +36,9 @@ export interface StageDef {
   optional?: boolean;
 }
 
+/** Penanda tahap yang ditulis tim di judul Heading form Tally. */
+export const STAGE_TAG_PATTERN = /\[\[\s*stage\s*:\s*([a-z0-9_-]+)\s*\]\]/i;
+
 export interface ClientConfig {
   slug: string;
   name: string;

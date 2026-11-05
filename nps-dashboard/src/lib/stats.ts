@@ -1,4 +1,4 @@
-import type { ClientConfig, QuestionKey } from './config';
+import type { ClientConfig, QuestionKey, StageDef } from './config';
 import { QUESTIONS, STAGES } from './config';
 import type { SurveyResponse } from './types';
 
@@ -53,6 +53,7 @@ export interface ItemScore {
   score: number | null;
   responses: number;
   stageKey: string | null;
+  stageLabel?: string;
 }
 
 export interface DistributionPoint {
@@ -170,11 +171,14 @@ export interface BuildOptions {
   totalSubmissions: number;
   filters: { from: string | null; to: string | null; service: string | null };
   availableServices: string[];
+  /** Tahap layanan; default STAGES bila form tidak memakai Heading. */
+  stages?: StageDef[];
   warning?: string;
 }
 
 export function buildDashboard(options: BuildOptions): DashboardData {
   const { client, responses, filters } = options;
+  const stageDefs = options.stages && options.stages.length > 0 ? options.stages : STAGES;
 
   const withNps = responses.filter((response) => response.nps !== null);
   const npsValues = withNps.map((response) => response.nps as number);
@@ -201,7 +205,7 @@ export function buildDashboard(options: BuildOptions): DashboardData {
 
   // Skor rata-rata per tahap.
   const stages: StageScore[] = [];
-  for (const stage of STAGES) {
+  for (const stage of stageDefs) {
     const questionValues: number[] = [];
     let answeredRespondents = 0;
     for (const response of responses) {
@@ -246,8 +250,8 @@ export function buildDashboard(options: BuildOptions): DashboardData {
   // Korelasi per tahap dengan skor NPS.
   const correlations: CorrelationResult[] = [];
   const distribution = buildDistribution(npsValues, client.npsScale);
-  const items = buildItems(responses);
-  for (const stageDef of STAGES) {
+  const items = buildItems(responses, stageDefs);
+  for (const stageDef of stageDefs) {
     const stage = stages.find((item) => item.key === stageDef.key);
     if (!stage) continue;
     const xs: number[] = [];
@@ -285,7 +289,7 @@ export function buildDashboard(options: BuildOptions): DashboardData {
         submittedAt: response.submittedAt,
         label: comment.label,
         stageKey: comment.stageKey,
-        stageLabel: stageLabelOf(comment.stageKey),
+        stageLabel: stageLabelOf(comment.stageKey, stageDefs),
         text: comment.text,
         respondentType: response.respondentType,
         serviceType: response.serviceType,
@@ -336,6 +340,12 @@ export function buildDashboard(options: BuildOptions): DashboardData {
 
   const dailyTrend = buildTrend(withNps, client);
 
+  // Daftar tahap dipakai juga oleh panel Detail Butir untuk penanda grup.
+  const stageLabels = new Map(stageDefs.map((stage) => [stage.key, stage.shortLabel]));
+  for (const item of items) {
+    if (item.stageKey) item.stageLabel = stageLabels.get(item.stageKey) ?? item.stageLabel;
+  }
+
   return {
     meta: {
       slug: client.slug,
@@ -366,7 +376,8 @@ export function buildDashboard(options: BuildOptions): DashboardData {
   };
 }
 
-function buildTrend(responses: SurveyResponse[], client: ClientConfig) {  const map = new Map<string, number[]>();
+function buildTrend(responses: SurveyResponse[], client: ClientConfig) {
+  const map = new Map<string, number[]>();
   for (const response of responses) {
     const date = response.submittedAt.slice(0, 10) || 'unknown';
     const list = map.get(date) ?? [];
@@ -416,7 +427,12 @@ const ITEM_STAGE: Record<string, string> = {
   fasilitasUmum: 'fasilitasUmum',
 };
 
-function buildItems(responses: SurveyResponse[]): ItemScore[] {
+function buildItems(responses: SurveyResponse[], stageDefs: StageDef[]): ItemScore[] {
+  const stageOfItem = new Map<QuestionKey, string>();
+  for (const stage of stageDefs) {
+    for (const question of stage.questions) stageOfItem.set(question, stage.key);
+  }
+
   return QUESTIONS.map((question) => {
     const values = responses
       .map((response) => response.scores[question.key])
@@ -426,13 +442,14 @@ function buildItems(responses: SurveyResponse[]): ItemScore[] {
       label: question.label,
       score: values.length ? round2(mean(values) as number) : null,
       responses: values.length,
-      stageKey: ITEM_STAGE[question.key] ?? null,
+      stageKey: stageOfItem.get(question.key) ?? ITEM_STAGE[question.key] ?? null,
     };
   }).filter((item) => item.responses > 0);
 }
 
-function stageLabelOf(stageKey: string | null): string {  if (!stageKey) return 'Umum';
-  return STAGES.find((stage) => stage.key === stageKey)?.label ?? 'Umum';
+function stageLabelOf(stageKey: string | null, stageDefs: StageDef[] = STAGES): string {
+  if (!stageKey) return 'Umum';
+  return stageDefs.find((stage) => stage.key === stageKey)?.label ?? 'Umum';
 }
 
 export const round1 = (value: number) => Math.round(value * 10) / 10;
