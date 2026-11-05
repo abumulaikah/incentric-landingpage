@@ -137,6 +137,106 @@ export async function fetchFormBlueprint(apiKey: string, formId: string): Promis
   });
 }
 
+export interface RawFormQuestion {
+  id: string;
+  title: string;
+  type: string;
+  options?: { id: string; text: string }[];
+}
+
+/**
+ * Ambil daftar pertanyaan berurutan beserta opsi jawaban.
+ * Dipakai untuk membuat CSV mentah yang bentuknya sama dengan export Tally.
+ */
+export async function fetchFormQuestions(apiKey: string, formId: string): Promise<RawFormQuestion[]> {
+  const response = await fetch(`${TALLY_API}/forms/${encodeURIComponent(formId)}/questions?limit=500`, {
+    headers: { Authorization: `Bearer ${apiKey}`, Accept: 'application/json' },
+  });
+
+  if (!response.ok) {
+    const body = await response.text().catch(() => '');
+    throw new TallyError(`Tally API ${response.status}: ${body.slice(0, 200) || response.statusText}`, response.status);
+  }
+
+  const payload = (await response.json()) as {
+    questions?: (TallyQuestion & { type?: string; fields?: { title?: string }[] })[];
+  };
+
+  return (payload.questions ?? []).map((question) => ({
+    id: question.id,
+    title: question.title ?? '',
+    type: question.type ?? '',
+    options: [],
+  }));
+}
+
+export interface RawSubmission {
+  submissionId: string;
+  respondentId: string;
+  submittedAt: string;
+  isCompleted: boolean;
+  /** Nilai per questionId, sudah siap ditulis ke CSV. */
+  answers: Record<string, unknown>;
+  /** Opsi terpilih (label) untuk pilihan ganda. */
+  optionLabels?: Record<string, string>;
+}
+
+/** Ambil submission lengkap tanpa transformasi, untuk export mentah. */
+export async function fetchRawSubmissions(apiKey: string, formId: string): Promise<RawSubmission[]> {
+  const output: RawSubmission[] = [];
+  let page = 1;
+  let hasMore = true;
+
+  for (let guard = 0; guard < MAX_PAGES && hasMore; guard++) {
+    const url = new URL(`${TALLY_API}/forms/${encodeURIComponent(formId)}/submissions`);
+    url.searchParams.set('page', String(page));
+    url.searchParams.set('limit', String(PAGE_LIMIT));
+    url.searchParams.set('filter', 'completed');
+
+    const response = await fetch(url, {
+      headers: { Authorization: `Bearer ${apiKey}`, Accept: 'application/json' },
+    });
+
+    if (!response.ok) {
+      const body = await response.text().catch(() => '');
+      throw new TallyError(`Tally API ${response.status}: ${body.slice(0, 200) || response.statusText}`, response.status);
+    }
+
+    const payload = (await response.json()) as {
+      page?: number;
+      hasMore?: boolean;
+      submissions?: {
+        id: string;
+        respondentId?: string;
+        submittedAt?: string;
+        isCompleted?: boolean;
+        responses?: { questionId?: string; answer?: unknown }[];
+      }[];
+    };
+
+    for (const submission of payload.submissions ?? []) {
+      const answers: Record<string, unknown> = {};
+      for (const responseItem of submission.responses ?? []) {
+        if (!responseItem.questionId) continue;
+        answers[responseItem.questionId] = responseItem.answer ?? '';
+      }
+
+      output.push({
+        submissionId: submission.id,
+        respondentId: submission.respondentId ?? '',
+        submittedAt: normalizeDate(submission.submittedAt),
+        isCompleted: submission.isCompleted ?? true,
+        answers,
+      });
+    }
+
+    hasMore = Boolean(payload.hasMore);
+    page = (payload.page ?? page) + 1;
+  }
+
+  return output;
+}
+
 function blockTitle(payload: TallyBlockPayload | undefined): string {
   if (!payload) return '';
   if (payload.title) return payload.title;

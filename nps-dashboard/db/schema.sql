@@ -47,5 +47,20 @@ CREATE TABLE IF NOT EXISTS nps_api_key (
   revoked_at TIMESTAMPTZ
 );
 
+-- Simpanan submission mentah (dari Tally API atau webhook) agar export
+-- tetap sama bentuknya dengan export asli Tally.
+CREATE TABLE IF NOT EXISTS nps_submission (
+  id              SERIAL PRIMARY KEY,
+  client_id       INTEGER NOT NULL REFERENCES nps_client(id) ON DELETE CASCADE,
+  submission_id   TEXT NOT NULL,
+  respondent_id   TEXT,
+  submitted_at    TIMESTAMPTZ,
+  is_completed    BOOLEAN NOT NULL DEFAULT TRUE,
+  payload         JSONB NOT NULL,
+  synced_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE (client_id, submission_id)
+);
+
 CREATE INDEX IF NOT EXISTS idx_nps_question_map_client ON nps_question_map (client_id);
 CREATE INDEX IF NOT EXISTS idx_nps_stage_client ON nps_stage (client_id);
+CREATE INDEX IF NOT EXISTS idx_nps_submission_client ON nps_submission (client_id, submitted_at);

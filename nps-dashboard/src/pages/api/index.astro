@@ -37,11 +37,12 @@ const endpoints = [
     method: 'GET',
     path: '/nps/{slug}/export',
     title: 'CSV export',
-    copy: 'The same CSV produced by the dashboard export button.',
+    copy: 'Data mentah bergaya export Tally (default: ringkasan laporan).',
     params: [
       ['from', 'ISO date', 'Optional'],
       ['to', 'ISO date', 'Optional'],
       ['service', 'string', 'Optional'],
+      ['format', 'raw | summary', 'raw = satu baris per submission, kolom = pertanyaan asli'],
     ],
   },
 ];

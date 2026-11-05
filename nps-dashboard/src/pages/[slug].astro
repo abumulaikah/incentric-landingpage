@@ -93,10 +93,17 @@ const lowestStage = [...(data?.stages ?? [])]
             <a href="/admin" class="btn btn-outline !min-h-10 !px-4">Admin</a>
           )}
           <a
-            href={`/api/export?slug=${client.slug}${filters.from ? `&from=${filters.from}` : ''}${filters.to ? `&to=${filters.to}` : ''}${filters.service ? `&service=${encodeURIComponent(filters.service)}` : ''}`}
+            href={`/api/export-raw?slug=${client.slug}${filters.from ? `&from=${filters.from}` : ''}${filters.to ? `&to=${filters.to}` : ''}${filters.service ? `&service=${encodeURIComponent(filters.service)}` : ''}`}
             class="btn btn-dark !min-h-10 !px-4"
           >
             Export CSV
+          </a>
+          <a
+            href={`/api/export?slug=${client.slug}${filters.from ? `&from=${filters.from}` : ''}${filters.to ? `&to=${filters.to}` : ''}${filters.service ? `&service=${encodeURIComponent(filters.service)}` : ''}`}
+            class="btn btn-outline !min-h-10 !px-4"
+            title="Ringkasan NPS, tahap, korelasi"
+          >
+            Summary
           </a>
           <form method="POST" action="/api/logout" class="inline">
             <button type="submit" class="btn btn-outline !min-h-10 !px-4">Sign out</button>

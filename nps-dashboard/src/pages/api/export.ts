@@ -1,19 +1,21 @@
 import type { APIRoute } from 'astro';
-import { getClient } from '../../lib/config';
+import { resolveClient } from '../../lib/resolve-client';
+import { isAdmin, sessionCookie, verifySessionToken } from '../../lib/auth';
 import { loadDashboard } from '../../lib/data';
 import { dashboardToCsv, csvFileName } from '../../lib/csv-export';
-import { isAdmin, sessionCookie, verifySessionToken } from '../../lib/auth';
 
 export const prerender = false;
 
+/** Export laporan ringkasan (NPS, tahap, korelasi, komentar). */
 export const GET: APIRoute = async ({ url, cookies }) => {
   const slug = url.searchParams.get('slug') ?? '';
-  const client = getClient(slug);
-  if (!client) return new Response('Client tidak ditemukan', { status: 404 });
+  const resolved = await resolveClient(slug);
+  if (!resolved) return new Response('Client not found', { status: 404 });
+  const client = resolved.client;
 
   const session = await verifySessionToken(cookies.get(sessionCookie.name)?.value);
   const authorized = isAdmin(session) || session?.scopes.includes(client.slug);
-  if (!authorized) return new Response('Tidak diizinkan', { status: 401 });
+  if (!authorized) return new Response('Not authorized', { status: 401 });
 
   const result = await loadDashboard(client.slug, {
     from: url.searchParams.get('from'),
@@ -21,7 +23,7 @@ export const GET: APIRoute = async ({ url, cookies }) => {
     service: url.searchParams.get('service'),
   });
 
-  if (!result) return new Response('Gagal memuat data', { status: 500 });
+  if (!result) return new Response('Failed to load data', { status: 500 });
 
   const csv = dashboardToCsv(result.data);
   return new Response(csv, {
