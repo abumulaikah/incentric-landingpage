@@ -75,6 +75,7 @@ const apiKeys = admin ? await listApiKeys() : [];
         {admin && (
           <div class="flex flex-wrap items-center gap-2">
             <a href="/admin/new" class="btn btn-yellow !min-h-10 !px-4">New project</a>
+            <a href="/admin/catalog" class="btn btn-outline !min-h-10 !px-4">Label catalog</a>
             <a href="/api" class="btn btn-outline !min-h-10 !px-4">API docs</a>
             <form method="POST" action="/api/logout"><button class="btn btn-outline !min-h-10 !px-4">Sign out</button></form>
           </div>
@@ -249,7 +250,7 @@ const apiKeys = admin ? await listApiKeys() : [];
                   </div>
                   <div class="mt-5 flex gap-2">
                     <a href="/${client.slug}" class="btn btn-primary flex-1 !min-h-10 !px-3">Open</a>
-                    <a href="/login/${client.slug}" class="btn btn-outline !min-h-10 !px-3">Client login</a>
+                    <a href="/admin/mapping/${client.slug}" class="btn btn-outline !min-h-10 !px-3">Mapping</a>
                   </div>
                 </article>`,
               )

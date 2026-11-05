@@ -1,16 +1,19 @@
 import { QUESTIONS } from './config';
-import { buildSyncResult } from './form-sync';
+import { buildSyncResult, guessLabel } from './form-sync';
+import { loadCatalog } from './catalog';
 import { fetchFormBlueprint } from './tally';
 
 /**
  * Baca form Tally dan hasilkan daftar tahap + pertanyaan siap diedit admin.
- * Dipakai halaman sinkronisasi client baru.
+ * Katalog label (bawaan + tambahan admin) dipakai untuk menebak label awal.
  */
 export async function syncFormStructure(apiKey: string, formId: string) {
   const blueprint = await fetchFormBlueprint(apiKey, formId);
+  const catalog = await loadCatalog();
+
   const result = buildSyncResult(
     blueprint,
-    QUESTIONS.map((question) => ({ label: question.label, titleKeywords: question.titleKeywords })),
+    catalog.map((entry) => ({ label: entry.label, titleKeywords: entry.titleKeywords })),
     ['merekomendasikan'],
   );
 
@@ -19,3 +22,6 @@ export async function syncFormStructure(apiKey: string, formId: string) {
     unknownCount: result.questions.filter((question) => question.isScore && !question.guessedLabel).length,
   };
 }
+
+export { QUESTIONS, guessLabel };
+

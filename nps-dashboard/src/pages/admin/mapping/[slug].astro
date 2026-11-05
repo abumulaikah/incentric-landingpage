@@ -1,0 +1,188 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { isAdmin, sessionCookie, verifySessionToken } from '../../../lib/auth';
+import { getClientRecord, listQuestionMap, listStages, updateQuestionMap } from '../../../lib/clients';
+import { hasDatabase } from '../../../lib/db';
+import { resolveClient } from '../../../lib/resolve-client';
+import { clientFormId, readEnv } from '../../../lib/env';
+import { fetchFormBlueprint } from '../../../lib/tally';
+import { matchQuestionKey, matchNps } from '../../../lib/normalize';
+import { getQuestion } from '../../../lib/config';
+
+export const prerender = false;
+
+const session = await verifySessionToken(Astro.cookies.get(sessionCookie.name)?.value);
+if (!isAdmin(session)) return Astro.redirect('/admin');
+
+const slug = Astro.params.slug ?? '';
+const resolved = await resolveClient(slug);
+if (!resolved) return Astro.redirect('/admin');
+
+const client = resolved.client;
+const dbReady = hasDatabase();
+const record = dbReady ? await getClientRecord(client.slug) : null;
+const clientId = record?.id ?? 0;
+
+let notice: string | null = null;
+let error: string | null = null;
+
+if (Astro.request.method === 'POST' && clientId > 0) {
+  const form = await Astro.request.formData();
+  const questionId = String(form.get('questionId') ?? '');
+  const label = String(form.get('label') ?? '').trim();
+  const stageKey = String(form.get('stageKey') ?? '').trim() || null;
+
+  if (questionId) {
+    await updateQuestionMap(clientId, questionId, { label: label || undefined, stageKey });
+    notice = 'Mapping updated.';
+  }
+}
+
+// Mapping tersimpan (database) atau hasil baca form sebagai fallback.
+const savedMaps = clientId > 0 ? await listQuestionMap(clientId) : [];
+const savedStages = clientId > 0 ? await listStages(clientId) : [];
+
+const apiKey = readEnv('TALLY_API_KEY');
+let formRows: { questionId: string; title: string; autoLabel: string | null; isNps: boolean }[] = [];
+let formError: string | null = null;
+
+if (apiKey) {
+  try {
+    const blueprint = await fetchFormBlueprint(apiKey, clientFormId(client.slug, client.formId));
+    formRows = blueprint
+      .filter((block) => /^TITLE$/i.test(block.type) && block.questionId)
+      .map((block) => {
+        const key = matchQuestionKey(block.title);
+        return {
+          questionId: block.questionId as string,
+          title: block.title,
+          autoLabel: key ? getQuestion(key).label : null,
+          isNps: matchNps(block.title),
+        };
+      });
+  } catch (err) {
+    formError = err instanceof Error ? err.message : 'Could not read the Tally form.';
+  }
+} else {
+  formError = 'TALLY_API_KEY is not configured.';
+}
+
+const rows = formRows.map((row) => {
+  const saved = savedMaps.find((map) => map.questionId === row.questionId);
+  return {
+    ...row,
+    label: saved?.label ?? row.autoLabel ?? '',
+    stageKey: saved?.stageKey ?? null,
+    source: saved ? 'saved' : row.autoLabel ? 'catalog' : 'unknown',
+  };
+});
+
+const scoreRows = rows.filter((row) => !row.isNps && /seberapa/i.test(row.title));
+---
+
+<Base title={`Mapping - ${client.name}`}>
+  <div class="shell">
+    <header class="border-b border-slate-300 bg-white">
+      <div class="container-page flex items-center justify-between gap-4 py-4">
+        <a href="/" class="flex items-center gap-3">
+          <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-ink text-base font-extrabold text-brand-yellow">i</span>
+          <span class="text-sm font-extrabold uppercase tracking-[0.24em]">incentric</span>
+        </a>
+        <div class="flex items-center gap-2">
+          <a href="/admin" class="btn btn-outline !min-h-10 !px-4">Projects</a>
+          <a href={`/${client.slug}`} class="btn btn-dark !min-h-10 !px-4">Open dashboard</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="container-page max-w-5xl space-y-6 py-10">
+      <div>
+        <p class="kicker">Mapping</p>
+        <h1 class="display mt-3">{client.name}</h1>
+        <p class="mt-3 text-sm leading-relaxed text-slate-500">
+          How each Tally question becomes a dashboard item. <strong>Catalog</strong> means the label
+          was suggested automatically; <strong>saved</strong> means it was stored for this client.
+        </p>
+      </div>
+
+      {clientId === 0 && (
+        <div class="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-relaxed text-amber-900">
+          This client is configured in code, not in the database. Labels come from the built-in
+          catalog and stages from the Tally headings. Editing is unavailable until it is connected
+          through <a href="/admin/new" class="underline">Add new client</a>.
+        </div>
+      )}
+
+      {formError && (
+        <div class="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm font-semibold text-rose-900">{formError}</div>
+      )}
+      {notice && <div class="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm font-semibold text-emerald-900">{notice}</div>}
+      {error && <div class="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm font-semibold text-rose-900">{error}</div>}
+
+      <section class="card">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <h2 class="text-lg font-extrabold">Scored questions</h2>
+          <span class="badge badge-muted">{scoreRows.length} items</span>
+        </div>
+
+        <div class="table-wrap mt-4">
+          <table class="data-table">
+            <thead>
+              <tr><th>Question in Tally</th><th>Label</th><th>Stage</th><th>Source</th></tr>
+            </thead>
+            <tbody>
+              {scoreRows.map((row) => (
+                <tr>
+                  <td class="max-w-[280px] text-[12px] leading-snug text-slate-600">{row.title}</td>
+                  <td>
+                    {clientId > 0 ? (
+                      <form method="POST" class="flex items-center gap-2">
+                        <input type="hidden" name="questionId" value={row.questionId} />
+                        <input name="label" value={row.label} class="field !h-9 !text-[12px]" />
+                        <select name="stageKey" class="field !h-9 !w-[130px] !text-[12px]">
+                          <option value="">None</option>
+                          {savedStages.map((stage) => (
+                            <option value={stage.key} selected={stage.key === row.stageKey}>{stage.label}</option>
+                          ))}
+                        </select>
+                        <button type="submit" class="btn btn-outline !min-h-9 !px-3 !text-[11px]">Save</button>
+                      </form>
+                    ) : (
+                      <span class="text-[13px] font-bold">{row.label || '—'}</span>
+                    )}
+                  </td>
+                  <td class="text-[12px] text-slate-500">
+                    {savedStages.find((stage) => stage.key === row.stageKey)?.label ?? (row.stageKey || '—')}
+                  </td>
+                  <td>
+                    {row.source === 'saved'
+                      ? <span class="badge badge-great">Saved</span>
+                      : row.source === 'catalog'
+                        ? <span class="badge badge-good">Catalog</span>
+                        : <span class="badge badge-warn">Unknown</span>}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {scoreRows.length === 0 && (
+          <p class="prose-note mt-4">No scored questions found in the Tally form.</p>
+        )}
+      </section>
+
+      <section class="card">
+        <h2 class="text-lg font-extrabold">Other questions</h2>
+        <p class="prose-note mt-2">These feed metadata and comments rather than scores.</p>
+        <ul class="mt-3 space-y-1.5">
+          {rows.filter((row) => !scoreRows.includes(row)).map((row) => (
+            <li class="flex flex-wrap items-center gap-2 text-[12px] text-slate-600">
+              <span class="max-w-[420px] truncate">{row.title}</span>
+              {row.isNps && <span class="badge badge-good">NPS</span>}
+            </li>
+          ))}
+        </ul>
+      </section>    </main>
+  </div>
+</Base>
