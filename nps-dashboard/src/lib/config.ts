@@ -132,6 +132,14 @@ export const STAGES: StageDef[] = [
     questions: ['tungguDokter', 'pemeriksaanDokter'],
   },
   {
+    // Kamar rawat inap menyusul setelah pemeriksaan dokter (hanya pasien inap).
+    key: 'kamarInap',
+    label: 'Kamar Rawat Inap',
+    shortLabel: 'Kamar Inap',
+    questions: ['kamar'],
+    optional: true,
+  },
+  {
     key: 'kasirFarmasi',
     label: 'Kasir & Farmasi',
     shortLabel: 'Kasir & Farmasi',
@@ -142,13 +150,6 @@ export const STAGES: StageDef[] = [
     label: 'Fasilitas Umum',
     shortLabel: 'Fasilitas',
     questions: ['fasilitasUmum'],
-  },
-  {
-    key: 'kamarInap',
-    label: 'Kamar Rawat Inap',
-    shortLabel: 'Kamar Inap',
-    questions: ['kamar'],
-    optional: true,
   },
 ];
 
