@@ -1,15 +1,18 @@
 ---
 import Base from '../layouts/Base.astro';
-import { isAdmin, sessionCookie, verifySessionToken } from '../lib/auth';
-import { hasDatabase } from '../lib/db';
-import { readEnv } from '../lib/env';
 import {
   checkAdminPassword,
   cookieOptionsFor,
   createSessionToken,
+  isAdmin,
   resetAttempts,
+  sessionCookie,
   tooManyAttempts,
+  verifySessionToken,
 } from '../lib/auth';
+import { createApiKey, listApiKeys, revokeApiKey } from '../lib/api-keys';
+import { hasDatabase } from '../lib/db';
+import { readEnv } from '../lib/env';
 
 export const prerender = false;
 
@@ -19,23 +22,46 @@ const dbReady = hasDatabase();
 const hasTallyKey = Boolean(readEnv('TALLY_API_KEY'));
 
 let loginError: string | null = null;
+let notice: string | null = null;
+let createdKey: string | null = null;
 
-if (!admin && Astro.request.method === 'POST') {
+if (Astro.request.method === 'POST') {
   const form = await Astro.request.formData();
-  const password = String(form.get('password') ?? '');
-  const identifier = `admin-page:${Astro.clientAddress ?? 'local'}`;
+  const intent = String(form.get('intent') ?? '');
 
-  if (tooManyAttempts(identifier)) {
-    loginError = 'Too many attempts. Please try again in a few minutes.';
-  } else if (!checkAdminPassword(password)) {
-    loginError = 'Incorrect admin password.';
-  } else {
-    resetAttempts(identifier);
-    const token = await createSessionToken(['admin']);
-    Astro.cookies.set(sessionCookie.name, token, cookieOptionsFor(Astro.url));
-    return Astro.redirect('/admin');
+  if (!admin) {
+    const password = String(form.get('password') ?? '');
+    const identifier = `admin-page:${Astro.clientAddress ?? 'local'}`;
+
+    if (tooManyAttempts(identifier)) {
+      loginError = 'Too many attempts. Please try again in a few minutes.';
+    } else if (!checkAdminPassword(password)) {
+      loginError = 'Incorrect admin password.';
+    } else {
+      resetAttempts(identifier);
+      const token = await createSessionToken(['admin']);
+      Astro.cookies.set(sessionCookie.name, token, cookieOptionsFor(Astro.url));
+      return Astro.redirect('/admin');
+    }
+  }
+
+  if (admin && intent === 'create-key') {
+    const created = await createApiKey(String(form.get('keyName') ?? ''), String(form.get('keyScope') ?? '') || null);
+    if (created) {
+      createdKey = created.key;
+      notice = 'API key created. Copy it now, it will not be shown again.';
+    } else {
+      loginError = 'Could not create the API key. Is the database connected?';
+    }
+  }
+
+  if (admin && intent === 'revoke-key') {
+    await revokeApiKey(Number(form.get('keyId') ?? 0));
+    notice = 'API key revoked.';
   }
 }
+
+const apiKeys = admin ? await listApiKeys() : [];
 ---
 
 <Base title="Projects - Incentric">
@@ -47,8 +73,9 @@ if (!admin && Astro.request.method === 'POST') {
           <span class="text-sm font-extrabold uppercase tracking-[0.24em]">incentric</span>
         </a>
         {admin && (
-          <div class="flex items-center gap-2">
+          <div class="flex flex-wrap items-center gap-2">
             <a href="/admin/new" class="btn btn-yellow !min-h-10 !px-4">New project</a>
+            <a href="/api" class="btn btn-outline !min-h-10 !px-4">API docs</a>
             <form method="POST" action="/api/logout"><button class="btn btn-outline !min-h-10 !px-4">Sign out</button></form>
           </div>
         )}
@@ -61,9 +88,10 @@ if (!admin && Astro.request.method === 'POST') {
           <p class="kicker">Internal</p>
           <h1 class="display mt-4">Incentric Admin</h1>
           <p class="mt-3 text-sm leading-relaxed text-slate-500">
-            Manage client dashboards, service stages and question labels.
+            Manage client dashboards, service stages and API keys.
           </p>
           <form method="POST" action="/admin" class="card mt-8 space-y-4">
+            <input type="hidden" name="intent" value="login" />
             <label class="block">
               <span class="stat-label">Admin password</span>
               <input name="password" type="password" required class="field mt-1.5" placeholder="Enter password" />
@@ -73,7 +101,7 @@ if (!admin && Astro.request.method === 'POST') {
           </form>
         </div>
       ) : (
-        <div class="space-y-8">
+        <div class="space-y-10">
           <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
               <p class="kicker">Internal</p>
@@ -93,6 +121,17 @@ if (!admin && Astro.request.method === 'POST') {
             </div>
           </div>
 
+          {notice && <div class="rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-sm font-semibold text-emerald-900">{notice}</div>}
+          {loginError && <div class="rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm font-semibold text-rose-900">{loginError}</div>}
+
+          {createdKey && (
+            <div class="rounded-lg border border-brand-blue bg-blue-50 p-4">
+              <p class="text-[10px] font-bold uppercase tracking-[0.14em] text-brand-blue">New API key</p>
+              <code class="mt-2 block break-all font-mono text-sm font-bold text-brand-ink">{createdKey}</code>
+              <p class="prose-note mt-2">Copy this now. It cannot be shown again.</p>
+            </div>
+          )}
+
           <section class="rounded-lg border border-slate-950 bg-brand-ink p-6 text-white md:p-8">
             <div class="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
               <div>
@@ -111,6 +150,60 @@ if (!admin && Astro.request.method === 'POST') {
           <div id="client-list" class="grid gap-4 md:grid-cols-2 xl:grid-cols-3" data-ready={dbReady ? '1' : '0'}>
             <p class="text-sm text-slate-500">Loading projects…</p>
           </div>
+
+          <section class="card">
+            <div class="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p class="card-title">API access</p>
+                <h2 class="card-heading">Read-only API keys</h2>
+                <p class="prose-note mt-2 max-w-2xl">
+                  Keys let partner applications read NPS data. Scope a key to a single client or leave
+                  it empty for all clients. See <a href="/api" class="brand-link">/api</a> for the documentation.
+                </p>
+              </div>
+              <span class="badge badge-muted">{apiKeys.length} active</span>
+            </div>
+
+            <form method="POST" class="mt-5 grid gap-3 sm:grid-cols-[1fr_1fr_auto]">
+              <input type="hidden" name="intent" value="create-key" />
+              <label class="block">
+                <span class="stat-label">Application name</span>
+                <input name="keyName" required class="field mt-1.5" placeholder="Partner dashboard" />
+              </label>
+              <label class="block">
+                <span class="stat-label">Client scope</span>
+                <input name="keyScope" class="field mt-1.5 font-mono" placeholder="all clients" />
+              </label>
+              <button type="submit" class="btn btn-primary self-end" disabled={!dbReady}>Create key</button>
+            </form>
+
+            {apiKeys.length > 0 && (
+              <div class="table-wrap mt-5">
+                <table class="data-table !min-w-0">
+                  <thead>
+                    <tr><th>Name</th><th>Scope</th><th>Created</th><th>Last used</th><th></th></tr>
+                  </thead>
+                  <tbody>
+                    {apiKeys.map((key) => (
+                      <tr>
+                        <td class="font-bold">{key.name}</td>
+                        <td class="font-mono text-[12px]">{key.slug ?? 'all clients'}</td>
+                        <td class="text-[12px] text-slate-500">{key.createdAt.slice(0, 10)}</td>
+                        <td class="text-[12px] text-slate-500">{key.lastUsedAt ? key.lastUsedAt.slice(0, 16).replace('T', ' ') : 'never'}</td>
+                        <td class="text-right">
+                          <form method="POST">
+                            <input type="hidden" name="intent" value="revoke-key" />
+                            <input type="hidden" name="keyId" value={key.id} />
+                            <button type="submit" class="btn btn-outline !min-h-8 !px-3 !text-[11px]">Revoke</button>
+                          </form>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </section>
 
           <section class="grid gap-4 md:grid-cols-3">
             {[

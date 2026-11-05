@@ -23,8 +23,7 @@ export const prerender = false;
 const slug = Astro.params.slug ?? '';
 
 // Rute khusus (mis. /admin/new) tidak boleh dianggap sebagai slug client.
-const RESERVED = new Set(['admin', 'login', 'api', 'favicon.svg']);
-const resolvedClient = RESERVED.has(slug) ? null : await resolveClient(slug);
+const RESERVED = new Set(['admin', 'login', 'api', 'favicon.svg']);const resolvedClient = RESERVED.has(slug) ? null : await resolveClient(slug);
 if (!resolvedClient) return Astro.redirect('/');
 const client = resolvedClient.client;
 
