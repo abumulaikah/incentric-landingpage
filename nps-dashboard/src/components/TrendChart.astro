@@ -1,5 +1,5 @@
 ---
-/** Grafik garis sederhana untuk tren NPS harian. */
+/** Grafik garis NPS harian dengan sumbu Y dan X berlabel. */
 interface Point {
   date: string;
   nps: number | null;
@@ -12,55 +12,158 @@ interface Props {
 
 const { points } = Astro.props;
 const valid = points.filter((point) => point.nps !== null);
-const width = 640;
-const height = 180;
-const padX = 8;
-const padY = 16;
+
+const width = 660;
+const height = 210;
+const padTop = 18;
+const padBottom = 34;
+const padLeft = 42;
+const padRight = 16;
 
 const values = valid.map((point) => point.nps as number);
-const maxValue = values.length ? Math.max(...values, 0) : 100;
-const minValue = values.length ? Math.min(...values, 0) : 0;
+const rawMax = values.length ? Math.max(...values, 0) : 100;
+const rawMin = values.length ? Math.min(...values, 0) : 0;
+
+// Bulatkan domain ke kelipatan 10 (atau 25 kalau rentangnya lebar).
+const step = rawMax - rawMin > 100 ? 25 : 10;
+const maxValue = Math.ceil((rawMax + 5) / step) * step;
+const minValue = Math.floor((rawMin - 5) / step) * step;
+
+const plotLeft = padLeft;
+const plotRight = width - padRight;
+const plotTop = padTop;
+const plotBottom = height - padBottom;
+const usableHeight = plotBottom - plotTop;
 const span = maxValue - minValue || 1;
 
-const coords = valid.map((point, index) => {
-  const x = valid.length === 1 ? width / 2 : padX + (index / (valid.length - 1)) * (width - padX * 2);
-  const y = height - padY - (((point.nps as number) - minValue) / span) * (height - padY * 2);
-  return { ...point, x, y };
-});
+const xOf = (index: number) =>
+  valid.length === 1 ? (plotLeft + plotRight) / 2 : plotLeft + (index / (valid.length - 1)) * (plotRight - plotLeft);
+const yOf = (value: number) => plotTop + ((maxValue - value) / span) * usableHeight;
+
+const coords = valid.map((point, index) => ({
+  ...point,
+  x: xOf(index),
+  y: yOf(point.nps as number),
+}));
 
 const linePath = coords.map((point, index) => `${index === 0 ? 'M' : 'L'}${point.x.toFixed(1)},${point.y.toFixed(1)}`).join(' ');
 const areaPath = coords.length
-  ? `${linePath} L${coords[coords.length - 1].x.toFixed(1)},${height} L${coords[0].x.toFixed(1)},${height} Z`
+  ? `${linePath} L${coords[coords.length - 1].x.toFixed(1)},${plotBottom} L${coords[0].x.toFixed(1)},${plotBottom} Z`
   : '';
-const zeroY = height - padY - ((0 - minValue) / span) * (height - padY * 2);
+
+// Label sumbu Y setiap 25 poin NPS.
+const ticks: number[] = [];
+for (let value = maxValue; value >= minValue - 0.0001; value -= step * 2.5) ticks.push(Math.round(value));
+
+const zeroY = minValue < 0 && maxValue > 0 ? yOf(0) : null;
+const formatDate = (value: string) => {
+  const date = new Date(`${value}T00:00:00`);
+  if (Number.isNaN(date.getTime())) return value;
+  return new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short' }).format(date);
+};
 ---
 
 {coords.length === 0 ? (
-  <p class="py-10 text-center text-sm text-slate-500">Belum ada data tren.</p>
+  <p class="py-10 text-center text-sm text-slate-500">No trend data yet.</p>
 ) : (
   <div>
-    <svg viewBox={`0 0 ${width} ${height}`} class="h-44 w-full" role="img" aria-label="Tren NPS harian">
+    <svg
+      viewBox={`0 0 ${width} ${height}`}
+      class="h-52 w-full"
+      role="img"
+      aria-label="Daily NPS trend with axis labels"
+      preserveAspectRatio="none"
+    >
       <defs>
         <linearGradient id="npsArea" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stop-color="#014fcf" stop-opacity="0.18" />
           <stop offset="100%" stop-color="#014fcf" stop-opacity="0" />
         </linearGradient>
       </defs>
-      {minValue < 0 && (
-        <line x1="0" y1={zeroY} x2={width} y2={zeroY} stroke="#cbd5e1" stroke-dasharray="4 4" stroke-width="1" />
-      )}
-      <path d={areaPath} fill="url(#npsArea)" />
-      <path d={linePath} fill="none" stroke="#014fcf" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-      {coords.map((point) => (
+
+      <!-- kisi + label sumbu Y -->
+      {ticks.map((tick) => (
         <g>
-          <circle cx={point.x} cy={point.y} r="4" fill="#fff" stroke="#014fcf" stroke-width="2.5" />
-          <title>{point.date}: NPS {point.nps} ({point.count} respons)</title>
+          <line
+            x1={plotLeft}
+            y1={yOf(tick).toFixed(1)}
+            x2={plotRight}
+            y2={yOf(tick).toFixed(1)}
+            stroke="#eef2f7"
+            stroke-width="1"
+          />
+          <text x={plotLeft - 8} y={yOf(tick) + 3.5} text-anchor="end" class="fill-slate-400" style="font-size:10px;font-weight:600">
+            {tick}
+          </text>
         </g>
       ))}
+
+      <!-- garis nol -->
+      {zeroY !== null && (
+        <line
+          x1={plotLeft}
+          y1={zeroY.toFixed(1)}
+          x2={plotRight}
+          y2={zeroY.toFixed(1)}
+          stroke="#94a3b8"
+          stroke-dasharray="5 4"
+          stroke-width="1"
+        />
+      )}
+
+      <!-- sumbu -->
+      <line x1={plotLeft} y1={plotTop} x2={plotLeft} y2={plotBottom} stroke="#cbd5e1" stroke-width="1" />
+      <line x1={plotLeft} y1={plotBottom} x2={plotRight} y2={plotBottom} stroke="#cbd5e1" stroke-width="1" />
+
+      <!-- label sumbu Y -->
+      <text
+        x={12}
+        y={(plotTop + plotBottom) / 2}
+        text-anchor="middle"
+        transform={`rotate(-90 12 ${(plotTop + plotBottom) / 2})`}
+        class="fill-slate-400"
+        style="font-size:9px;font-weight:800;letter-spacing:0.08em"
+      >
+        NPS
+      </text>
+
+      <path d={areaPath} fill="url(#npsArea)" />
+      <path d={linePath} fill="none" stroke="#014fcf" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+
+      {coords.map((point) => (
+        <g>
+          <circle cx={point.x.toFixed(1)} cy={point.y.toFixed(1)} r="4" fill="#fff" stroke="#014fcf" stroke-width="2.5" />
+          <text x={point.x.toFixed(1)} y={(point.y - 11).toFixed(1)} text-anchor="middle" class="fill-slate-800" style="font-size:10px;font-weight:800">
+            {point.nps}
+          </text>
+          <title>{point.date}: NPS {point.nps} ({point.count} responses)</title>
+        </g>
+      ))}
+
+      <!-- label sumbu X (tanggal) -->
+      {coords
+        .filter((_, index) => coords.length <= 8 || index % Math.ceil(coords.length / 8) === 0 || index === coords.length - 1)
+        .map((point) => (
+          <text
+            x={point.x.toFixed(1)}
+            y={plotBottom + 15}
+            text-anchor="middle"
+            class="fill-slate-500"
+            style="font-size:9.5px;font-weight:700"
+          >
+            {formatDate(point.date)}
+          </text>
+        ))}
+
+      <text
+        x={(plotLeft + plotRight) / 2}
+        y={height - 4}
+        text-anchor="middle"
+        class="fill-slate-400"
+        style="font-size:9px;font-weight:800;letter-spacing:0.08em"
+      >
+        DATE (DAILY NPS)
+      </text>
     </svg>
-    <div class="mt-2 flex justify-between text-[11px] font-medium text-slate-500">
-      <span>{valid[0].date}</span>
-      <span>{valid[valid.length - 1].date}</span>
-    </div>
   </div>
 )}

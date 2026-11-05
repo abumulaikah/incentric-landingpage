@@ -96,12 +96,13 @@ const sampleBody = `{
 }`;
 
 const fullFields = [
-  ['items', 'Score per individual question'],
+  ['items', 'key, label, stageKey, stageLabel, score, responses for every question'],
   ['distribution', 'Response count for every point on the scale'],
-  ['serviceBreakdown', 'Responses, NPS, mean score and category counts per service'],
-  ['respondentBreakdown', 'Respondent type counts (patient, companion, …)'],
-  ['trend', 'Daily NPS and response count'],
-  ['comments', 'Verbatim comments with stage, service and respondent type'],
+  ['serviceBreakdown', 'service, responses, nps, meanScore, promoters, passives, detractors'],
+  ['availableServices', 'All service names present in the data (for filters)'],
+  ['respondentBreakdown', 'Respondent type counts (patient, companion, ...)'],
+  ['trend', 'date, nps, responses per day'],
+  ['comments', 'Verbatim text with stage, service, respondentType and submittedAt'],
 ];
 
 const permissions = [

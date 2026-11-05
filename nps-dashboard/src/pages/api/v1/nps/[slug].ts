@@ -59,6 +59,7 @@ export const GET: APIRoute = async ({ request, params, url }) => {
     correlations: data.correlations.map((item) => ({
       key: item.key,
       label: item.label,
+      rank: item.rank,
       score: item.score,
       r: item.r,
       strength: item.strength,
@@ -70,11 +71,27 @@ export const GET: APIRoute = async ({ request, params, url }) => {
 
   const full = {
     ...base,
-    items: data.items.map((item) => ({ key: item.key, label: item.label, score: item.score, responses: item.responses })),
+    items: data.items.map((item) => ({
+      key: item.key,
+      label: item.label,
+      stageKey: item.stageKey,
+      stageLabel: item.stageLabel ?? null,
+      score: item.score,
+      responses: item.responses,
+    })),
     distribution: data.distribution,
-    serviceBreakdown: data.serviceBreakdown,
+    serviceBreakdown: data.serviceBreakdown.map((item) => ({
+      service: item.label,
+      responses: item.count,
+      nps: item.nps,
+      meanScore: item.meanScore,
+      promoters: item.promoters,
+      passives: item.passives,
+      detractors: item.detractors,
+    })),
+    availableServices: data.availableServices,
     respondentBreakdown: data.respondentBreakdown,
-    trend: data.dailyTrend,
+    trend: data.dailyTrend.map((point) => ({ date: point.date, nps: point.nps, responses: point.count })),
     comments: data.comments.map((comment) => ({
       submittedAt: comment.submittedAt,
       stage: comment.stageLabel,
