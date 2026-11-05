@@ -58,12 +58,6 @@ const stageBars = (data?.stages ?? []).map((stage) => ({
   highlight: stage.score !== null && stage.score === Math.max(...(data?.stages ?? []).map((item) => item.score ?? 0)),
 }));
 
-const correlationBars = (data?.correlations ?? []).map((item) => ({
-  label: item.shortLabel,
-  value: item.r,
-  highlight: item.rank === 1,
-}));
-
 const scoreMax = data?.meta.npsScale === '1-5' ? 5 : 10;
 const hasData = Boolean(nps && nps.total > 0);
 
@@ -310,49 +304,44 @@ const lowestStage = [...(data?.stages ?? [])]
               <span class="badge badge-muted shrink-0">r Pearson</span>
             </div>
 
-            <div class="mt-6 grid gap-8 lg:grid-cols-[1.25fr_0.75fr]">
-              <div class="table-wrap">
-                <table class="data-table">
-                  <thead>
+            <div class="table-wrap mt-6">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th class="w-10">#</th>
+                    <th>Tahap layanan</th>
+                    <th class="text-right">Skor</th>
+                    <th class="w-[32%]">Kekuatan korelasi (r)</th>
+                    <th>Status &amp; rekomendasi</th>
+                    <th class="text-right">Responden</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(data?.correlations ?? []).map((row) => (
                     <tr>
-                      <th class="w-10">#</th>
-                      <th>Tahap layanan</th>
-                      <th class="text-right">Skor</th>
-                      <th class="text-right">r</th>
-                      <th>Kekuatan</th>
-                      <th>Status &amp; rekomendasi</th>
+                      <td class="font-extrabold text-slate-400 tabular-nums">{row.rank}</td>
+                      <td class="font-bold">{row.label}</td>
+                      <td class="text-right font-semibold tabular-nums">{formatScore(row.score)}</td>
+                      <td>
+                        <div class="flex items-center gap-2.5">
+                          <div class="h-2 w-full min-w-[90px] overflow-hidden rounded-full bg-slate-100">
+                            <div
+                              class="h-full rounded-full"
+                              style={`width:${row.r === null ? 0 : Math.max(2, Math.min(100, Math.abs(row.r) * 100))}%;background:${COLORS.primary};opacity:${row.rank === 1 ? 1 : 0.7}`}
+                            ></div>
+                          </div>
+                          <span class="w-11 shrink-0 text-right text-[13px] font-extrabold tabular-nums">
+                            {row.r === null ? '–' : row.r.toFixed(3)}
+                          </span>
+                          <span class={`badge badge-${strengthTone(row.strength)} shrink-0`}>{row.strength}</span>
+                        </div>
+                      </td>
+                      <td class="text-slate-600">{row.recommendation}</td>
+                      <td class="text-right text-slate-500 tabular-nums">{row.n}</td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {(data?.correlations ?? []).map((row) => (
-                      <tr>
-                        <td class="font-extrabold text-slate-400 tabular-nums">{row.rank}</td>
-                        <td class="font-bold">{row.label}</td>
-                        <td class="text-right font-semibold tabular-nums">{formatScore(row.score)}</td>
-                        <td class="text-right font-extrabold tabular-nums">{row.r === null ? '–' : row.r.toFixed(3)}</td>
-                        <td>
-                          <span class={`badge badge-${strengthTone(row.strength)}`}>{row.strength}</span>
-                        </td>
-                        <td class="text-slate-600">{row.recommendation}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              <div>
-                <p class="mb-4 text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500">
-                  Kekuatan korelasi
-                </p>
-                <BarChart
-                  bars={correlationBars}
-                  min={0}
-                  max={1}
-                  color={COLORS.primary}
-                  valueFormat="correlation"
-                  emptyMessage="Belum cukup data untuk menghitung korelasi."
-                />
-              </div>
+                  ))}
+                </tbody>
+              </table>
             </div>
 
             {(data?.correlations[0]?.r ?? 0) >= 0.5 ? (
