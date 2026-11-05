@@ -76,19 +76,19 @@ const lowestStage = [...(data?.stages ?? [])]
 <Base title={`Dashboard NPS · ${client.name}`}>
   <div class="shell">
     <!-- Top bar -->
-    <header class="no-print border-b border-slate-200 bg-white">
+    <header class="no-print border-b border-slate-300 bg-white">
       <div class="container-page flex flex-wrap items-center justify-between gap-4 py-4">
         <div class="flex items-center gap-4">
           <a href="/" class="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-ink text-base font-extrabold text-brand-yellow">i</a>
           <div>
-            <p class="text-[10px] font-bold uppercase tracking-[0.22em] text-slate-400">Dashboard NPS</p>
+            <p class="text-[10px] font-bold uppercase tracking-[0.24em] text-slate-400">Client dashboard</p>
             <p class="text-sm font-extrabold leading-tight">{client.name}</p>
           </div>
         </div>
 
         <div class="flex flex-wrap items-center gap-2">
           {demo && (
-            <span class="badge badge-warn">Mode demo</span>
+            <span class="badge badge-warn">Demo mode</span>
           )}
           {session && isAdmin(session) && (
             <a href="/admin" class="btn btn-outline !min-h-10 !px-4">Admin</a>
@@ -100,7 +100,7 @@ const lowestStage = [...(data?.stages ?? [])]
             Export CSV
           </a>
           <form method="POST" action="/api/logout" class="inline">
-            <button type="submit" class="btn btn-outline !min-h-10 !px-4">Keluar</button>
+            <button type="submit" class="btn btn-outline !min-h-10 !px-4">Sign out</button>
           </form>
         </div>
       </div>
@@ -110,8 +110,9 @@ const lowestStage = [...(data?.stages ?? [])]
       <!-- Title + filter -->
       <div class="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
         <div>
-          <h1 class="text-2xl font-extrabold tracking-tight md:text-[2rem]">Patient Experience Report</h1>
-          <p class="mt-1.5 text-sm text-slate-500">
+          <p class="kicker">Voice of customer</p>
+          <h1 class="display mt-3 text-[1.75rem] md:text-[2.25rem]">Patient Experience Report</h1>
+          <p class="mt-2 text-sm text-slate-500">
             {formatDate(rangeFrom)} – {formatDate(rangeTo)}
             {data?.filters.service ? ` · ${data.filters.service}` : ' · All services'}
             {data?.meta.generatedAt ? ` · updated ${new Date(data.meta.generatedAt).toLocaleString('en-GB')}` : ''}

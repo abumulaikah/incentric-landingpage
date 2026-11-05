@@ -11,6 +11,13 @@ const slugify = (value: string) =>
     .replace(/^-+|-+$/g, '')
     .slice(0, 40);
 
+/** Password ramah dibaca: tanpa karakter ambigu (0/O, 1/l/I). */
+export function generatePassword(length = 12): string {
+  const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
+  const bytes = crypto.getRandomValues(new Uint8Array(length));
+  return Array.from(bytes, (byte) => alphabet[byte % alphabet.length]).join('');
+}
+
 export interface QuestionDraft {
   questionId: string;
   label: string;
@@ -20,63 +27,67 @@ export interface QuestionDraft {
   title: string;
 }
 
-export interface SyncPreview {
-  name: string;
-  formId: string;
-  slug: string;
-  stages: { key: string; label: string }[];
-  questions: QuestionDraft[];
-  unknownCount: number;
+export interface ConnectedClient {
+  ok: boolean;
+  slug?: string;
+  password?: string;
+  name?: string;
+  formId?: string;
+  stages?: number;
+  questions?: number;
+  error?: string;
 }
 
-/** Validasi form ID Tally lalu baca strukturnya untuk pratinjau admin. */
-export async function createSyncPreview(input: { name: string; formId: string }): Promise<SyncPreview> {
+/**
+ * Alur utama admin: nama + Form ID → baca Tally → simpan → dashboard siap.
+ * Tahap dan label pertanyaan diturunkan otomatis; tidak ada langkah manual.
+ */
+export async function connectClient(input: {
+  name: string;
+  formId: string;
+  apiKey: string;
+  npsScale?: '1-5' | '0-10';
+}): Promise<ConnectedClient> {
   const name = input.name.trim();
   const formId = input.formId.trim();
 
-  if (!name) throw new Error('Client name is required.');
-  if (!/^[A-Za-z0-9]{4,}$/.test(formId)) throw new Error('Tally form ID looks invalid.');
-
-  const result = await syncFormStructure(process.env.TALLY_API_KEY ?? '', formId);
-
-  return {
-    name,
-    formId,
-    slug: slugify(name),
-    stages: result.stages,
-    questions: result.questions.map((question) => ({
-      questionId: question.questionId,
-      label: question.label,
-      stageKey: question.stageKey,
-      isScore: question.isScore,
-      isNps: question.isNps,
-      title: question.title,
-    })),
-    unknownCount: result.unknownCount,
-  };
-}
-
-export interface SyncCommitInput extends SyncPreview {
-  password: string;
-  npsScale: '1-5' | '0-10';
-}
-
-/** Simpan client + tahap + mapping pertanyaan ke database. */
-export async function commitSync(input: SyncCommitInput): Promise<{ ok: boolean; slug?: string; error?: string }> {
-  if (!input.password || input.password.length < 8) {
-    return { ok: false, error: 'Password must be at least 8 characters.' };
+  if (!name) return { ok: false, error: 'Client name is required.' };
+  if (!/^[A-Za-z0-9]{4,}$/.test(formId)) {
+    return { ok: false, error: 'Tally form ID looks invalid. Use the short ID from the form URL.' };
   }
 
-  const passwordHash = await hashPassword(input.password);
+  let structure: Awaited<ReturnType<typeof syncFormStructure>>;
+  try {
+    structure = await syncFormStructure(input.apiKey, formId);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Could not read the Tally form.';
+    return { ok: false, error: `Tally: ${message}` };
+  }
+
+  if (structure.stages.length === 0) {
+    return {
+      ok: false,
+      error: 'No headings found in the Tally form. Add Heading blocks so questions can be grouped into service stages.',
+    };
+  }
+
+  const scored = structure.questions.filter((question) => question.isScore);
+  if (scored.length === 0) {
+    return { ok: false, error: 'No scored questions found. Add your scale questions in Tally first.' };
+  }
+
+  const password = generatePassword(12);
+  const passwordHash = await hashPassword(password);
+
   const created = await createClient({
-    slug: input.slug,
-    name: input.name,
-    formId: input.formId,
-    npsScale: input.npsScale,
+    slug: slugify(name),
+    name,
+    formId,
+    npsScale: input.npsScale ?? '1-5',
     passwordHash,
   });
 
-  if (!created.ok || !created.slug) return created;
+  if (!created.ok || !created.slug) return { ok: false, error: created.error };
 
   const { getClientRecord } = await import('./clients');
   const record = await getClientRecord(created.slug);
@@ -84,18 +95,29 @@ export async function commitSync(input: SyncCommitInput): Promise<{ ok: boolean;
     return { ok: false, error: 'Client saved but could not be reloaded from the database.' };
   }
 
-  await replaceStages(record.id, input.stages);
+  await replaceStages(record.id, structure.stages);
   await upsertQuestionMaps(
     record.id,
-    input.questions.map((question, index) => ({
+    structure.questions.map((question, index) => ({
       questionId: question.questionId,
       questionTitle: question.title,
-      label: question.label || QUESTIONS.find((item) => item.key === question.questionId)?.label || question.questionId,
-      stageKey: question.stageKey,
+      label:
+        question.label ||
+        QUESTIONS.find((item) => item.key === question.questionId)?.label ||
+        question.questionId,
+      stageKey: question.isScore && !question.isNps ? question.stageKey : null,
       isScore: question.isScore && !question.isNps,
       position: index,
     })),
   );
 
-  return { ok: true, slug: created.slug };
+  return {
+    ok: true,
+    slug: created.slug,
+    password,
+    name,
+    formId,
+    stages: structure.stages.length,
+    questions: scored.length,
+  };
 }

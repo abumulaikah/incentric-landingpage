@@ -1,24 +1,22 @@
 ---
 import Base from '../layouts/Base.astro';
+import { isAdmin, sessionCookie, verifySessionToken } from '../lib/auth';
+import { hasDatabase } from '../lib/db';
+import { readEnv } from '../lib/env';
 import {
   checkAdminPassword,
   cookieOptionsFor,
   createSessionToken,
-  isAdmin,
   resetAttempts,
-  sessionCookie,
   tooManyAttempts,
-  verifySessionToken,
 } from '../lib/auth';
-import { hasDatabase } from '../lib/db';
-import { isDemoMode } from '../lib/env';
 
 export const prerender = false;
 
 const session = await verifySessionToken(Astro.cookies.get(sessionCookie.name)?.value);
 const admin = isAdmin(session);
 const dbReady = hasDatabase();
-const demo = isDemoMode();
+const hasTallyKey = Boolean(readEnv('TALLY_API_KEY'));
 
 let loginError: string | null = null;
 
@@ -40,76 +38,93 @@ if (!admin && Astro.request.method === 'POST') {
 }
 ---
 
-<Base title="Admin · Incentric NPS">
+<Base title="Projects - Incentric">
   <div class="shell">
-    <header class="border-b border-slate-200 bg-white">
+    <header class="border-b border-slate-300 bg-white">
       <div class="container-page flex items-center justify-between gap-4 py-4">
         <a href="/" class="flex items-center gap-3">
           <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-ink text-base font-extrabold text-brand-yellow">i</span>
-          <span class="text-sm font-extrabold uppercase tracking-[0.2em]">incentric</span>
+          <span class="text-sm font-extrabold uppercase tracking-[0.24em]">incentric</span>
         </a>
         {admin && (
           <div class="flex items-center gap-2">
-            <a href="/admin" class="btn btn-outline !min-h-10 !px-4">Clients</a>
-            <form method="POST" action="/api/logout"><button class="btn btn-dark !min-h-10 !px-4">Sign out</button></form>
+            <a href="/admin/new" class="btn btn-yellow !min-h-10 !px-4">New project</a>
+            <form method="POST" action="/api/logout"><button class="btn btn-outline !min-h-10 !px-4">Sign out</button></form>
           </div>
         )}
       </div>
     </header>
 
-    <main class="container-page py-8">
+    <main class="container-page py-10 md:py-14">
       {!admin ? (
-        <div id="login" class="mx-auto max-w-md">
-          <p class="text-[11px] font-bold uppercase tracking-[0.22em] text-brand-blue">Internal</p>
-          <h1 class="mt-2 text-3xl font-extrabold tracking-tight">Incentric Admin</h1>
-          <p class="mt-2 text-sm text-slate-500">Manage client dashboards, stages and question labels.</p>
-          <form method="POST" action="/admin" class="card mt-6 space-y-4">
+        <div class="mx-auto max-w-md">
+          <p class="kicker">Internal</p>
+          <h1 class="display mt-4">Incentric Admin</h1>
+          <p class="mt-3 text-sm leading-relaxed text-slate-500">
+            Manage client dashboards, service stages and question labels.
+          </p>
+          <form method="POST" action="/admin" class="card mt-8 space-y-4">
             <label class="block">
-              <span class="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500">Admin password</span>
-              <input name="password" type="password" required class="field" placeholder="••••••••" />
+              <span class="stat-label">Admin password</span>
+              <input name="password" type="password" required class="field mt-1.5" placeholder="Enter password" />
             </label>
             {loginError && <p class="rounded-lg bg-rose-50 p-3 text-xs font-semibold text-rose-700">{loginError}</p>}
             <button type="submit" class="btn btn-primary w-full">Sign in</button>
           </form>
-          {demo && <p class="mt-4 text-xs text-slate-400">Demo mode is active.</p>}
         </div>
       ) : (
-        <div class="space-y-6">
-          <div class="flex flex-wrap items-end justify-between gap-3">
+        <div class="space-y-8">
+          <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
-              <p class="text-[11px] font-bold uppercase tracking-[0.22em] text-brand-blue">Internal</p>
-              <h1 class="mt-2 text-3xl font-extrabold tracking-tight">Clients</h1>
+              <p class="kicker">Internal</p>
+              <h1 class="display mt-3">Client projects</h1>
+              <p class="mt-3 max-w-xl text-sm leading-relaxed text-slate-500">
+                Every project is one Tally form. Connect a form and the dashboard is generated
+                automatically from its headings and scored questions.
+              </p>
             </div>
-            <div class="flex items-center gap-2">
-              <span class={`badge ${dbReady ? 'badge-great' : 'badge-warn'}`}>{dbReady ? 'Database connected' : 'Database not connected'}</span>
-              <a href="/admin" class="btn btn-outline !min-h-10 !px-4">Refresh</a>
+            <div class="flex flex-wrap items-center gap-2">
+              <span class={`badge ${dbReady ? 'badge-great' : 'badge-bad'}`}>
+                {dbReady ? 'Database connected' : 'Database not connected'}
+              </span>
+              <span class={`badge ${hasTallyKey ? 'badge-good' : 'badge-bad'}`}>
+                {hasTallyKey ? 'Tally key set' : 'Tally key missing'}
+              </span>
             </div>
           </div>
 
-          <div class="card">
-            <div class="flex flex-wrap items-center justify-between gap-3">
+          <section class="rounded-lg border border-slate-950 bg-brand-ink p-6 text-white md:p-8">
+            <div class="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
               <div>
-                <p class="card-title">Add client</p>
-                <h2 class="card-heading">Create a dashboard from a Tally form</h2>
-                <p class="prose-note mt-2 max-w-2xl">
-                  The system reads Tally headings as service stages and turns every scored question into a dashboard item with a short label.
+                <p class="text-[11px] font-bold uppercase tracking-[0.24em] text-brand-yellow">New project</p>
+                <h2 class="mt-3 max-w-xl text-2xl font-extrabold leading-tight tracking-tight text-white md:text-3xl">
+                  Paste a Tally form ID. Get a dashboard.
+                </h2>
+                <p class="mt-3 max-w-xl text-sm leading-relaxed text-white/60">
+                  Headings become service stages. Scored questions become dashboard items.
                 </p>
               </div>
-              <a href="/admin/new" class="btn btn-primary">Add new client</a>
+              <a href="/admin/new" class="btn btn-yellow shrink-0">Connect a form</a>
             </div>
+          </section>
+
+          <div id="client-list" class="grid gap-4 md:grid-cols-2 xl:grid-cols-3" data-ready={dbReady ? '1' : '0'}>
+            <p class="text-sm text-slate-500">Loading projects…</p>
           </div>
 
-          <div id="client-list" class="grid gap-4 md:grid-cols-2 xl:grid-cols-3" data-ready={dbReady ? '1' : '0'}></div>
-
-          <div class="card">
-            <p class="card-title">How a new client is added</p>
-            <ol class="mt-3 space-y-2 text-sm leading-relaxed text-slate-600">
-              <li><strong>1.</strong> Duplicate the Tally template and adjust the questions for the client.</li>
-              <li><strong>2.</strong> Click <em>Add new client</em> and enter the name and Tally form ID.</li>
-              <li><strong>3.</strong> Review stage names and question labels, then save with a client password.</li>
-              <li><strong>4.</strong> Share the login link <code class="font-mono text-xs">/login/&lt;slug&gt;</code> with the client.</li>
-            </ol>
-          </div>
+          <section class="grid gap-4 md:grid-cols-3">
+            {[
+              { step: '01', title: 'Duplicate the template', copy: 'Copy the Tally template and adjust the questions for the client.' },
+              { step: '02', title: 'Connect the form', copy: 'Enter the client name and the Tally form ID. No configuration needed.' },
+              { step: '03', title: 'Share the login', copy: 'Send the generated password and the login link to the client.' },
+            ].map((item) => (
+              <article class="card">
+                <p class="text-2xl font-extrabold tracking-tight text-brand-blue">{item.step}</p>
+                <h3 class="mt-3 text-base font-bold leading-snug">{item.title}</h3>
+                <p class="mt-2 text-sm leading-relaxed text-slate-500">{item.copy}</p>
+              </article>
+            ))}
+          </section>
         </div>
       )}
     </main>
@@ -122,18 +137,24 @@ if (!admin && Astro.request.method === 'POST') {
         .then((response) => (response.ok ? response.json() : Promise.reject(response)))
         .then(
           (payload: { clients: { slug: string; name: string; formId: string; responses: number | null; nps: number | null }[] }) => {
+            if (!payload.clients.length) {
+              list.innerHTML = '<p class="text-sm text-slate-500">No projects yet. Connect your first Tally form.</p>';
+              return;
+            }
             list.innerHTML = payload.clients
               .map(
                 (client) => `
-                <article class="card">
-                  <p class="text-[11px] font-bold uppercase tracking-[0.14em] text-slate-400">${client.slug}</p>
-                  <h2 class="mt-1.5 text-lg font-extrabold leading-tight">${client.name}</h2>
-                  <p class="mt-2 text-xs text-slate-500">Form ${client.formId}</p>
-                  <p class="mt-3 text-sm font-semibold text-slate-700">
-                    ${client.responses ?? 0} responses
-                    <span class="ml-2 text-brand-blue">NPS ${client.nps === null ? '–' : client.nps}</span>
-                  </p>
-                  <div class="mt-4 flex gap-2">
+                <article class="card flex flex-col justify-between">
+                  <div>
+                    <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">${client.slug}</p>
+                    <h2 class="mt-2 text-lg font-extrabold leading-tight">${client.name}</h2>
+                    <p class="mt-2 text-xs text-slate-500">Form ${client.formId}</p>
+                    <p class="mt-4 text-sm font-semibold text-slate-700">
+                      ${client.responses ?? 0} responses
+                      <span class="ml-2 font-extrabold text-brand-blue">NPS ${client.nps === null ? '-' : client.nps}</span>
+                    </p>
+                  </div>
+                  <div class="mt-5 flex gap-2">
                     <a href="/${client.slug}" class="btn btn-primary flex-1 !min-h-10 !px-3">Open</a>
                     <a href="/login/${client.slug}" class="btn btn-outline !min-h-10 !px-3">Client login</a>
                   </div>
@@ -143,7 +164,7 @@ if (!admin && Astro.request.method === 'POST') {
           },
         )
         .catch(() => {
-          list.innerHTML = '<p class="text-sm text-rose-600">Could not load clients.</p>';
+          list.innerHTML = '<p class="text-sm text-rose-600">Could not load projects.</p>';
         });
     }
   </script>
