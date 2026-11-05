@@ -36,12 +36,12 @@ const points = items.filter((item) => item.score !== null);
 const columnWidth = 104;
 const labelWidth = 34;
 const plotWidth = points.length * columnWidth + labelWidth;
-const plotHeight = 340;
+const plotHeight = 380;
 
 const padTop = 34;
-const padBottom = 78;
+const padBottom = 112;
 const plotLeft = labelWidth + 8;
-const plotRight = plotWidth - 12;
+const plotRight = plotWidth - 52;
 const usable = plotHeight - padTop - padBottom;
 const scoreRange = max - min || 1;
 
@@ -177,13 +177,29 @@ const belowBaseline = points.filter((item) => (item.score as number) < baseline)
           );
         })}
 
+        <!-- garis penghubung titik ke label -->
+        {points.map((item, index) => (
+          <g>
+            <line
+              x1={xOf(index).toFixed(1)}
+              y1={(yOf(item.score as number) + 8).toFixed(1)}
+              x2={xOf(index).toFixed(1)}
+              y2={(plotHeight - padBottom - 10).toFixed(1)}
+              stroke="#cbd5e1"
+              stroke-width="1"
+              stroke-dasharray="3 3"
+            />
+            <circle cx={xOf(index).toFixed(1)} cy={(plotHeight - padBottom - 10).toFixed(1)} r="1.8" fill="#94a3b8" />
+          </g>
+        ))}
+
         <!-- label pertanyaan -->
         {points.map((item, index) => (
           <g>
             {wrapLabel(item.label).map((line, lineIndex) => (
               <text
                 x={xOf(index).toFixed(1)}
-                y={(plotHeight - padBottom + 18 + lineIndex * 11).toFixed(1)}
+                y={(plotHeight - padBottom + lineIndex * 12).toFixed(1)}
                 text-anchor="middle"
                 class="fill-slate-600"
                 style="font-size:10px;font-weight:700"
@@ -194,19 +210,41 @@ const belowBaseline = points.filter((item) => (item.score as number) < baseline)
           </g>
         ))}
 
-        <!-- penanda tahap -->
+        <!-- legend di bawah sumbu X -->
+        <text x={plotLeft - 8} y={plotHeight - padBottom} text-anchor="end" class="fill-slate-400" style="font-size:9px;font-weight:800">
+          BUTIR
+        </text>
+        <line
+          x1={labelWidth + 6}
+          y1={(plotHeight - padBottom).toFixed(1)}
+          x2={plotRight}
+          y2={(plotHeight - padBottom).toFixed(1)}
+          stroke="#cbd5e1"
+          stroke-width="1"
+        />
+
         {stageAnchors
           .filter((anchor) => anchor.startsStage)
           .map((anchor) => (
-            <text
-              x={xOf(anchor.index).toFixed(1)}
-              y={plotHeight - 6}
-              text-anchor="middle"
-              class="fill-brand-blue/70"
-              style="font-size:8.5px;font-weight:800;letter-spacing:0.05em"
-            >
-              {(stages.find((stage) => stage.key === anchor.item.stageKey)?.shortLabel ?? '').toUpperCase()}
-            </text>
+            <g>
+              <line
+                x1={xOf(anchor.index).toFixed(1)}
+                y1={(plotHeight - padBottom).toFixed(1)}
+                x2={xOf(anchor.index).toFixed(1)}
+                y2={(plotHeight - padBottom + 5).toFixed(1)}
+                stroke="#94a3b8"
+                stroke-width="1"
+              />
+              <text
+                x={xOf(anchor.index).toFixed(1)}
+                y={plotHeight - 8}
+                text-anchor="middle"
+                class="fill-brand-blue/80"
+                style="font-size:9px;font-weight:800;letter-spacing:0.05em"
+              >
+                {(stages.find((stage) => stage.key === anchor.item.stageKey)?.shortLabel ?? '').toUpperCase()}
+              </text>
+            </g>
           ))}
       </svg>
     </div>
