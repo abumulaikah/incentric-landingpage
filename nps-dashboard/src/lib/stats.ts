@@ -431,7 +431,7 @@ const ITEM_STAGE: Record<string, string> = {
   kasir: 'kasirFarmasi',
   obat: 'kasirFarmasi',
   farmasi: 'kasirFarmasi',
-  kamar: 'kamarInap',
+  kamar: 'pemeriksaan',
   fasilitasUmum: 'fasilitasUmum',
 };
 

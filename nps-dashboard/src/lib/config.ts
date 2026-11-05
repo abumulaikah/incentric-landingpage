@@ -126,15 +126,9 @@ export const STAGES: StageDef[] = [
     key: 'pemeriksaan',
     label: 'Pemeriksaan Medis',
     shortLabel: 'Pemeriksaan',
-    questions: ['tungguDokter', 'pemeriksaanDokter'],
-  },
-  {
-    // Kamar rawat inap menyusul setelah pemeriksaan dokter (hanya pasien inap).
-    key: 'kamarInap',
-    label: 'Kamar Rawat Inap',
-    shortLabel: 'Kamar Inap',
-    questions: ['kamar'],
-    optional: true,
+    // Kamar rawat inap ikut di sini; di form Tally pertanyaan itu hanya
+    // muncul untuk responden rawat inap (conditional logic).
+    questions: ['tungguDokter', 'pemeriksaanDokter', 'kamar'],
   },
   {
     key: 'kasirFarmasi',

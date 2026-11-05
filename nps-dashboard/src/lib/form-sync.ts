@@ -97,20 +97,6 @@ export function buildSyncResult(
     position++;
   }
 
-  // Kamar rawat inap berdiri sendiri setelah pemeriksaan, walau di form
-  // pertanyaannya masih berada di bawah Heading Pemeriksaan.
-  const kamar = questions.find((question) => question.isScore && /kamar/i.test(question.title));
-  if (kamar) {
-    const inpatientKey = 'kamarInap';
-    if (!stages.some((stage) => stage.key === inpatientKey)) {
-      const examIndex = stages.findIndex((stage) => stage.key === 'pemeriksaan');
-      const entry = { key: inpatientKey, label: 'Kamar Rawat Inap' };
-      if (examIndex >= 0) stages.splice(examIndex + 1, 0, entry);
-      else stages.push(entry);
-    }
-    kamar.stageKey = inpatientKey;
-  }
-
   return { stages, questions };
 }
 

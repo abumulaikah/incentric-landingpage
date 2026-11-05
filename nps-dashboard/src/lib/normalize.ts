@@ -42,7 +42,7 @@ const STAGE_OF_QUESTION: Record<QuestionKey, string> = {
   kasir: 'kasirFarmasi',
   obat: 'kasirFarmasi',
   farmasi: 'kasirFarmasi',
-  kamar: 'kamarInap',
+  kamar: 'pemeriksaan',
   fasilitasUmum: 'fasilitasUmum',
 };
 
@@ -204,16 +204,6 @@ function questionsByHeading(blueprint: FormBlock[] | undefined, plan: StagePlan)
     mapping.set(currentStage, list);
   }
 
-  // Kamar rawat inap boleh berada di bawah tahap pemeriksaan, tetapi tetap
-  // dikeluarkan dari tahap itu agar tampil sebagai tahap tersendiri.
-  for (const stage of plan.stages) {
-    const list = mapping.get(stage.key);
-    if (!list?.includes('kamar')) continue;
-    const withoutKamar = list.filter((question) => question !== 'kamar');
-    if (withoutKamar.length > 0) mapping.set(stage.key, withoutKamar);
-    else mapping.delete(stage.key);
-  }
-
   return mapping;
 }
 
@@ -233,33 +223,13 @@ export function buildStages(blueprint: FormBlock[] | undefined, scores: Set<Ques
 
   const mapping = questionsByHeading(blueprint, plan);
 
-  const stages: StageDef[] = plan.stages
+  return plan.stages
     .map((stage) => ({
       ...stage,
+      shortLabel: shortLabelFor(stage.label),
       questions: (mapping.get(stage.key) ?? []).filter((question) => scores.has(question)),
     }))
     .filter((stage) => stage.questions.length > 0);
-
-  // Sisipkan tahap Kamar Rawat Inap tepat setelah tahap yang memuatnya.
-  if (scores.has('kamar') && !stages.some((stage) => stage.key === 'kamarInap')) {
-    const inpatient: StageDef = {
-      key: 'kamarInap',
-      label: 'Kamar Rawat Inap',
-      shortLabel: 'Kamar Inap',
-      questions: ['kamar'],
-      optional: true,
-    };
-    const examIndex = stages.findIndex((stage) => stage.key === 'pemeriksaan');
-    if (examIndex >= 0) stages.splice(examIndex + 1, 0, inpatient);
-    else stages.push(inpatient);
-  }
-
-  // Nama tampilan mengikuti Heading di form, tapi dipendekkan untuk grafik.
-  for (const stage of stages) {
-    stage.shortLabel = shortLabelFor(stage.label);
-  }
-
-  return stages;
 }
 
 const SHORT_LABELS: Record<string, string> = {
@@ -268,7 +238,6 @@ const SHORT_LABELS: Record<string, string> = {
   Pemeriksaan: 'Pemeriksaan',
   'Kasir & Farmasi': 'Kasir & Farmasi',
   Fasilitas: 'Fasilitas',
-  'Kamar Rawat Inap': 'Kamar Inap',
 };
 
 function shortLabelFor(label: string): string {
