@@ -4,10 +4,11 @@ import BarChart from '../components/BarChart.astro';
 import DistributionChart from '../components/DistributionChart.astro';
 import DonutChart from '../components/DonutChart.astro';
 import NpsGauge from '../components/NpsGauge.astro';
+import ItemScoreChart from '../components/ItemScoreChart.astro';
 import TrendChart from '../components/TrendChart.astro';
 import { isAdmin, verifySessionToken, sessionCookie } from '../lib/auth';
 import { COLORS } from '../lib/colors';
-import { getClient } from '../lib/config';
+import { getClient, STAGES } from '../lib/config';
 import { loadDashboard } from '../lib/data';
 import {
   formatDate,
@@ -276,26 +277,24 @@ const lowestStage = [...(data?.stages ?? [])]
             </div>
 
             <div class="card">
-              <div class="flex items-start justify-between gap-4">
+              <div class="flex flex-wrap items-start justify-between gap-4">
                 <div>
                   <p class="card-title">Detail butir</p>
-                  <h2 class="card-heading">Skor tiap pertanyaan</h2>
+                  <h2 class="card-heading">Naik-turun pengalaman per pertanyaan</h2>
+                  <p class="prose-note mt-2 max-w-2xl">
+                    Urutan mengikuti alur layanan, dari kedatangan sampai fasilitas umum.
+                    Garis tren menunjukkan titik mana yang menurun dan perlu perhatian.
+                  </p>
                 </div>
                 <span class="badge badge-muted shrink-0">{formatNumber(data?.items.length)} butir</span>
               </div>
-              <div class="mt-4 space-y-2">
-                {(data?.items ?? []).map((item) => {
-                  const width = item.score === null ? 0 : ((item.score - 1) / (scoreMax - 1)) * 100;
-                  return (
-                    <div class="flex items-center gap-3">
-                      <span class="w-[45%] shrink-0 text-[12px] font-semibold leading-tight text-slate-600">{item.label}</span>
-                      <div class="h-2 flex-1 overflow-hidden rounded-full bg-slate-100">
-                        <div class="h-full rounded-full bg-brand-blue/70" style={`width:${Math.max(0, Math.min(100, width))}%`}></div>
-                      </div>
-                      <span class="w-10 shrink-0 text-right text-[12px] font-extrabold tabular-nums">{formatScore(item.score)}</span>
-                    </div>
-                  );
-                })}
+              <div class="mt-5">
+                <ItemScoreChart
+                  items={data?.items ?? []}
+                  stages={STAGES.map((stage) => ({ key: stage.key, shortLabel: stage.shortLabel }))}
+                  min={data?.meta.npsScale === '1-5' ? 1 : 0}
+                  max={scoreMax}
+                />
               </div>
             </div>
           </section>
