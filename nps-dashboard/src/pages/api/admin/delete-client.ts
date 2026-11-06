@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { getQuery } from '../../lib/db';
+import { getQuery } from '../../../lib/db';
 
 export const prerender = false;
 
