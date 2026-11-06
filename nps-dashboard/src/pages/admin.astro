@@ -24,6 +24,7 @@ const hasTallyKey = Boolean(readEnv('TALLY_API_KEY'));
 let loginError: string | null = null;
 let notice: string | null = null;
 let createdKey: string | null = null;
+let dbError: string | null = null;
 
 if (Astro.request.method === 'POST') {
   const form = await Astro.request.formData();
@@ -46,23 +47,51 @@ if (Astro.request.method === 'POST') {
   }
 
   if (admin && intent === 'create-key') {
-    const created = await createApiKey(String(form.get('keyName') ?? ''), String(form.get('keyScope') ?? '') || null);
-    if (created) {
-      createdKey = created.key;
-      notice = 'API key created. Copy it now, it will not be shown again.';
-    } else {
-      loginError = 'Could not create the API key. Is the database connected?';
+    try {
+      const created = await createApiKey(String(form.get('keyName') ?? ''), String(form.get('keyScope') ?? '') || null);
+      if (created) {
+        createdKey = created.key;
+        notice = 'API key created. Copy it now, it will not be shown again.';
+      } else {
+        dbError = 'Could not create the API key. Is the database connected?';
+      }
+    } catch (error) {
+      dbError = error instanceof Error ? error.message : 'Could not create the API key.';
     }
   }
 
   if (admin && intent === 'revoke-key') {
-    await revokeApiKey(Number(form.get('keyId') ?? 0));
-    notice = 'API key revoked.';
+    try {
+      await revokeApiKey(Number(form.get('keyId') ?? 0));
+      notice = 'API key revoked.';
+    } catch (error) {
+      dbError = error instanceof Error ? error.message : 'Could not revoke the key.';
+    }
   }
 }
 
-const apiKeys = admin ? await listApiKeys() : [];
-const dbCheck = admin ? await checkDatabase() : { ok: false, driver: 'none', message: '' };
+// Semua akses database dibungkus: admin tetap bisa login walau DB bermasalah.
+let apiKeys: Awaited<ReturnType<typeof listApiKeys>> = [];
+let dbCheck: Awaited<ReturnType<typeof checkDatabase>> = {
+  ok: false,
+  driver: databaseDriver(),
+  message: hasDatabase() ? 'Not checked.' : 'DATABASE_URL is not set.',
+};
+
+if (admin) {
+  try {
+    dbCheck = await checkDatabase();
+  } catch (error) {
+    dbCheck = { ok: false, driver: databaseDriver(), message: error instanceof Error ? error.message : 'Check failed.' };
+  }
+
+  try {
+    apiKeys = await listApiKeys();
+  } catch (error) {
+    dbError = dbError ?? (error instanceof Error ? error.message : 'Could not load API keys.');
+  }
+}
+
 const driverLabel = databaseDriver() === 'neon' ? 'Neon' : databaseDriver() === 'pg' ? 'Postgres' : 'none';
 ---
 
@@ -132,6 +161,11 @@ const driverLabel = databaseDriver() === 'neon' ? 'Neon' : databaseDriver() === 
 
           {notice && <div class="rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-sm font-semibold text-emerald-900">{notice}</div>}
           {loginError && <div class="rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm font-semibold text-rose-900">{loginError}</div>}
+          {dbError && (
+            <div class="rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm leading-relaxed text-rose-900">
+              <strong class="font-extrabold">Database error.</strong> {dbError}
+            </div>
+          )}
 
           {createdKey && (
             <div class="rounded-lg border border-brand-blue bg-blue-50 p-4">
