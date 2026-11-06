@@ -11,7 +11,7 @@ import {
   verifySessionToken,
 } from '../lib/auth';
 import { createApiKey, listApiKeys, revokeApiKey } from '../lib/api-keys';
-import { hasDatabase } from '../lib/db';
+import { checkDatabase, databaseDriver, hasDatabase } from '../lib/db';
 import { readEnv } from '../lib/env';
 
 export const prerender = false;
@@ -62,6 +62,8 @@ if (Astro.request.method === 'POST') {
 }
 
 const apiKeys = admin ? await listApiKeys() : [];
+const dbCheck = admin ? await checkDatabase() : { ok: false, driver: 'none', message: '' };
+const driverLabel = databaseDriver() === 'neon' ? 'Neon' : databaseDriver() === 'pg' ? 'Postgres' : 'none';
 ---
 
 <Base title="Projects - Incentric">
@@ -113,14 +115,20 @@ const apiKeys = admin ? await listApiKeys() : [];
               </p>
             </div>
             <div class="flex flex-wrap items-center gap-2">
-              <span class={`badge ${dbReady ? 'badge-great' : 'badge-bad'}`}>
-                {dbReady ? 'Database connected' : 'Database not connected'}
+              <span class={`badge ${dbCheck.ok ? 'badge-great' : 'badge-bad'}`}>
+                {dbCheck.ok ? `Database connected (${driverLabel})` : 'Database not connected'}
               </span>
               <span class={`badge ${hasTallyKey ? 'badge-good' : 'badge-bad'}`}>
                 {hasTallyKey ? 'Tally key set' : 'Tally key missing'}
               </span>
             </div>
           </div>
+
+          {!dbCheck.ok && dbCheck.message && (
+            <div class="rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm leading-relaxed text-rose-900">
+              <strong class="font-extrabold">Database check failed.</strong> {dbCheck.message}
+            </div>
+          )}
 
           {notice && <div class="rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-sm font-semibold text-emerald-900">{notice}</div>}
           {loginError && <div class="rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm font-semibold text-rose-900">{loginError}</div>}
