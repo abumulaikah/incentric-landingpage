@@ -1,5 +1,6 @@
 ---
 import Base from '../../../layouts/Base.astro';
+import SiteHeader from '../../../components/SiteHeader.astro';
 import { isAdmin, sessionCookie, verifySessionToken } from '../../../lib/auth';
 import { getClientRecord, listQuestionMap, listStages, updateQuestionMap } from '../../../lib/clients';
 import { hasDatabase } from '../../../lib/db';
@@ -82,20 +83,15 @@ const scoreRows = rows.filter((row) => !row.isNps && /seberapa/i.test(row.title)
 
 <Base title={`Mapping - ${client.name}`}>
   <div class="shell">
-    <header class="border-b border-slate-300 bg-white">
-      <div class="container-page flex items-center justify-between gap-4 py-4">
-        <a href="/" class="flex items-center gap-3">
-          <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-ink text-base font-extrabold text-brand-yellow">i</span>
-          <span class="text-sm font-extrabold uppercase tracking-[0.24em]">incentric</span>
-        </a>
-        <div class="flex items-center gap-2">
-          <a href="/admin" class="btn btn-outline !min-h-10 !px-4">Projects</a>
-          <a href={`/${client.slug}`} class="btn btn-dark !min-h-10 !px-4">Open dashboard</a>
-        </div>
-      </div>
-    </header>
+    <SiteHeader
+      tone="light"
+      homeHref="/admin"
+      clientName={client.name}
+      links={[{ label: 'Projects', href: '/admin' }]}
+      action={{ label: 'Open dashboard', href: `/${client.slug}` }}
+    />
 
-    <main class="container-page max-w-5xl space-y-6 py-10">
+    <main class="container-page max-w-5xl space-y-6 pb-14 pt-24 md:pt-32">
       <div>
         <p class="kicker">Mapping</p>
         <h1 class="display mt-3">{client.name}</h1>
