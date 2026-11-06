@@ -1,2 +1,2 @@
 export const WHATSAPP_URL =
-  "https://api.whatsapp.com/send?phone=6281249017400";
+  "https://api.whatsapp.com/send?phone=6281128022323";

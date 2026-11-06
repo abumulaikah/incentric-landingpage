@@ -3,7 +3,7 @@
 Route produksi: `https://incentric.co.id/senimerawatpelanggan`
 
 Halaman ini memakai cover asli, materi buku Ronald Satria, CSS khusus, dan
-kontak WhatsApp yang sudah digunakan project: `6281249017400`.
+kontak WhatsApp yang sudah digunakan project: `6281128022323`.
 Tidak ada dependensi baru.
 
 Pembukaan menyebut buku, penulis, masalah pelanggan, harga, dan cara memesan.
