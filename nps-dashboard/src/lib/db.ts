@@ -49,6 +49,12 @@ export function normalizeConnectionString(url: string): string {
     if (password) value = value.replace('[YOUR-PASSWORD]', encodeURIComponent(password));
   }
 
+  // Parameter sslmode di connection string bisa bertentangan dengan opsi ssl
+  // yang diberikan ke driver pg. Supabase memakai sertifikat yang tidak
+  // terverifikasi oleh CA bawaan, jadi biarkan opsi ssl di kode yang berlaku.
+  value = value.replace(/([?&])sslmode=[^&]*/gi, '$1').replace(/[?&]$/, '');
+  value = value.replace(/\?&/, '?');
+
   return value;
 }
 
@@ -70,10 +76,17 @@ export async function getQuery(): Promise<QueryFn | null> {
   }
 
   const pg = await import('pg');
+  const isLocal = /localhost|127\.0\.0\.1/.test(url);
+
+  // Supabase Transaction pooler memakai port 6543; Session pooler 5432.
+  // Keduanya butuh SSL tanpa verifikasi CA (supaya koneksi tetap jalan).
   const pool = new pg.default.Pool({
     connectionString: url,
     max: 3,
-    ssl: /localhost|127\.0\.0\.1/.test(url) ? undefined : { rejectUnauthorized: false },
+    ssl: isLocal ? undefined : { rejectUnauthorized: false },
+    // Jalankan semua query dalam mode plain: driver pg mengelola sertifikat sendiri.
+    query_timeout: 15000,
+    connectionTimeoutMillis: 10000,
   });
 
   cached = async (text, params) => {
