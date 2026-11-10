@@ -1,7 +1,10 @@
 import { defineCollection, z } from 'astro:content';
+import { glob } from 'astro/loaders';
 
 const blog = defineCollection({
-  type: 'content',
+  // Only top-level Markdown files are published. Drafts and private notes kept
+  // in subfolders (inbox, lab, output) are ignored instead of failing the build.
+  loader: glob({ pattern: '*.{md,mdx}', base: './src/content/blog' }),
   schema: z.object({
     title: z.string(),
     description: z.string(),

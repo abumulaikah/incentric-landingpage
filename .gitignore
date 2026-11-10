@@ -9,6 +9,12 @@ coverage/
 .env*
 !.env.example
 
+# Obsidian vault di dalam folder blog: catatan pribadi, bukan artikel terbit
+src/content/blog/00 - Inbox/
+src/content/blog/20 - Lab/
+src/content/blog/30 - Output/
+src/content/blog/Untitled.canvas
+
 # Dashboard NPS (sub-project Vercel terpisah)
 nps-dashboard/dist/
 nps-dashboard/.astro/

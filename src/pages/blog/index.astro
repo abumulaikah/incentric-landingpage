@@ -80,7 +80,7 @@ const tagOptions = ['Marketing', 'Service', 'Sales', 'CRM', 'Culture', 'Research
                   ]}
                   data-filter-values={getPostFilters(post).join('|||')}
                 >
-                  <a href={`/blog/${post.slug}/`} class="absolute inset-0 z-10" aria-label={post.data.title}></a>
+                  <a href={`/blog/${post.id}/`} class="absolute inset-0 z-10" aria-label={post.data.title}></a>
                   {post.data.heroImage ? (
                     <img
                       src={post.data.heroImage}
@@ -110,7 +110,7 @@ const tagOptions = ['Marketing', 'Service', 'Sales', 'CRM', 'Culture', 'Research
                         </a>
                       </div>
                       <h2 class:list={['font-bold leading-tight tracking-tight text-white', index < 2 ? 'text-3xl md:text-5xl' : 'text-2xl md:text-3xl']}>
-                        <a href={`/blog/${post.slug}/`} class="relative z-20 text-white transition group-hover:text-brand-yellow">
+                        <a href={`/blog/${post.id}/`} class="relative z-20 text-white transition group-hover:text-brand-yellow">
                           {post.data.title}
                         </a>
                       </h2>
@@ -165,7 +165,7 @@ const tagOptions = ['Marketing', 'Service', 'Sales', 'CRM', 'Culture', 'Research
                 data-title={post.data.title}
                 data-description={post.data.description}
               >
-                <a href={`/blog/${post.slug}/`} class="absolute inset-0 z-10" aria-label={post.data.title}></a>
+                <a href={`/blog/${post.id}/`} class="absolute inset-0 z-10" aria-label={post.data.title}></a>
                 <img
                   src={post.data.heroImage}
                   alt={post.data.heroImageAlt ?? post.data.title}
@@ -197,7 +197,7 @@ const tagOptions = ['Marketing', 'Service', 'Sales', 'CRM', 'Culture', 'Research
                       </a>
                     </div>
                     <h3 class="mt-4 text-2xl font-bold leading-tight tracking-tight text-white">
-                      <a href={`/blog/${post.slug}/`} class="relative z-20 text-white transition group-hover:text-brand-yellow">
+                      <a href={`/blog/${post.id}/`} class="relative z-20 text-white transition group-hover:text-brand-yellow">
                         {post.data.title}
                       </a>
                     </h3>
