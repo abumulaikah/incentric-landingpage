@@ -121,6 +121,7 @@ export function Navbar({ theme = "auto" }: NavbarProps) {
   }, [theme]);
 
   return (
+    <>
     <div className="fixed top-5 left-0 right-0 z-50 flex justify-center px-5 pointer-events-none sm:top-6 sm:px-4">
       {/* Glass Background - Increased blur and adjusted opacity for better readability */}
       <div className={`absolute w-[calc(100%-2.5rem)] max-w-7xl h-14 backdrop-blur-3xl border shadow-[0_8px_32px_rgba(0,0,0,0.1)] rounded-full pointer-events-auto transition-colors duration-500 sm:w-full sm:h-16 ${isDarkText ? 'bg-white/40 border-black/5' : 'bg-slate-950/40 border-white/10'}`} />
@@ -300,5 +301,19 @@ export function Navbar({ theme = "auto" }: NavbarProps) {
         </motion.div>
       )}
     </div>
+
+    <div className="pointer-events-none fixed inset-x-0 top-[80px] z-40 flex justify-center px-5 sm:top-[96px]">
+      <a
+        href="https://wscx.incentric.co.id/"
+        target="_blank"
+        rel="noreferrer"
+        className={`pointer-events-auto inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.14em] backdrop-blur-3xl shadow-[0_8px_24px_rgba(0,0,0,0.12)] transition-colors duration-500 hover:scale-105 sm:text-[11px] ${isDarkText ? 'border-black/5 bg-white/50 text-slate-900 hover:bg-white/80' : 'border-white/10 bg-slate-950/45 text-white hover:bg-slate-950/70'}`}
+      >
+        <span className="h-1.5 w-1.5 rounded-full bg-brand-yellow" aria-hidden="true" />
+        Join our CX workshop
+        <span aria-hidden="true" className="text-[11px] leading-none">↗</span>
+      </a>
+    </div>
+    </>
   );
 }
